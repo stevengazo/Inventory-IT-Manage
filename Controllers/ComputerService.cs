@@ -1,6 +1,6 @@
 ﻿using InventoryIT.Data;
 using InventoryIT.Model;
-using InventoryIT.Services;
+using InventoryIT.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
@@ -14,27 +14,28 @@ namespace InventoryIT.Controllers
             _inventoryDb = inventoryDb;
         }
 
-        public Task Add(ComputerModel entity)
+        public void Add(ComputerModel entity)
+        {
+            _inventoryDb.Computer.Add(entity);
+            _inventoryDb.SaveChanges();
+        }
+
+        public void Delete(ComputerModel entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task Delete(ComputerModel entity)
+        public List<ComputerModel> GetAll()
+        {
+            return _inventoryDb.Computer.ToList();
+        }
+
+        public List<ComputerModel> Search(string value)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ComputerModel>> GetAll()
-        {
-            return _inventoryDb.Computer.ToListAsync();
-        }
-
-        public Task<List<ComputerModel>> Search(string value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Update(ComputerModel entity)
+        public void Update(ComputerModel entity)
         {
             throw new NotImplementedException();
         }

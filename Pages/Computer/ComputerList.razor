@@ -1,25 +1,39 @@
 ﻿@page "/computers"
-@inject ComputerService _ComputerService;
-<h3>ComputerList</h3>
+
+@inject IControllerServices<ComputerModel> _ComputerService;
+
+<h3>Computadoras</h3>
 
 
-@foreach(var C in Computers)
-{
-    <label>
-        @C.SerialNumber.ToString();
-    </label>
-}
+
+<AddComputerComponent OnComputerAdded="UpdateComputerList" />
+
+<TableComputers Computers="@Computers" />
+
+
 
 @code {
     List<ComputerModel> Computers { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        Computers = new();
         base.OnInitializedAsync();
 
 
         // Get the computers in the db
-        Computers = await _ComputerService.GetAll(); 
+        Computers =  _ComputerService.GetAll(); 
 
+    }
+
+    private async Task UpdateComputerList()
+    {
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            Computers = _ComputerService.GetAll();
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
     }
 
 }

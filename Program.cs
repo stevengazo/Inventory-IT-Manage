@@ -2,7 +2,7 @@ using InventoryIT.Areas.Identity;
 using InventoryIT.Controllers;
 using InventoryIT.Data;
 using InventoryIT.Model;
-using InventoryIT.Services;
+using InventoryIT.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -24,7 +24,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
-// Services to CRUD DB
+// Contracts to CRUD DB
 builder.Services.AddScoped<IControllerServices<Brand>, BrandService>();
 builder.Services.AddScoped<IControllerServices<ComputerModel>, ComputerService>();
 
@@ -36,7 +36,32 @@ var app = builder.Build();
 // Create The Database
 
 
+using( var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
+    if (db.Database.CanConnect())
+    {
+        Console.WriteLine("Base de datos existente");
+    }
+    else
+    {
+        Console.WriteLine("La base de datos no existe. Intentando crearla");
+        try
+        {
+            db.Database.Migrate();
+            Console.WriteLine("Base de datos creada");
+        }
+        catch (System.Exception ex)
+        {
+            Console.WriteLine($"Error al intentar crear la base de datos: {ex.Message}");
+        }
+        finally
+        {
 
+        }
+
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

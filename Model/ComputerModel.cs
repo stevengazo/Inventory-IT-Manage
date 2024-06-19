@@ -18,9 +18,9 @@ namespace InventoryIT.Model
         public string KeyboardLayout { get; set; }
         public bool HasNumericKeyboard { get; set; }
         public bool IsActive { get; set; }
-        public ICollection<HistoryModel> Histories { get; set; }
-        public int BrandId { get; set; }
-        public Brand Brand { get; set; }
+        public ICollection<HistoryModel>? Histories { get; set; }
+        public int? BrandId { get; set; }
+        public Brand? Brand { get; set; }
 
     }
 }

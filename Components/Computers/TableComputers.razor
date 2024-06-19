@@ -1,0 +1,109 @@
+﻿
+<div class="shadow p-2">
+    <h3>Computadoras Existentes</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>
+                    Numero Serie
+                </td>
+                <td>
+                    Fecha Adquisicion
+                </td>
+                <td>
+                    Modelo
+                </td>
+                <td>
+                    Costo
+                </td>
+                <td>
+                    Tipo Disco
+                </td>
+                <td>
+                    Tamaño
+                </td>
+                <td>
+                    Tipo RAM
+                </td>
+                <td>
+                    Tamaño
+                </td>
+                <td>
+                    Procesador
+                </td>
+                <td>
+                    Teclado
+                </td>
+                <td colspan="2">
+                    Acciones
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Computers != null)
+            {
+                @foreach (var C in Computers)
+                {
+                    <tr>
+                        <td>
+                            @C.SerialNumber
+                        </td>
+                        <td>
+                            @C.AdquisitionDate
+                        </td>
+                        <td>
+                            @C.ModelName
+                        </td>
+                        <td>
+                            @C.Cost
+                        </td>
+                        @if (C.HaveSSD)
+                        {
+                            <td>SSD</td>
+                        }
+                        else
+                        {
+                            <td>HDD</td>
+                        }
+                        <td>
+                            @C.SizeDisk
+                        </td>
+                        <td>
+                            @C.RAMType
+                        </td>
+                        <td>
+                            @C.SizeRAM
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @C.KeyboardLayout
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-outline-info">Ver</a>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-outline-success">Editar</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public List<ComputerModel> Computers { get; set; }
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        StateHasChanged(); // Notificar a Blazor que se han actualizado los parámetros y debe renderizar de nuevo
+    }
+}

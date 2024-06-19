@@ -1,4 +1,4 @@
-﻿using InventoryIT.Services;
+﻿using InventoryIT.Contracts;
 using InventoryIT.Model;
 using InventoryIT.Data;
 using Microsoft.EntityFrameworkCore;
@@ -15,39 +15,37 @@ namespace InventoryIT.Controllers
             this._inventoryDb = inventoryDb;
         }
 
-        public Task Add(Brand entity)
+        public void Add(Brand entity)
         {
             _inventoryDb.Brand.Add(entity);
-            _inventoryDb.SaveChangesAsync();
-            return Task.CompletedTask;
+            _inventoryDb.SaveChanges();
+            
         }
 
-        public Task Delete(Brand entity)
+       public void Delete(Brand entity)
         {
             _inventoryDb.Brand.Remove(entity);
             _inventoryDb.SaveChanges();
-           return Task.CompletedTask;   
         }
 
-        public async Task<List<Brand>> GetAll()
+        public List<Brand> GetAll()
         {
-            return await _inventoryDb.Brand.ToListAsync();
+                return _inventoryDb.Brand.ToList();
         }
 
-        public Task<List<Brand>> Search(string value)
+        public List<Brand> Search(string value)
         {
             var data = (
                 from i in _inventoryDb.Brand
                 where i.Name == value
                 select i).ToList(); 
-            return Task.FromResult(data);
+            return data;
         }
 
-        public Task Update(Brand entity)
+        public void Update(Brand entity)
         {
             _inventoryDb.Brand.Update(entity);
-            _inventoryDb.SaveChangesAsync();
-            return Task.CompletedTask;
+            _inventoryDb.SaveChanges();
         }
     }
 }

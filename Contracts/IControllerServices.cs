@@ -1,19 +1,19 @@
 ﻿using System.Threading.Tasks;
 using InventoryIT.Data;
 using InventoryIT.Model;
-namespace InventoryIT.Services
+namespace InventoryIT.Contracts
 {
     public interface IControllerServices<T> where T : class
     {
-        Task Add(T entity);
+        void Add(T entity);
 
-        Task Update(T entity);
+        void Update(T entity);
         
-        Task Delete(T entity);   
+        void Delete(T entity);   
 
-        Task<List<T>> GetAll();
+        List<T> GetAll();
 
-        Task<List<T>> Search(string value);
+        List<T> Search(string value);
 
     }
 }
