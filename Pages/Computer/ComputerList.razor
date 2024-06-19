@@ -1,0 +1,25 @@
+﻿@page "/computers"
+@inject ComputerService _ComputerService;
+<h3>ComputerList</h3>
+
+
+@foreach(var C in Computers)
+{
+    <label>
+        @C.SerialNumber.ToString();
+    </label>
+}
+
+@code {
+    List<ComputerModel> Computers { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+
+        // Get the computers in the db
+        Computers = await _ComputerService.GetAll(); 
+
+    }
+
+}
