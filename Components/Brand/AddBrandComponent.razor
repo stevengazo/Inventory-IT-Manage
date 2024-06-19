@@ -1,0 +1,38 @@
+﻿@inject IControllerServices<Brand> _BrandService
+
+
+<div class="d-flex flex-column">
+    <EditForm Model="ObjBrand">
+        <div>
+            <label>
+            </label>
+            <InputText @bind-Value="ObjBrand.Name"></InputText>
+        </div>
+    </EditForm>
+    <button @onclick="Save"> Agregar</button>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnBrandAdded { get; set; }
+
+    Brand ObjBrand = new();
+
+    private async Task Save()
+    {
+        try
+        {
+            _BrandService.Add(ObjBrand);
+            await OnBrandAdded.InvokeAsync();
+            ObjBrand = new();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+
+
+    }
+
+}

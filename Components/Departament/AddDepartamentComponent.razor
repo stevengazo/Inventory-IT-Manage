@@ -1,0 +1,37 @@
+﻿@inject IControllerServices<Departament> _DepartamentService
+
+
+<div class="d-flex flex-column">
+    <EditForm Model="ObjDepartament">
+        <div>
+            <label>
+            </label>
+            <InputText @bind-Value="ObjDepartament.Name"></InputText>
+        </div>
+    </EditForm>
+    <button @onclick="Save"> Agregar</button>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnDepartamentAdded { get; set; }
+
+    Departament ObjDepartament = new();
+
+    private async Task Save()
+    {
+        try
+        {
+            _DepartamentService.Add(ObjDepartament);
+            ObjDepartament = new();
+        }
+        catch (Exception e)
+        {
+
+            throw;
+        }
+
+
+    }
+
+}

@@ -1,0 +1,29 @@
+﻿
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Marca
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Brands)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public List<Brand> Brands { get; set; }
+
+    
+
+}

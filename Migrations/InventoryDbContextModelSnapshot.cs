@@ -47,11 +47,10 @@ namespace InventoryIT.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComputerModelID"), 1L, 1);
 
-                    b.Property<string>("AdquisitionDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("AdquisitionDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("BrandId")
+                    b.Property<int?>("BrandId")
                         .HasColumnType("int");
 
                     b.Property<string>("Cost")
@@ -82,6 +81,10 @@ namespace InventoryIT.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Processor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RAMType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -105,6 +108,23 @@ namespace InventoryIT.Migrations
                     b.ToTable("Computer");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.Departament", b =>
+                {
+                    b.Property<int>("DepartamentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartamentID"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DepartamentID");
+
+                    b.ToTable("Departament");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
@@ -116,6 +136,16 @@ namespace InventoryIT.Migrations
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DepartamentID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Fired")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -124,11 +154,16 @@ namespace InventoryIT.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecondLastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmployeeId");
+
+                    b.HasIndex("DepartamentID");
 
                     b.ToTable("Employee");
                 });
@@ -270,15 +305,22 @@ namespace InventoryIT.Migrations
                 {
                     b.HasOne("InventoryIT.Model.Brand", "Brand")
                         .WithMany("Computers")
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BrandId");
 
                     b.HasOne("InventoryIT.Model.Employee", null)
                         .WithMany("computer_Models")
                         .HasForeignKey("EmployeeId");
 
                     b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.Employee", b =>
+                {
+                    b.HasOne("InventoryIT.Model.Departament", "Departament")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartamentID");
+
+                    b.Navigation("Departament");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.HistoryModel", b =>
@@ -340,6 +382,11 @@ namespace InventoryIT.Migrations
             modelBuilder.Entity("InventoryIT.Model.ComputerModel", b =>
                 {
                     b.Navigation("Histories");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.Departament", b =>
+                {
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.Employee", b =>

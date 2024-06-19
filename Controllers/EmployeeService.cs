@@ -15,7 +15,8 @@ namespace InventoryIT.Controllers
 
         public void Add(Employee entity)
         {
-            throw new NotImplementedException();
+            _InventoryDB.Employee.Add(entity);
+            _InventoryDB.SaveChanges();
         }
 
         public void Delete(Employee entity)
@@ -25,7 +26,7 @@ namespace InventoryIT.Controllers
 
         public List<Employee> GetAll()
         {
-            throw new NotImplementedException();
+            return _InventoryDB.Employee.ToList();
         }
 
         public List<Employee> Search(string value)

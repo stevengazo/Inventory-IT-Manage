@@ -1,7 +1,10 @@
-﻿namespace InventoryIT.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace InventoryIT.Model
 {
     public class PhoneNumber
     {
+        [Key]
         public int PhoneNumberId { get; set; }
         public int Number { get; set; }
         public string Operator { get; set; }

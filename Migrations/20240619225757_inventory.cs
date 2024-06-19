@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InventoryIT.Migrations
 {
-    public partial class inventoryMigration : Migration
+    public partial class inventory : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,19 +23,16 @@ namespace InventoryIT.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employee",
+                name: "Departament",
                 columns: table => new
                 {
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                    DepartamentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SecondLastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employee", x => x.EmployeeId);
+                    table.PrimaryKey("PK_Departament", x => x.DepartamentID);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,6 +79,31 @@ namespace InventoryIT.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Employee",
+                columns: table => new
+                {
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SecondLastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<int>(type: "int", nullable: false),
+                    Fired = table.Column<bool>(type: "bit", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DepartamentID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employee", x => x.EmployeeId);
+                    table.ForeignKey(
+                        name: "FK_Employee_Departament_DepartamentID",
+                        column: x => x.DepartamentID,
+                        principalTable: "Departament",
+                        principalColumn: "DepartamentID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Computer",
                 columns: table => new
                 {
@@ -89,7 +111,7 @@ namespace InventoryIT.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ModelName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdquisitionDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AdquisitionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Cost = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HaveSSD = table.Column<bool>(type: "bit", nullable: false),
                     SizeDisk = table.Column<int>(type: "int", nullable: false),
@@ -97,9 +119,10 @@ namespace InventoryIT.Migrations
                     RAMType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     KeyboardLayout = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Processor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HasNumericKeyboard = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    BrandId = table.Column<int>(type: "int", nullable: false),
+                    BrandId = table.Column<int>(type: "int", nullable: true),
                     EmployeeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -109,8 +132,7 @@ namespace InventoryIT.Migrations
                         name: "FK_Computer_Brand_BrandId",
                         column: x => x.BrandId,
                         principalTable: "Brand",
-                        principalColumn: "BrandId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "BrandId");
                     table.ForeignKey(
                         name: "FK_Computer_Employee_EmployeeId",
                         column: x => x.EmployeeId,
@@ -186,6 +208,11 @@ namespace InventoryIT.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Employee_DepartamentID",
+                table: "Employee",
+                column: "DepartamentID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_History_ComputerModelID",
                 table: "History",
                 column: "ComputerModelID");
@@ -238,6 +265,9 @@ namespace InventoryIT.Migrations
 
             migrationBuilder.DropTable(
                 name: "Brand");
+
+            migrationBuilder.DropTable(
+                name: "Departament");
         }
     }
 }

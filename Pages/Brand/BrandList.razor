@@ -1,0 +1,40 @@
+﻿@page "/brand"
+@inject IControllerServices<Brand> _BrandServices;
+
+
+    <h3>
+        Marcas Ingresadas
+    </h3>
+
+    <div class="d-flex flex-row justify-content-around">
+    <AddBrandComponent OnBrandAdded="UpdateBrandList" />
+
+    <TableBrand Brands="@Brands" />
+    </div>
+
+
+
+
+
+
+
+@code{
+    List<Brand> Brands { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Brands = _BrandServices.GetAll();
+        base.OnInitializedAsync();   
+
+    }
+
+
+    private async Task UpdateBrandList()
+    {
+        await InvokeAsync(() =>
+        {
+            Brands = _BrandServices.GetAll();
+            StateHasChanged();
+        });
+    }
+}

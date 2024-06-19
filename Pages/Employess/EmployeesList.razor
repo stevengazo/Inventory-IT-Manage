@@ -1,6 +1,34 @@
 ﻿@page "/employees"
+@inject IControllerServices<Employee> _EmployeesServices;
 <h3>Lista de Empleados</h3>
 
-@code {
 
+
+<AddDepartamentComponent />
+<AddEmployeeComponent OnEmployeeAdded="UpdateEmployeeList" />
+<TableEmployeeComponent  Employees="@Employees" />
+
+
+
+
+@code {
+    List<Employee> Employees { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Employees = new();
+        base.OnInitializedAsync();
+        Employees = _EmployeesServices.GetAll();
+
+    }
+
+
+    private async Task UpdateEmployeeList()
+    {
+        await InvokeAsync(() =>
+        {
+            Employees = _EmployeesServices.GetAll();
+            StateHasChanged();
+        });
+    }
 }

@@ -27,6 +27,9 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 // Contracts to CRUD DB
 builder.Services.AddScoped<IControllerServices<Brand>, BrandService>();
 builder.Services.AddScoped<IControllerServices<ComputerModel>, ComputerService>();
+builder.Services.AddScoped<IControllerServices<Employee>, EmployeeService>();
+builder.Services.AddScoped<IControllerServices<Departament>, DepartamentService>();
+
 
 builder.Services.AddSingleton<WeatherForecastService>();
 
