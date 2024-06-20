@@ -29,6 +29,11 @@ namespace InventoryIT.Controllers
             return _InventoryDB.Employee.ToList();
         }
 
+        public Employee GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Employee> Search(string value)
         {
             throw new NotImplementedException();

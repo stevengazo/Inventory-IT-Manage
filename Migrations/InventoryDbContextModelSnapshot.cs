@@ -307,11 +307,13 @@ namespace InventoryIT.Migrations
                         .WithMany("Computers")
                         .HasForeignKey("BrandId");
 
-                    b.HasOne("InventoryIT.Model.Employee", null)
+                    b.HasOne("InventoryIT.Model.Employee", "Employee")
                         .WithMany("computer_Models")
                         .HasForeignKey("EmployeeId");
 
                     b.Navigation("Brand");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.Employee", b =>

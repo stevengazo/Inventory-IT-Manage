@@ -23,5 +23,7 @@ namespace InventoryIT.Model
         public int? BrandId { get; set; }
         public Brand? Brand { get; set; }
 
+        public Employee? Employee { get; set; }
+        public int? EmployeeId { get; set; }
     }
 }

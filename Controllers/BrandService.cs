@@ -33,6 +33,11 @@ namespace InventoryIT.Controllers
                 return _inventoryDb.Brand.ToList();
         }
 
+        public Brand GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Brand> Search(string value)
         {
             var data = (

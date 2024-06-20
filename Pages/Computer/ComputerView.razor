@@ -1,0 +1,52 @@
+﻿@page "/computers/{id}"
+
+@inject IControllerServices<ComputerModel> _ComputerService
+
+    <h3>
+        Información de Computadora
+    </h3>
+@if (flag)
+{
+    <DetailsComputerComponent ComputerModel="@Computer" />
+    <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
+}
+else
+{
+    <h4>Error "@id " no es valido</h4>
+}
+
+
+
+@code {
+
+    [Parameter]
+    public string id { get; set; }
+
+    bool flag = true;
+    private ComputerModel Computer = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        flag = int.TryParse(id, out int _id);
+        if (flag)
+        {
+            Computer = _ComputerService.GetById(_id);
+        }
+        else
+        {
+            Computer = new();
+        }
+        base.OnInitializedAsync();   
+    }
+
+    private async Task UpdateComputerList()
+    {
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            flag = int.TryParse(id, out int _id);
+            Computer = _ComputerService.GetById(_id);
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
+}

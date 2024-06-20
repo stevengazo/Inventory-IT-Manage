@@ -1,0 +1,142 @@
+﻿
+
+
+
+<table class="table">
+    <tr>
+        <th>
+            @nameof(ComputerModel.ComputerModelID)
+        </th>
+        <td>
+            @ComputerModel.ComputerModelID
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.Brand)
+        </th>
+        <td>
+            @ComputerModel.Brand.Name
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.SerialNumber)
+        </th>
+        <td>
+            @ComputerModel.SerialNumber
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.ModelName)
+        </th>
+        <td>
+            @ComputerModel.ModelName
+        </td>
+    </tr>
+        <tr>
+        <th>
+            @nameof(ComputerModel.AdquisitionDate)
+        </th>
+        <td>
+            @ComputerModel.AdquisitionDate.ToLongDateString()
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.Cost)
+        </th>
+        <td>
+            $ @ComputerModel.Cost
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.HaveSSD)
+        </th>
+        @if (ComputerModel.HaveSSD)
+        {
+            <td>
+                SSD
+            </td>
+        }
+        else
+        {
+            <td>
+                HDD
+            </td>
+        }
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.SizeDisk)
+        </th>
+        <td>
+            @ComputerModel.SizeDisk GB
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.RAMType)
+        </th>
+        <td>
+            @ComputerModel.RAMType
+        </td>
+    </tr>    <tr>
+        <th>
+            @nameof(ComputerModel.SizeRAM)
+        </th>
+        <td>
+            @ComputerModel.SizeRAM GB
+        </td>
+    </tr>    <tr>
+        <th>
+            @nameof(ComputerModel.Processor)
+        </th>
+        <td>
+            @ComputerModel.Processor
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.HasNumericKeyboard)
+        </th>
+        @if (ComputerModel.HasNumericKeyboard)
+        {
+            <td>
+                Tiene Teclado Numerico
+            </td>
+        }
+        else
+        {
+            <td>
+                No Tiene teclado Numerico
+            </td>
+        }
+    </tr>
+    <tr>
+        <th>
+            @nameof(ComputerModel.Employee)
+        </th>
+        @if (ComputerModel.Employee !=null)
+        {
+            <td>
+                @ComputerModel.Employee.Name @ComputerModel.Employee.LastName
+            </td>
+        }
+        else
+        {
+            <td>
+                Sin Asignar
+            </td>
+        }
+    </tr>
+</table>
+
+
+
+@code {
+    [Parameter]
+    public ComputerModel ComputerModel { get; set; }
+}

@@ -29,6 +29,11 @@ namespace InventoryIT.Controllers
             return _db.Departament.ToList();
         }
 
+        public Departament GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Departament> Search(string value)
         {
             throw new NotImplementedException();

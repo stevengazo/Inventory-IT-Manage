@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240619225757_inventory")]
+    [Migration("20240620222435_inventory")]
     partial class inventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -309,11 +309,13 @@ namespace InventoryIT.Migrations
                         .WithMany("Computers")
                         .HasForeignKey("BrandId");
 
-                    b.HasOne("InventoryIT.Model.Employee", null)
+                    b.HasOne("InventoryIT.Model.Employee", "Employee")
                         .WithMany("computer_Models")
                         .HasForeignKey("EmployeeId");
 
                     b.Navigation("Brand");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.Employee", b =>

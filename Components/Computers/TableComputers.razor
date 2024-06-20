@@ -34,6 +34,9 @@
                 <td>
                     Teclado
                 </td>
+                <td>
+                    Encargado
+                </td>
                 <td colspan="2">
                     Acciones
                 </td>
@@ -80,8 +83,16 @@
                         <td>
                             @C.KeyboardLayout
                         </td>
+                        @if (C.Employee != null)
+                        {
+                            <td>@C.Employee.Name @C.Employee.LastName</td>
+                        }
+                        else
+                        {
+                            <td>Sin Asignar</td>
+                        }
                         <td>
-                            <a href="#" class="btn btn-sm btn-outline-info">Ver</a>
+                            <a href="/computers/@C.ComputerModelID" class="btn btn-sm btn-outline-info">Ver</a>
                         </td>
                         <td>
                             <a href="#" class="btn btn-sm btn-outline-success">Editar</a>

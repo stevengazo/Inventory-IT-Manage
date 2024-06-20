@@ -27,8 +27,16 @@ namespace InventoryIT.Controllers
 
         public List<ComputerModel> GetAll()
         {
-            return _inventoryDb.Computer.ToList();
+            return _inventoryDb.Computer.Include(i=>i.Employee).ToList();
         }
+        public ComputerModel GetById(int id) 
+        {
+            return _inventoryDb.Computer
+                .Include(i => i.Employee)
+                .Include(i=>i.Brand)
+                .FirstOrDefault(i => i.ComputerModelID == id);
+        }
+
 
         public List<ComputerModel> Search(string value)
         {
@@ -37,7 +45,13 @@ namespace InventoryIT.Controllers
 
         public void Update(ComputerModel entity)
         {
-            throw new NotImplementedException();
+            entity.Employee = entity.EmployeeId == 0 ? null : entity.Employee;
+            entity.EmployeeId = entity.EmployeeId == 0 ? null : entity.EmployeeId;
+
+            _inventoryDb.Computer.Update(entity);
+            _inventoryDb.SaveChanges();
         }
+
+
     }
 }

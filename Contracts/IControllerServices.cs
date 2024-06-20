@@ -12,6 +12,7 @@ namespace InventoryIT.Contracts
         void Delete(T entity);   
 
         List<T> GetAll();
+        T GetById(int id);
 
         List<T> Search(string value);
 
