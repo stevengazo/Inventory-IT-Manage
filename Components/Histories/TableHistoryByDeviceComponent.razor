@@ -1,0 +1,47 @@
+﻿
+
+<div class="mx-3 my-2 shadow-sm p-2">
+    <h4>Historial del Dispositivo</h4>
+
+    @if (HiddeTable)
+    {
+        <button @onclick="()=>HiddeTable=false" class="btn btn-outline-primary">Ver Historial</button>
+    }
+    else
+    {
+        <button @onclick="()=>HiddeTable=true" class="btn btn-outline-primary my-2">Ocultar Historial</button>
+        <table class="table ">
+            <thead>
+                <tr>
+                    <th>
+                        Fecha
+                    </th>
+                    <th>
+                        Comentario
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (HistoryModel item in Histories)
+                {
+                    <tr>
+                        <td>
+                            @item.CreationDate.ToLongDateString()
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<HistoryModel> Histories { get; set; }
+    bool HiddeTable = true;
+
+}

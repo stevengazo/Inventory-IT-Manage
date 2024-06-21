@@ -15,6 +15,7 @@ namespace InventoryIT.Model
         public DateTime Birthday { get; set; }
         public ICollection<Phone_Number_User_Model>? phone_Number_User_Models {  get; set; } 
         public ICollection<ComputerModel>? computer_Models { get; set;}
+        public ICollection<PhoneExtension>? phoneExtensions { get; set; }
 
         public Departament? Departament { get; set; }
         public int? DepartamentID { get; set; }

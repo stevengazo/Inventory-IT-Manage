@@ -29,6 +29,11 @@ builder.Services.AddScoped<IControllerServices<Brand>, BrandService>();
 builder.Services.AddScoped<IControllerServices<ComputerModel>, ComputerService>();
 builder.Services.AddScoped<IControllerServices<Employee>, EmployeeService>();
 builder.Services.AddScoped<IControllerServices<Departament>, DepartamentService>();
+builder.Services.AddScoped<IControllerServices<SmartPhoneModel>, SmartPhoneService>();
+builder.Services.AddScoped<IHistoryServices<HistoryModel>, HistoryService>();
+builder.Services.AddScoped<IControllerServices<PeripheralModel>, PeripheralService>();
+builder.Services.AddScoped<IControllerServices<PhoneExtension>, PhoneExtensionService>();
+
 
 
 builder.Services.AddSingleton<WeatherForecastService>();

@@ -1,0 +1,92 @@
+﻿<h3>TableSmartPhoneComponent</h3>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Phone Number
+            </th>
+      
+            <th>
+                Fecha de Adquisicion
+            </th>
+   
+            <th>
+                Marca
+            </th>
+      
+            <th>
+                Modelo
+            </th>
+        
+            <th>
+                N Serie
+            </th>
+       
+            <th>
+                Costo
+            </th>
+     
+            <th>
+                Estado
+            </th>
+     
+            <th>
+                Responsable
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(SmartPhoneModel i in SmartPhones)
+        {
+            <tr>
+                <td>
+                    @i.PhoneNumber
+                </td>
+                <td>
+                    @i.AdquisitionDate.ToLongDateString()
+                </td>
+                <td>
+                    @i.Brand.Name
+                </td>
+                <td>
+                    @i.PhoneModel
+                </td>
+                <td>
+                    @i.PhoneSerial
+                </td>
+                <td>
+                    @i.Cost
+                </td>
+                @if (i.isActive)
+                {
+                    <td>
+                        Telefono Activo
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        Inactivo
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public List<SmartPhoneModel> SmartPhones { get; set; }
+
+    
+ 
+}

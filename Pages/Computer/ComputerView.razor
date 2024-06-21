@@ -1,6 +1,7 @@
 ﻿@page "/computers/{id}"
 
 @inject IControllerServices<ComputerModel> _ComputerService
+@inject IHistoryServices<HistoryModel> _HistoryService
 
     <h3>
         Información de Computadora
@@ -9,6 +10,7 @@
 {
     <DetailsComputerComponent ComputerModel="@Computer" />
     <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
+    <TableHistoryByDeviceComponent Histories="@Histories" />
 }
 else
 {
@@ -23,19 +25,16 @@ else
     public string id { get; set; }
 
     bool flag = true;
-    private ComputerModel Computer = new();
+    List<HistoryModel> Histories = new();
+    private ComputerModel Computer { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         flag = int.TryParse(id, out int _id);
-        if (flag)
-        {
-            Computer = _ComputerService.GetById(_id);
-        }
-        else
-        {
-            Computer = new();
-        }
+
+        Computer = (flag) ? _ComputerService.GetById(_id) : new();
+        Histories = (flag) ? _HistoryService.HistoriesOfComputer(_id) : new();
+        
         base.OnInitializedAsync();   
     }
 
@@ -46,6 +45,7 @@ else
         {
             flag = int.TryParse(id, out int _id);
             Computer = _ComputerService.GetById(_id);
+            Histories = _HistoryService.HistoriesOfComputer(_id);
             StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
         });
     }

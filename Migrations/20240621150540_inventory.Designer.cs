@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240620222435_inventory")]
+    [Migration("20240621150540_inventory")]
     partial class inventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -200,6 +200,53 @@ namespace InventoryIT.Migrations
                     b.ToTable("History");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.PeripheralModel", b =>
+                {
+                    b.Property<int>("PeripheralModelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PeripheralModelId"), 1L, 1);
+
+                    b.Property<DateTime>("AdquisitionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SerialNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PeripheralModelId");
+
+                    b.HasIndex("BrandId");
+
+                    b.ToTable("Peripheral");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.Phone_Number_User_Model", b =>
                 {
                     b.Property<int>("Id")
@@ -226,6 +273,43 @@ namespace InventoryIT.Migrations
                     b.HasIndex("SmartPhoneModelId");
 
                     b.ToTable("Phone_Number_User");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.PhoneExtension", b =>
+                {
+                    b.Property<int>("PhoneExtensionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhoneExtensionId"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Extension")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneExtensionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PhoneNumberPBX")
+                        .HasColumnType("int");
+
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PhoneExtensionId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("PhoneExtension");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.PhoneNumber", b =>
@@ -342,6 +426,17 @@ namespace InventoryIT.Migrations
                     b.Navigation("SmartPhoneModel");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.PeripheralModel", b =>
+                {
+                    b.HasOne("InventoryIT.Model.Brand", "Brand")
+                        .WithMany("Peripherals")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.Phone_Number_User_Model", b =>
                 {
                     b.HasOne("InventoryIT.Model.Employee", "Employee")
@@ -365,6 +460,15 @@ namespace InventoryIT.Migrations
                     b.Navigation("PhoneNumberModel");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.PhoneExtension", b =>
+                {
+                    b.HasOne("InventoryIT.Model.Employee", "Employee")
+                        .WithMany("phoneExtensions")
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.SmartPhoneModel", b =>
                 {
                     b.HasOne("InventoryIT.Model.Brand", "Brand")
@@ -379,6 +483,8 @@ namespace InventoryIT.Migrations
             modelBuilder.Entity("InventoryIT.Model.Brand", b =>
                 {
                     b.Navigation("Computers");
+
+                    b.Navigation("Peripherals");
 
                     b.Navigation("SmartPhones");
                 });
@@ -396,6 +502,8 @@ namespace InventoryIT.Migrations
             modelBuilder.Entity("InventoryIT.Model.Employee", b =>
                 {
                     b.Navigation("computer_Models");
+
+                    b.Navigation("phoneExtensions");
 
                     b.Navigation("phone_Number_User_Models");
                 });

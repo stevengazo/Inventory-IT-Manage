@@ -1,26 +1,26 @@
-﻿<h3>AssignComputerComponent</h3>
-
-
-@inject IControllerServices<ComputerModel> _ComputerService
+﻿@inject IControllerServices<ComputerModel> _ComputerService
 @inject IControllerServices<Employee> _EmployeeService
+@inject IHistoryServices<HistoryModel> _HistoryService
 
+<div class="shadow-sm my-2 p-2">
+    <h3>Asignación de Computadora</h3>
 
-    <div class="d-flex flex-row">
-    <EditForm Model="@ComputerModel" class="">
-        <InputSelect @bind-Value="ComputerModel.EmployeeId" class="form-control">
-            <option value="0">Sin Asignar</option>
-            @foreach (Employee item in Employees)
-            {
-                <option value="@item.EmployeeId">@item.Name @item.LastName</option>
-            }
-        </InputSelect>
-    </EditForm>
-    <button class="btn btn-outline-info" @onclick="Update">
-        Asignar
-    </button>
-
-
+    <div class="d-flex flex-row  ">
+        <EditForm Model="@ComputerModel" class="">
+            <InputSelect @bind-Value="ComputerModel.EmployeeId" class="form-control">
+                <option value="0">Sin Asignar</option>
+                @foreach (Employee item in Employees)
+                {
+                    <option value="@item.EmployeeId">@item.Name @item.LastName</option>
+                }
+            </InputSelect>
+        </EditForm>
+        <button class="btn btn-outline-info mx-2" @onclick="Update">
+            Asignar
+        </button>
     </div>
+</div>
+
 
 
 
@@ -30,10 +30,20 @@
     public EventCallback OnComputerUpdated { get; set; }
     [Parameter]
     public ComputerModel ComputerModel { get; set; }
+    private string LastEmployee { get; set; }
 
     List<Employee> Employees = new();
     protected override async Task OnInitializedAsync()
     {
+        if (ComputerModel.EmployeeId != null)
+        {
+            LastEmployee = $"{ComputerModel.Employee.Name} {ComputerModel.Employee.LastName} ";
+        }
+        else
+        {
+            LastEmployee = "";
+        }
+
         base.OnInitializedAsync();
         Employees = _EmployeeService.GetAll();
     }
@@ -42,14 +52,40 @@
     {
         try
         {
+
+
             _ComputerService.Update(ComputerModel);
+
+            HistoryModel newHistory = new();
+            var employee = Employees.FirstOrDefault(i => i.EmployeeId == ComputerModel.EmployeeId);
+            if (string.IsNullOrEmpty(LastEmployee) && ComputerModel.EmployeeId == null)
+            {
+                // Primera asignacion
+                newHistory.Description = $" La computadora '{ComputerModel.SerialNumber}', Modelo '{ComputerModel.ModelName}'. Se ha asignado a {employee.Name} {employee.LastName} ";
+            }
+            else if (ComputerModel.EmployeeId == null && !string.IsNullOrEmpty(LastEmployee))
+            {
+                newHistory.Description = $@" La computadora '{ComputerModel.SerialNumber}', Modelo '{ComputerModel.ModelName}'. Se la eliminado la asignacion de {LastEmployee}. Equipo disponible.";
+                LastEmployee = string.Empty;
+            }
+            else
+            {
+                // nueva asignacion
+                newHistory.Description = $@" La computadora '{ComputerModel.SerialNumber}', Modelo '{ComputerModel.ModelName}', ha cambiado de asignación a {employee.Name} {employee.LastName} ";
+                LastEmployee = $"{employee.Name} {employee.LastName}";
+            }
+            newHistory.CreationDate = DateTime.Today;
+            newHistory.ComputerModelID = ComputerModel.ComputerModelID;
+            _HistoryService.Add(newHistory);
+
+
             OnComputerUpdated.InvokeAsync();
         }
         catch (Exception e)
         {
-            
+
             throw;
         }
-        
+
     }
 }

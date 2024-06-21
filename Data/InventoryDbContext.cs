@@ -12,9 +12,9 @@ namespace InventoryIT.Data
         public DbSet<HistoryModel> History { get; set; }
         public DbSet<Phone_Number_User_Model> Phone_Number_User { get; set; }
         public DbSet<PhoneNumber> PhoneNumber { get; set; }
-        
+        public DbSet<PeripheralModel> Peripheral { get; set; }
         public DbSet<SmartPhoneModel> SmartPhone { get; set; }
-
+        public DbSet<PhoneExtension> PhoneExtension { get; set; }
         public InventoryDbContext(DbContextOptions<InventoryDbContext> options) : base(options) 
         {
            

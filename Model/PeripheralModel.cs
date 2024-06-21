@@ -12,7 +12,11 @@ namespace InventoryIT.Model
         public string Model {  get; set; }         
         public DateTime AdquisitionDate { get; set; }
         public float Cost { get; set; }
+        public bool IsActive { get; set; }
+        public string Description { get; set; }
 
+        public int BrandId { get; set; }
+        public Brand Brand { get; set; }
 
     }
 }

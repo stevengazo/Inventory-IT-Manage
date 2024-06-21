@@ -1,0 +1,26 @@
+﻿@page "/smartphones"
+@inject IControllerServices<SmartPhoneModel> _SmarthPhoneService;
+<h3>Telefonos Celulares</h3>
+
+<AddSmartPhoneComponent OnSmartPhoneAdded="@UpdateComputerList" />
+<TableSmartPhoneComponent SmartPhones="@SmartPhones"/>
+
+@code {
+
+    private List<SmartPhoneModel> SmartPhones = new(); 
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        SmartPhones = _SmarthPhoneService.GetAll();
+    }
+    private async Task UpdateComputerList()
+    {
+        await InvokeAsync(() =>
+        {
+            SmartPhones = _SmarthPhoneService.GetAll();
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
+}
