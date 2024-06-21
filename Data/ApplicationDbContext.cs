@@ -9,5 +9,6 @@ namespace InventoryIT.Data
             : base(options)
         {
         }
+        
     }
 }

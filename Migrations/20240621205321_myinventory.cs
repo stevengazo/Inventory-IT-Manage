@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InventoryIT.Migrations
 {
-    public partial class inventory : Migration
+    public partial class myinventory : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,9 +42,13 @@ namespace InventoryIT.Migrations
                     PhoneNumberId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Operator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<int>(type: "int", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cost = table.Column<float>(type: "real", nullable: false),
+                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,6 +261,38 @@ namespace InventoryIT.Migrations
                         column: x => x.SmartPhoneModelId,
                         principalTable: "SmartPhone",
                         principalColumn: "SmartPhoneModelId");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Brand",
+                columns: new[] { "BrandId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Dell" },
+                    { 2, "Lenovo" },
+                    { 3, "HP" },
+                    { 4, "Epson" },
+                    { 5, "Ubiquiti" },
+                    { 7, "Cisco" },
+                    { 8, "Samsung" },
+                    { 9, "Xiaomi" },
+                    { 10, "Apple" },
+                    { 11, "Huawei" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Departament",
+                columns: new[] { "DepartamentID", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Gerencia" },
+                    { 2, "Administracion" },
+                    { 3, "Financiero" },
+                    { 4, "Proyectos" },
+                    { 5, "Operativo" },
+                    { 6, "Arquitectura" },
+                    { 7, "Ventas" },
+                    { 8, "IT" }
                 });
 
             migrationBuilder.CreateIndex(

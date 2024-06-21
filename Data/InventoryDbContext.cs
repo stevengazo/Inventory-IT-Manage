@@ -19,5 +19,109 @@ namespace InventoryIT.Data
         {
            
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            List<Departament> departaments = new List<Departament>()
+            {
+                new()
+                {
+                    DepartamentID = 1,
+                    Name= "Gerencia",
+                },
+                new()
+                {
+                    DepartamentID = 2,
+                    Name= "Administracion",
+                },
+                new()
+                {
+                    DepartamentID = 3,
+                    Name= "Financiero",
+                },
+                new()
+                {
+                    DepartamentID = 4,
+                    Name= "Proyectos",
+                },
+                new()
+                {
+                    DepartamentID = 5,
+                    Name= "Operativo",
+                },
+                new()
+                {
+                    DepartamentID = 6,
+                    Name= "Arquitectura",
+                },
+                new()
+                {
+                    DepartamentID = 7,
+                    Name= "Ventas",
+                },
+                new()
+                {
+                    DepartamentID = 8,
+                    Name= "IT",
+                }
+            };
+            modelBuilder.Entity<Departament>().HasData(departaments);
+            List<Brand> brands = new List<Brand>()
+            {
+                new()
+                {
+                    BrandId = 1,
+                    Name="Dell"
+                },
+                 new()
+                {
+                    BrandId = 2,
+                    Name="Lenovo"
+                },
+                  new()
+                {
+                    BrandId = 3,
+                    Name="HP"
+                },
+                   new()
+                {
+                    BrandId = 4,
+                    Name="Epson"
+                },
+                    new()
+                {
+                    BrandId = 5,
+                    Name="Ubiquiti"
+                },
+                     new()
+                {
+                    BrandId = 7,
+                    Name="Cisco"
+                },
+                      new()
+                {
+                    BrandId = 8,
+                    Name="Samsung"
+                },
+                       new()
+                {
+                    BrandId = 9,
+                    Name="Xiaomi"
+                },
+                        new()
+                {
+                    BrandId = 10,
+                    Name="Apple"
+                },
+                         new()
+                {
+                    BrandId = 11,
+                    Name="Huawei"
+                },
+            };
+            modelBuilder.Entity<Brand>().HasData(brands);
+
+        }
     }
 }

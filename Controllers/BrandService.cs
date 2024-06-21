@@ -30,7 +30,7 @@ namespace InventoryIT.Controllers
 
         public List<Brand> GetAll()
         {
-                return _inventoryDb.Brand.ToList();
+                return _inventoryDb.Brand.OrderBy(i=>i.Name).ToList();
         }
 
         public Brand GetById(int id)

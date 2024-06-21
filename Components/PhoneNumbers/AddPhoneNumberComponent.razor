@@ -1,0 +1,106 @@
+﻿@inject IControllerServices<PhoneNumber> _PhoneNumberService;
+
+
+<div class="border m-2 p-3 rounded rounded-1 shadow">
+    @if (HideForm)
+    {
+        <button @onclick="()=>HideForm=false" class="btn btn-outline-success">
+            Nuevo Registro
+        </button>
+    }
+    else
+    {
+        <EditForm Model="ObjPhoneNumber">
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    Numero Telefono
+                </label>
+                <InputNumber @bind-Value="ObjPhoneNumber.Number" class="form-control form-control-sm w-75"></InputNumber>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    @nameof(ObjPhoneNumber.Operator)
+                </label>
+                <InputText @bind-Value="ObjPhoneNumber.Operator" class="form-control form-control-sm w-75"></InputText>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    @nameof(ObjPhoneNumber.Type)
+                </label>
+                <InputSelect @bind-Value="ObjPhoneNumber.Type" class="form-control form-control-sm w-75">
+                    <option value="Prepago">Prepago</option>
+                    <option value="Postpago">Postpago</option>
+                </InputSelect>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    @nameof(ObjPhoneNumber.Description)
+                </label>
+                <InputTextArea @bind-Value="ObjPhoneNumber.Description" class="form-control form-control-sm w-75"></InputTextArea>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    @nameof(ObjPhoneNumber.Cost)
+                </label>
+                <InputNumber @bind-Value="ObjPhoneNumber.Cost" class="form-control form-control-sm w-75"></InputNumber>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    @nameof(ObjPhoneNumber.StartDate)
+                </label>
+                <InputDate @bind-Value="ObjPhoneNumber.StartDate" class="form-control form-control-sm w-75"></InputDate>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    @nameof(ObjPhoneNumber.ExpireDate)
+                </label>
+                <InputDate @bind-Value="ObjPhoneNumber.ExpireDate" class="form-control form-control-sm w-75"></InputDate>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                <label>
+                    @nameof(ObjPhoneNumber.IsActive)
+                </label>
+                <InputCheckbox @bind-Value="ObjPhoneNumber.IsActive" class="w-100"></InputCheckbox>
+            </div>
+        </EditForm>
+        <button @onclick="Save" class="btn btn-outline-info">
+            Agregar
+        </button>
+        <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
+            Cancelar
+        </button>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public EventCallback OnPhoneNumberAdded { get; set; }
+
+    PhoneNumber ObjPhoneNumber = new();
+    bool HideForm = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ObjPhoneNumber.ExpireDate = DateTime.Now;
+        base.OnInitializedAsync();
+
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            _PhoneNumberService.Add(ObjPhoneNumber);
+            // Dispara el evento para indicar que se agregó una nueva computadora
+            await OnPhoneNumberAdded.InvokeAsync();
+            ObjPhoneNumber = new();
+            HideForm = true;
+        }
+        catch (Exception e)
+        {
+
+            throw e;
+        }
+    }
+}

@@ -1,0 +1,51 @@
+﻿<h3>Lista de Telefonos y Lineas Asignadas</h3>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Numero Telefonico
+            </th>
+            <th>
+                Modelo
+            </th>
+            <th>
+                Persona
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (phone_Number_User_Models != null)
+        {
+            foreach (var item in phone_Number_User_Models)
+            {
+                <tr>
+                    <td>
+                        @item.PhoneNumber.Number
+                    </td>
+                    <td>
+                        @item.PhoneNumberModel.PhoneModel
+                    </td>
+                    <td>
+                        @item.Employee.Name @item.Employee.LastName
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public List<Phone_Number_User_Model> phone_Number_User_Models { get; set; }
+}

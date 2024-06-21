@@ -1,0 +1,82 @@
+﻿
+
+
+
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Número
+            </th>
+            <th>
+                Operador
+            </th>
+            <th>
+                Tipo
+            </th>
+            <th>
+                Costo
+            </th>
+            <th>
+                Fecha Vencimiento
+            </th>
+            <th>
+                Estado
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (PhoneNumbers != null)
+        {
+            foreach (PhoneNumber i in PhoneNumbers)
+            {
+                <tr>
+                    <td>
+                        @i.Number
+                    </td>
+                    <td>
+                        @i.Operator
+                    </td>
+                    <td>
+                        @i.Type
+                    </td>
+                    <td>
+                        @i.Cost
+                    </td>
+                    <td>
+                        @i.ExpireDate.ToLongDateString()
+                    </td>
+                    @{
+                        if(i.IsActive)
+                {
+                            <td>
+                                Linea activa
+                            </td>
+                        }else
+                        {
+                            <td>
+                                Linea Inactiva
+                            </td>
+                        }
+                    }
+                    <td>
+                        <a href="#" class="btn btn-outline-info" >Editar</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    [Parameter]
+    public List<PhoneNumber> PhoneNumbers { get; set; }
+}

@@ -11,16 +11,16 @@
                 Nombre
             </th>
             <th>
-                Extension
-            </th>
-            <th>
-                Telefono
+                PBX
             </th>
             <th>
                 Usuario
             </th>
             <th>
                 Contrasena
+            </th>
+            <th>
+                Extension
             </th>
             <th>
                 Empleado
@@ -40,9 +40,6 @@
                         @item.PhoneExtensionName
                     </td>
                     <td>
-                        @item.Extension
-                    </td>
-                    <td>
                         @item.PhoneNumberPBX
                     </td>
                     <td>
@@ -50,6 +47,9 @@
                     </td>
                     <td>
                         @item.Password
+                    </td>
+                    <td>
+                        @item.Extension
                     </td>
                     @if (item.Employee != null && !item.Employee.Fired)
                     {

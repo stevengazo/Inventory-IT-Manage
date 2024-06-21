@@ -33,7 +33,8 @@ builder.Services.AddScoped<IControllerServices<SmartPhoneModel>, SmartPhoneServi
 builder.Services.AddScoped<IHistoryServices<HistoryModel>, HistoryService>();
 builder.Services.AddScoped<IControllerServices<PeripheralModel>, PeripheralService>();
 builder.Services.AddScoped<IControllerServices<PhoneExtension>, PhoneExtensionService>();
-
+builder.Services.AddScoped<IControllerServices<PhoneNumber>, PhoneNumbersService>();
+builder.Services.AddScoped<IControllerServices<Phone_Number_User_Model>, Phone_Number_UserService>();
 
 
 builder.Services.AddSingleton<WeatherForecastService>();

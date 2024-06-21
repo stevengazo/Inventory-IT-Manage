@@ -1,0 +1,47 @@
+﻿@page "/phones-numbers"
+
+
+@inject IControllerServices<PhoneNumber> _PhoneNumberService;
+
+<h3>Computadoras</h3>
+
+
+
+<AddPhoneNumberComponent OnPhoneNumberAdded="UpdateList" />
+
+<TablePhoneNumbersComponent PhoneNumbers="@Phones" />
+
+
+
+@code {
+    List<PhoneNumber> Phones { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Phones = new();
+        base.OnInitializedAsync();
+
+
+        // Get the computers in the db
+        Phones = _PhoneNumberService.GetAll();
+
+    }
+
+    private async Task UpdateList()
+    {
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            Phones = _PhoneNumberService.GetAll();
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
+
+}
+
+
+
+
+
+
+

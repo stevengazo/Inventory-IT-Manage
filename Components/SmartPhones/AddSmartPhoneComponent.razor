@@ -11,63 +11,62 @@
     }
     else
     {
-        <EditForm Model="ObjSmartPhone">
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+        <EditForm Model="ObjSmartPhone" class="d-flex flex-column gap-1">
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Numero Telefono
                 </label>
-                <InputText @bind-Value="ObjSmartPhone.PhoneNumber" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjSmartPhone.PhoneNumber" class="form-text w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Fecha Adquisición
                 </label>
-                <InputDate @bind-Value="ObjSmartPhone.AdquisitionDate" class="form-control form-control-sm w-75"></InputDate>
+                <InputDate @bind-Value="ObjSmartPhone.AdquisitionDate" class="form-control w-75"></InputDate>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Modelo
                 </label>
-                <InputText @bind-Value="ObjSmartPhone.PhoneModel" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjSmartPhone.PhoneModel" class="form-text w-75"></InputText>
             </div>
-
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Numero de Serie
                 </label>
-                <InputText @bind-Value="ObjSmartPhone.PhoneSerial" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjSmartPhone.PhoneSerial" class="form-text w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Costo
                 </label>
-                <InputText @bind-Value="ObjSmartPhone.Cost" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjSmartPhone.Cost" class="form-text w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Descripción
                 </label>
-                <InputTextArea @bind-Value="ObjSmartPhone.Description" class="form-control form-control-sm w-75"></InputTextArea>
+                <InputTextArea @bind-Value="ObjSmartPhone.Description" class="form-text w-75"></InputTextArea>
             </div>
 
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Estado
                 </label>
-                <InputText @bind-Value="ObjSmartPhone.Status" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjSmartPhone.Status" class="form-control w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Activo
                 </label>
-                <InputCheckbox @bind-Value="ObjSmartPhone.isActive" class="form-control form-control-sm w-75"></InputCheckbox>
+                <InputCheckbox @bind-Value="ObjSmartPhone.isActive" class="form-check w-75"></InputCheckbox>
             </div>
 
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjSmartPhone.BrandId)
                 </label>
-                <InputSelect @bind-Value="ObjSmartPhone.BrandId" class=" w-50">
+                <InputSelect @bind-Value="ObjSmartPhone.BrandId" class="form-select w-75">
                     @foreach (Brand item in Brands)
                     {
                         <option value="@item.BrandId"> @item.Name </option>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240621171830_inventory")]
-    partial class inventory
+    [Migration("20240621205321_myinventory")]
+    partial class myinventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,6 +39,58 @@ namespace InventoryIT.Migrations
                     b.HasKey("BrandId");
 
                     b.ToTable("Brand");
+
+                    b.HasData(
+                        new
+                        {
+                            BrandId = 1,
+                            Name = "Dell"
+                        },
+                        new
+                        {
+                            BrandId = 2,
+                            Name = "Lenovo"
+                        },
+                        new
+                        {
+                            BrandId = 3,
+                            Name = "HP"
+                        },
+                        new
+                        {
+                            BrandId = 4,
+                            Name = "Epson"
+                        },
+                        new
+                        {
+                            BrandId = 5,
+                            Name = "Ubiquiti"
+                        },
+                        new
+                        {
+                            BrandId = 7,
+                            Name = "Cisco"
+                        },
+                        new
+                        {
+                            BrandId = 8,
+                            Name = "Samsung"
+                        },
+                        new
+                        {
+                            BrandId = 9,
+                            Name = "Xiaomi"
+                        },
+                        new
+                        {
+                            BrandId = 10,
+                            Name = "Apple"
+                        },
+                        new
+                        {
+                            BrandId = 11,
+                            Name = "Huawei"
+                        });
                 });
 
             modelBuilder.Entity("InventoryIT.Model.ComputerModel", b =>
@@ -125,6 +177,48 @@ namespace InventoryIT.Migrations
                     b.HasKey("DepartamentID");
 
                     b.ToTable("Departament");
+
+                    b.HasData(
+                        new
+                        {
+                            DepartamentID = 1,
+                            Name = "Gerencia"
+                        },
+                        new
+                        {
+                            DepartamentID = 2,
+                            Name = "Administracion"
+                        },
+                        new
+                        {
+                            DepartamentID = 3,
+                            Name = "Financiero"
+                        },
+                        new
+                        {
+                            DepartamentID = 4,
+                            Name = "Proyectos"
+                        },
+                        new
+                        {
+                            DepartamentID = 5,
+                            Name = "Operativo"
+                        },
+                        new
+                        {
+                            DepartamentID = 6,
+                            Name = "Arquitectura"
+                        },
+                        new
+                        {
+                            DepartamentID = 7,
+                            Name = "Ventas"
+                        },
+                        new
+                        {
+                            DepartamentID = 8,
+                            Name = "IT"
+                        });
                 });
 
             modelBuilder.Entity("InventoryIT.Model.Employee", b =>
@@ -330,8 +424,18 @@ namespace InventoryIT.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhoneNumberId"), 1L, 1);
 
-                    b.Property<int>("IsActive")
-                        .HasColumnType("int");
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpireDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
@@ -339,6 +443,9 @@ namespace InventoryIT.Migrations
                     b.Property<string>("Operator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Type")
                         .IsRequired()

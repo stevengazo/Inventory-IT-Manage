@@ -26,7 +26,7 @@ namespace InventoryIT.Controllers
 
         public List<Departament> GetAll()
         {
-            return _db.Departament.ToList();
+            return _db.Departament.OrderBy(i=>i.Name).ToList();
         }
 
         public Departament GetById(int id)
