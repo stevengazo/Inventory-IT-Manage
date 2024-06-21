@@ -1,6 +1,7 @@
 ﻿using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {
@@ -15,7 +16,8 @@ namespace InventoryIT.Controllers
 
         public void Add(PeripheralModel entity)
         {
-            throw new NotImplementedException();
+            _inventoryDb.Peripheral.Add(entity);
+            _inventoryDb.SaveChanges();
         }
 
         public void Delete(PeripheralModel entity)
@@ -25,7 +27,9 @@ namespace InventoryIT.Controllers
 
         public List<PeripheralModel> GetAll()
         {
-            throw new NotImplementedException();
+           return _inventoryDb.Peripheral
+                .Include(i=>i.Brand)
+                .ToList();
         }
 
         public PeripheralModel GetById(int id)

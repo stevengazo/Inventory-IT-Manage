@@ -1,5 +1,4 @@
-﻿<h3>Lista de Telefonos y Lineas Asignadas</h3>
-
+﻿
 
 
 <table class="table">
@@ -9,10 +8,19 @@
                 Numero Telefonico
             </th>
             <th>
+                Marca
+            </th>
+            <th>
                 Modelo
             </th>
             <th>
-                Persona
+                Serie
+            </th>
+            <th>
+                Encargado
+            </th>
+            <th colspan="2">
+                Acciones
             </th>
         </tr>
     </thead>
@@ -26,10 +34,24 @@
                         @item.PhoneNumber.Number
                     </td>
                     <td>
+                        @item.PhoneNumberModel.Brand.Name
+                    </td>
+                    <td>
                         @item.PhoneNumberModel.PhoneModel
                     </td>
                     <td>
+                        @item.PhoneNumberModel.PhoneSerial
+                    </td>
+                    <td>
                         @item.Employee.Name @item.Employee.LastName
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-outline-info">
+                            Editar
+                        </a>
+                        <a href="#" class="btn btn-outline-danger">
+                            Eliminar
+                        </a>
                     </td>
                 </tr>
             }

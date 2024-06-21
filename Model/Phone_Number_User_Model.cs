@@ -8,6 +8,7 @@ namespace InventoryIT.Model
         [Key]
         public int Id { get; set; } 
         public int PhoneNumberId { get; set; }
+        public DateTime CreationDate { get; set; }
         public PhoneNumber ?PhoneNumber { get; set; }
         public int? SmartPhoneModelId { get; set; }
         public SmartPhoneModel? PhoneNumberModel { get; set; }

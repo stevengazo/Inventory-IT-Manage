@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240621205321_myinventory")]
+    [Migration("20240621215305_myinventory")]
     partial class myinventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -358,6 +358,9 @@ namespace InventoryIT.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("int");

@@ -1,12 +1,35 @@
 ﻿@page "/phone-number-user"
-
+@inject IControllerServices<Phone_Number_User_Model> _Phone_Number_UserService;
 
 <h3>
     Lista de Asignaciones de Celulares y Lineas Telefonicas
 </h3>
 
+<AddPhone_Number_UserComponent eventCallback="UpdateList" />
+<TablePhone_Number_UserComponent phone_Number_User_Models="@phone_Numbers" />
 
 
 
+@code{
+
+    List<Phone_Number_User_Model> phone_Numbers { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        phone_Numbers = _Phone_Number_UserService.GetAll();
+        base.OnInitializedAsync();   
+    }
+
+    private async Task UpdateList()
+    {
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            phone_Numbers = _Phone_Number_UserService.GetAll();
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
+
+}
 
 

@@ -31,6 +31,7 @@ namespace InventoryIT.Controllers
                 .Include(i=>i.PhoneNumber)
                 .Include(i => i.Employee)
                 .Include(i => i.PhoneNumberModel)
+                .ThenInclude(PNM=>PNM.Brand)
                 .ToList();
         }
 

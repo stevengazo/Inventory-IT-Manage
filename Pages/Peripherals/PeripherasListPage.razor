@@ -1,0 +1,38 @@
+﻿@page "/peripherals"
+
+@inject IControllerServices<PeripheralModel> _PeripheralsService;
+
+
+
+    <AddPeripheralComponenet OnPeripheralAdded="@UpdateList"/>
+
+
+    <TablePeripheralComponent Peripherals="@peripherals" />
+
+
+
+@code{
+    List<PeripheralModel> peripherals { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        peripherals = _PeripheralsService.GetAll();
+    }
+    private async Task UpdateList()
+    {
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            peripherals = _PeripheralsService.GetAll();
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
+}
+
+
+
+
+
+
+

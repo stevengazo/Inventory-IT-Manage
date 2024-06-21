@@ -1,0 +1,125 @@
+﻿@inject IControllerServices<PeripheralModel> _PeripheralsService;
+@inject IControllerServices<Brand> _BrandService;
+
+
+<div class="border m-2 p-3 rounded rounded-1 shadow">
+    @if (HideForm)
+    {
+        <button @onclick="()=>HideForm=false" class="btn btn-outline-success">
+            Nuevo Registro
+        </button>
+    }
+    else
+    {
+        <EditForm Model="ObjPeripheral" class="d-flex flex-column gap-1">
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Nombre
+                </label>
+                <InputText @bind-Value="ObjPeripheral.Name" class="form-text w-75"></InputText>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Tipo
+                </label>
+                <InputDate @bind-Value="ObjPeripheral.AdquisitionDate" class="form-control w-75"></InputDate>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Modelo
+                </label>
+                <InputText @bind-Value="ObjPeripheral.Type" class="form-text w-75"></InputText>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Numero de Serie
+                </label>
+                <InputText @bind-Value="ObjPeripheral.SerialNumber" class="form-text w-75"></InputText>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Modelo
+                </label>
+                <InputText @bind-Value="ObjPeripheral.Model" class="form-text w-75"></InputText>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Costo
+                </label>
+                <InputNumber @bind-Value="ObjPeripheral.Cost" class="form-control w-75"></InputNumber>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Modelo
+                </label>
+                <InputText @bind-Value="ObjPeripheral.Model" class="form-text w-75"></InputText>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Descripción
+                </label>
+                <InputTextArea @bind-Value="ObjPeripheral.Description" class="form-text w-75"></InputTextArea>
+            </div>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    Activo
+                </label>
+                <InputCheckbox @bind-Value="ObjPeripheral.IsActive" class="form-check w-75"></InputCheckbox>
+            </div>
+
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
+                    @nameof(ObjPeripheral.BrandId)
+                </label>
+                <InputSelect @bind-Value="ObjPeripheral.BrandId" class="form-select w-75">
+                    @foreach (Brand item in Brands)
+                    {
+                        <option value="@item.BrandId"> @item.Name </option>
+                    }
+                </InputSelect>
+            </div>
+        </EditForm>
+        <button @onclick="Save" class="btn btn-outline-info">
+            Agregar
+        </button>
+        <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
+            Cancelar
+        </button>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public EventCallback OnPeripheralAdded { get; set; }
+
+    PeripheralModel ObjPeripheral = new();
+    bool HideForm = true;
+    List<Brand> Brands = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ObjPeripheral.AdquisitionDate = DateTime.Now;
+        Brands = _BrandService.GetAll();
+        base.OnInitializedAsync();
+
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            ObjPeripheral.BrandId = 1;
+            _PeripheralsService.Add(ObjPeripheral);
+            // Dispara el evento para indicar que se agregó una nueva computadora
+            await OnPeripheralAdded.InvokeAsync();
+            ObjPeripheral = new();
+            HideForm = true;
+        }
+        catch (Exception e)
+        {
+
+            throw e;
+        }
+    }
+}

@@ -1,0 +1,114 @@
+﻿@inject IControllerServices<Employee> _EmployeeService;
+@inject IControllerServices<SmartPhoneModel> _SmartPhoneService;
+@inject IControllerServices<PhoneNumber> _PhoneNumberService;
+@inject IHistoryServices<HistoryModel> _HistoryService
+@inject IControllerServices<Phone_Number_User_Model> _PNU_Service;
+
+
+
+
+
+<EditForm Model="@ObjPNU">
+    <div class="">
+        <label>
+            Empleado
+        </label>
+        <InputSelect @bind-Value="ObjPNU.EmployeeId" class="form-select">
+            @{
+                if (employees != null)
+                {
+                    foreach (var i in employees)
+                    {
+                        <option value="@i.EmployeeId">@i.Name @i.LastName</option>
+                    }
+                }
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label>
+            Numero
+        </label>
+        <InputSelect @bind-Value="ObjPNU.PhoneNumberId" class="form-select">
+            @{
+                if (lines != null)
+                {
+                    foreach (var i in lines)
+                    {
+                        <option value="@i.PhoneNumberId">@i.Number | @i.Operator @i.Type</option>
+                    }
+                }
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label>
+            Telefono
+        </label>
+        <InputSelect @bind-Value="ObjPNU.SmartPhoneModelId" class="form-select">
+            @{
+                if (smartPhones != null)
+                {
+                    foreach (var i in smartPhones)
+                    {
+                        <option value="@i.SmartPhoneModelId">@i.Brand.Name @i.PhoneModel | @i.PhoneSerial </option>
+                    }
+                }
+            }
+        </InputSelect>
+    </div>
+    <button class="btn btn-outline-info my-2" @onclick="Save">
+        Agregar
+    </button>
+</EditForm>
+
+
+
+
+@code {
+    [Parameter]
+    public EventCallback eventCallback { get; set; }
+    private Phone_Number_User_Model ObjPNU = new();
+
+    List<Employee> employees { get; set; }
+    List<SmartPhoneModel> smartPhones { get; set; }
+    List<PhoneNumber> lines { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        employees = _EmployeeService.GetAll();
+        smartPhones = _SmartPhoneService.GetAll();
+        lines = _PhoneNumberService.GetAll();
+
+        ObjPNU.SmartPhoneModelId = (smartPhones != null) ? smartPhones.FirstOrDefault().SmartPhoneModelId : 0;
+        ObjPNU.PhoneNumberId = (lines != null) ? lines.FirstOrDefault().PhoneNumberId : 0;
+        ObjPNU.EmployeeId = (employees != null) ? employees.FirstOrDefault().EmployeeId : 0;
+
+        base.OnInitializedAsync();
+    }
+    async void Save()
+    {
+
+        ObjPNU.CreationDate = DateTime.Now;
+        _PNU_Service.Add(ObjPNU);
+
+        var employee = employees.FirstOrDefault(i => i.EmployeeId == ObjPNU.EmployeeId);
+        var phone = smartPhones.FirstOrDefault(i => i.SmartPhoneModelId == ObjPNU.SmartPhoneModelId);
+        var line = lines.FirstOrDefault(i => i.PhoneNumberId == ObjPNU.PhoneNumberId);
+        HistoryModel newHistory = new()
+            {
+                Description = $"Se ha asignado el telefono, con la linea {line.Number}, a {employee.Name} {employee.LastName} ",
+                CreationDate = DateTime.Now,
+                SmartPhoneModelId = phone.SmartPhoneModelId
+
+            };
+        _HistoryService.Add(newHistory);
+
+        phone.PhoneNumber = line.Number.ToString();
+        _SmartPhoneService.Update(phone);
+
+
+        await eventCallback.InvokeAsync();
+    }
+}
