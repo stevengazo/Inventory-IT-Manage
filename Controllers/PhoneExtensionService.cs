@@ -1,6 +1,7 @@
 ﻿using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {
@@ -15,7 +16,8 @@ namespace InventoryIT.Controllers
 
         public void Add(PhoneExtension entity)
         {
-            throw new NotImplementedException();
+            _inventoryDbContext.PhoneExtension.Add(entity);
+            _inventoryDbContext.SaveChanges();
         }
 
         public void Delete(PhoneExtension entity)
@@ -25,12 +27,12 @@ namespace InventoryIT.Controllers
 
         public List<PhoneExtension> GetAll()
         {
-            throw new NotImplementedException();
+            return _inventoryDbContext.PhoneExtension.Include(i=>i.Employee).ToList();
         }
 
         public PhoneExtension GetById(int id)
         {
-            throw new NotImplementedException();
+            return _inventoryDbContext.PhoneExtension.Include(i=>i.Employee).FirstOrDefault(i => i.PhoneExtensionId == id);
         }
 
         public List<PhoneExtension> Search(string value)
@@ -40,7 +42,10 @@ namespace InventoryIT.Controllers
 
         public void Update(PhoneExtension entity)
         {
-            throw new NotImplementedException();
+            entity.EmployeeId = (entity.EmployeeId == 0) ? null : entity.EmployeeId;
+            entity.Employee = (entity.EmployeeId == 0) ? null : entity.Employee;
+            _inventoryDbContext.PhoneExtension.Update(entity);
+            _inventoryDbContext.SaveChanges();
         }
     }
 }

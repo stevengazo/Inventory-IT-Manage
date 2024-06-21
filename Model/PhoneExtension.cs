@@ -9,7 +9,7 @@ namespace InventoryIT.Model
         public string? PhoneExtensionName { get; set;}
         public int Extension {  get; set;}
         public string Description { get; set;}
-        public string? User {  get; set;}
+        public string? UserNumber {  get; set;}
         public string? Password { get; set;}
         public int PhoneNumberPBX { get; set;}
         public int? EmployeeId { get; set; }

@@ -1,0 +1,33 @@
+﻿@page "/extension/Edit/{id}"
+
+@inject IControllerServices<PhoneExtension> _ExtensionsService
+
+
+<h3>
+    Edicion de Extension
+</h3>
+<p>
+    Cambie los valores de la extension según lo requiera
+</p>
+<UpdateExtensionComponent ObjExtension="@extension" />
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    public PhoneExtension extension = new();
+
+    int _id = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bool flag = int.TryParse(id, out _id);
+        if (flag)
+        {
+            extension = _ExtensionsService.GetById(_id);
+        }
+        base.OnInitializedAsync();
+    }
+
+}

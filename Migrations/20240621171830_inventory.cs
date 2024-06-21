@@ -52,33 +52,6 @@ namespace InventoryIT.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Peripheral",
-                columns: table => new
-                {
-                    PeripheralModelId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdquisitionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Cost = table.Column<float>(type: "real", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BrandId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Peripheral", x => x.PeripheralModelId);
-                    table.ForeignKey(
-                        name: "FK_Peripheral_Brand_BrandId",
-                        column: x => x.BrandId,
-                        principalTable: "Brand",
-                        principalColumn: "BrandId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SmartPhone",
                 columns: table => new
                 {
@@ -168,6 +141,38 @@ namespace InventoryIT.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Peripheral",
+                columns: table => new
+                {
+                    PeripheralModelId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AdquisitionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Cost = table.Column<float>(type: "real", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BrandId = table.Column<int>(type: "int", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Peripheral", x => x.PeripheralModelId);
+                    table.ForeignKey(
+                        name: "FK_Peripheral_Brand_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brand",
+                        principalColumn: "BrandId");
+                    table.ForeignKey(
+                        name: "FK_Peripheral_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employee",
+                        principalColumn: "EmployeeId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Phone_Number_User",
                 columns: table => new
                 {
@@ -207,7 +212,7 @@ namespace InventoryIT.Migrations
                     PhoneExtensionName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Extension = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    User = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumberPBX = table.Column<int>(type: "int", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: true)
@@ -231,7 +236,8 @@ namespace InventoryIT.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ComputerModelID = table.Column<int>(type: "int", nullable: true),
-                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: true)
+                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: true),
+                    PeripheralModelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -241,6 +247,11 @@ namespace InventoryIT.Migrations
                         column: x => x.ComputerModelID,
                         principalTable: "Computer",
                         principalColumn: "ComputerModelID");
+                    table.ForeignKey(
+                        name: "FK_History_Peripheral_PeripheralModelId",
+                        column: x => x.PeripheralModelId,
+                        principalTable: "Peripheral",
+                        principalColumn: "PeripheralModelId");
                     table.ForeignKey(
                         name: "FK_History_SmartPhone_SmartPhoneModelId",
                         column: x => x.SmartPhoneModelId,
@@ -269,6 +280,11 @@ namespace InventoryIT.Migrations
                 column: "ComputerModelID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_History_PeripheralModelId",
+                table: "History",
+                column: "PeripheralModelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_History_SmartPhoneModelId",
                 table: "History",
                 column: "SmartPhoneModelId");
@@ -277,6 +293,11 @@ namespace InventoryIT.Migrations
                 name: "IX_Peripheral_BrandId",
                 table: "Peripheral",
                 column: "BrandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Peripheral_EmployeeId",
+                table: "Peripheral",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Phone_Number_User_EmployeeId",
@@ -310,9 +331,6 @@ namespace InventoryIT.Migrations
                 name: "History");
 
             migrationBuilder.DropTable(
-                name: "Peripheral");
-
-            migrationBuilder.DropTable(
                 name: "Phone_Number_User");
 
             migrationBuilder.DropTable(
@@ -320,6 +338,9 @@ namespace InventoryIT.Migrations
 
             migrationBuilder.DropTable(
                 name: "Computer");
+
+            migrationBuilder.DropTable(
+                name: "Peripheral");
 
             migrationBuilder.DropTable(
                 name: "PhoneNumber");

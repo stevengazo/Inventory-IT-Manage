@@ -15,8 +15,11 @@ namespace InventoryIT.Model
         public bool IsActive { get; set; }
         public string Description { get; set; }
 
-        public int BrandId { get; set; }
-        public Brand Brand { get; set; }
+        public int? BrandId { get; set; }
+        public Brand? Brand { get; set; }
 
+        public int? EmployeeId { get; set; }
+        public Employee? Employee { get; set; }
+        public ICollection<HistoryModel>? History { get; set; }
     }
 }

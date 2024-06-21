@@ -1,7 +1,25 @@
 ﻿@page "/extensions"
 
-<h3>ExtensionsListPage</h3>
+@inject IControllerServices<PhoneExtension> _ExtensionsService;
+
+
+<h3>
+    Lista de Extensiones
+</h3>
+
+<AddExtensionComponent OnExtensionAdded="UpdatedExtension" />
+<TableExtensionsComponent Extensions="@phoneExtensions"/>
 
 @code {
+    private List<PhoneExtension> phoneExtensions = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        phoneExtensions = _ExtensionsService.GetAll().OrderBy(i => i.Extension).ToList();
+    }
+    private void UpdatedExtension()
+    {
+        phoneExtensions = _ExtensionsService.GetAll().OrderBy(i => i.Extension).ToList();
+    }
 }

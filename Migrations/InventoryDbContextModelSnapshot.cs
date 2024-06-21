@@ -186,12 +186,17 @@ namespace InventoryIT.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PeripheralModelId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("SmartPhoneModelId")
                         .HasColumnType("int");
 
                     b.HasKey("HistoryModelID");
 
                     b.HasIndex("ComputerModelID");
+
+                    b.HasIndex("PeripheralModelId");
 
                     b.HasIndex("SmartPhoneModelId");
 
@@ -209,7 +214,7 @@ namespace InventoryIT.Migrations
                     b.Property<DateTime>("AdquisitionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("BrandId")
+                    b.Property<int?>("BrandId")
                         .HasColumnType("int");
 
                     b.Property<float>("Cost")
@@ -218,6 +223,9 @@ namespace InventoryIT.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -241,6 +249,8 @@ namespace InventoryIT.Migrations
                     b.HasKey("PeripheralModelId");
 
                     b.HasIndex("BrandId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Peripheral");
                 });
@@ -300,7 +310,7 @@ namespace InventoryIT.Migrations
                     b.Property<int>("PhoneNumberPBX")
                         .HasColumnType("int");
 
-                    b.Property<string>("User")
+                    b.Property<string>("UserNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PhoneExtensionId");
@@ -415,11 +425,17 @@ namespace InventoryIT.Migrations
                         .WithMany("Histories")
                         .HasForeignKey("ComputerModelID");
 
+                    b.HasOne("InventoryIT.Model.PeripheralModel", "PeripheralModel")
+                        .WithMany("History")
+                        .HasForeignKey("PeripheralModelId");
+
                     b.HasOne("InventoryIT.Model.SmartPhoneModel", "SmartPhoneModel")
                         .WithMany("History")
                         .HasForeignKey("SmartPhoneModelId");
 
                     b.Navigation("ComputerModel");
+
+                    b.Navigation("PeripheralModel");
 
                     b.Navigation("SmartPhoneModel");
                 });
@@ -428,11 +444,15 @@ namespace InventoryIT.Migrations
                 {
                     b.HasOne("InventoryIT.Model.Brand", "Brand")
                         .WithMany("Peripherals")
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BrandId");
+
+                    b.HasOne("InventoryIT.Model.Employee", "Employee")
+                        .WithMany("peripherals")
+                        .HasForeignKey("EmployeeId");
 
                     b.Navigation("Brand");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.Phone_Number_User_Model", b =>
@@ -501,9 +521,16 @@ namespace InventoryIT.Migrations
                 {
                     b.Navigation("computer_Models");
 
+                    b.Navigation("peripherals");
+
                     b.Navigation("phoneExtensions");
 
                     b.Navigation("phone_Number_User_Models");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.PeripheralModel", b =>
+                {
+                    b.Navigation("History");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.PhoneNumber", b =>

@@ -1,0 +1,25 @@
+﻿@page "/computers/edit/{id}"
+@inject IControllerServices<ComputerModel> _ComputerService
+
+<h3>Edicion de Laptop</h3>
+
+<UpdateComputerComponent ObjComputer="@computerModel"/>
+
+@code {
+    [Parameter]
+    public string id{ get; set; }
+
+    int _id = 0;
+
+    ComputerModel computerModel = new();
+    protected override Task OnInitializedAsync()
+    {
+        bool flag = int.TryParse(id, out _id);
+        if (flag)
+        {
+            computerModel = _ComputerService.GetById(_id);
+        }
+        return base.OnInitializedAsync();
+    }
+
+}

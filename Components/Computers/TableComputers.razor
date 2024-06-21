@@ -83,9 +83,13 @@
                         <td>
                             @C.KeyboardLayout
                         </td>
-                        @if (C.Employee != null)
+                        @if (C.Employee != null && !C.Employee.Fired)
                         {
                             <td>@C.Employee.Name @C.Employee.LastName</td>
+                        }
+                        else if (C.Employee != null && C.Employee.Fired)
+                        {
+                            <td class="text-danger">@C.Employee.Name @C.Employee.LastName (Despedido)</td>
                         }
                         else
                         {
@@ -95,7 +99,7 @@
                             <a href="/computers/@C.ComputerModelID" class="btn btn-sm btn-outline-info">Ver</a>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-outline-success">Editar</a>
+                            <a href="/computers/edit/@C.ComputerModelID" class="btn btn-sm btn-outline-success">Editar</a>
                         </td>
                     </tr>
                 }

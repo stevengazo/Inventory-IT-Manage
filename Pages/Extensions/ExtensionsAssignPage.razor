@@ -1,0 +1,33 @@
+﻿@page "/extension/assign/{id}"
+
+@inject IControllerServices<PhoneExtension> _ExtensionsService
+
+
+<h3>
+    Asignacion de Extension
+</h3>
+<p>
+    Indique el nombre del empleado que tendra asignada la extension en cuestion
+</p>
+<AssignExtensionComponent PhoneExtension="@extension" />
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    public PhoneExtension extension = new();
+
+    int _id = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bool flag = int.TryParse(id, out _id);
+        if (flag)
+        {
+            extension = _ExtensionsService.GetById(_id);
+        }
+        base.OnInitializedAsync();
+    }
+
+}

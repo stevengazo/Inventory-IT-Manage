@@ -1,0 +1,55 @@
+﻿@inject IControllerServices<PhoneExtension> _ExtensionsService
+@inject IControllerServices<Employee> _EmployeeService
+
+@inject NavigationManager Nav;
+
+<div class="shadow-sm my-2 p-2">
+    <h3>Asignación de Extension</h3>
+
+    <div class="d-flex flex-row  ">
+        <EditForm Model="@PhoneExtension" class="">
+            <InputSelect @bind-Value="PhoneExtension.EmployeeId" class="form-control">
+                <option value="0">Sin Asignar</option>
+                @foreach (Employee item in Employees)
+                {
+                    <option value="@item.EmployeeId">@item.Name @item.LastName</option>
+                }
+            </InputSelect>
+        </EditForm>
+        <button class="btn btn-outline-info mx-2" @onclick="Update">
+            Asignar
+        </button>
+    </div>
+</div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public PhoneExtension PhoneExtension { get; set; }
+    
+
+    List<Employee> Employees = new();
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        Employees = _EmployeeService.GetAll();
+    }
+
+    private async Task Update()
+    {
+        try
+        {
+            _ExtensionsService.Update(PhoneExtension);
+            Nav.NavigateTo("extensions");
+        }
+        catch (Exception e)
+        {
+
+            throw;
+        }
+
+    }
+}

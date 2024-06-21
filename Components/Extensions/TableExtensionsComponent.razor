@@ -1,0 +1,90 @@
+﻿<h3> Extensiones Registradas</h3>
+<p>
+    Esta tabla muestra la informacion sobre la asignacion, la extension y el pbx utilizado.
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Extension
+            </th>
+            <th>
+                Telefono
+            </th>
+            <th>
+                Usuario
+            </th>
+            <th>
+                Contrasena
+            </th>
+            <th>
+                Empleado
+            </th>
+            <th colspan="2">
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Extensions != null)
+        {
+            foreach (PhoneExtension item in Extensions)
+            {
+                <tr>
+                    <td>
+                        @item.PhoneExtensionName
+                    </td>
+                    <td>
+                        @item.Extension
+                    </td>
+                    <td>
+                        @item.PhoneNumberPBX
+                    </td>
+                    <td>
+                        @item.UserNumber
+                    </td>
+                    <td>
+                        @item.Password
+                    </td>
+                    @if (item.Employee != null && !item.Employee.Fired)
+                    {
+                        <td>
+                            @item.Employee.Name @item.Employee.LastName
+                        </td>
+                    }
+                    else if (item.Employee != null && item.Employee.Fired)
+                    {
+                        <td class="text-danger">
+                            @item.Employee.Name @item.Employee.LastName (despedido)
+                        </td>
+                    }
+                    else 
+                    {
+                        <td class="text-info">
+                         Sin Asignar
+                        </td>
+                    }
+                    <td>
+                        <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-info">Asignación</a>
+                    </td>
+                    <td>
+                        <a href="/extension/edit/@item.PhoneExtensionId" class="btn btn-outline-info">Editar</a>
+                    </td>
+                </tr>
+
+            }
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    [Parameter]
+    public List<PhoneExtension> Extensions { get; set; }
+}
