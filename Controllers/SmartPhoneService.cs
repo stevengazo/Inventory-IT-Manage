@@ -32,7 +32,7 @@ namespace InventoryIT.Controllers
 
         public SmartPhoneModel GetById(int id)
         {
-            throw new NotImplementedException();
+            return _inventoryDbContext.SmartPhone.FirstOrDefault(i => i.SmartPhoneModelId == id);
         }
 
         public List<SmartPhoneModel> Search(string value)
@@ -42,7 +42,8 @@ namespace InventoryIT.Controllers
 
         public void Update(SmartPhoneModel entity)
         {
-            throw new NotImplementedException();
+            _inventoryDbContext.SmartPhone.Update(entity);
+            _inventoryDbContext.SaveChanges();
         }
     }
 }

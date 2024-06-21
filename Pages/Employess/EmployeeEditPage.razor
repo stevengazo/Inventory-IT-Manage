@@ -1,0 +1,22 @@
+﻿@page "/employee/edit/{id}"
+
+
+@inject IControllerServices<Employee> _EmployeeService;
+
+<UpdateEmployeeComponent ObjEmployee="@employee" />
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    int _id = 0;
+    private Employee employee = new();
+    protected override async Task OnInitializedAsync()
+    {
+        bool flag = int.TryParse(id, out _id);
+        if (flag)
+        {
+            employee = _EmployeeService.GetById(_id);
+        }
+        base.OnInitializedAsync();
+    }
+}

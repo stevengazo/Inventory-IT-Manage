@@ -1,0 +1,54 @@
+﻿
+
+
+<div class="mx-2 p-2 my-2 shadow-sm">
+    <table class="table">
+        <tr>
+            <th>
+                @nameof(EmployeeObj.Name)
+            </th>
+            <td>
+                @EmployeeObj.Name
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(EmployeeObj.LastName)
+            </th>
+            <td>
+                @EmployeeObj.LastName
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(EmployeeObj.SecondLastName)
+            </th>
+            <td>
+                @EmployeeObj.SecondLastName
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(EmployeeObj.Email)
+            </th>
+            <td>
+                @EmployeeObj.Email
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(EmployeeObj.Birthday)
+            </th>
+            <td>
+                @EmployeeObj.Birthday.ToLongDateString()
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public Employee EmployeeObj { get; set; }
+}

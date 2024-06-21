@@ -31,7 +31,7 @@ namespace InventoryIT.Controllers
 
         public Employee GetById(int id)
         {
-            throw new NotImplementedException();
+            return _InventoryDB.Employee.FirstOrDefault(i => i.EmployeeId == id);
         }
 
         public List<Employee> Search(string value)
@@ -41,7 +41,8 @@ namespace InventoryIT.Controllers
 
         public void Update(Employee entity)
         {
-            throw new NotImplementedException();
+            _InventoryDB.Employee.Update(entity);
+            _InventoryDB.SaveChanges();
         }
     }
 }

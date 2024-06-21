@@ -1,0 +1,24 @@
+﻿@page "/smartphone/edit/{id}"
+@inject IControllerServices<SmartPhoneModel> _SmartPhoneService;
+
+
+    <UpdateSmartPhoneComponent ObjSmartPhone="@smartphone" />
+
+@code{
+
+    [Parameter]
+    public string id { get; set; }
+
+    bool flag = true;
+    
+    private SmartPhoneModel smartphone { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        flag = int.TryParse(id, out int _id);
+
+        smartphone = (flag) ? _SmartPhoneService.GetById(_id) : new();
+
+        base.OnInitializedAsync();
+    }
+}
