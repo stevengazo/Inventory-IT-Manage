@@ -12,90 +12,90 @@
     else
     {
         <EditForm Model="ObjComputer">
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     Numero de Serie
                 </label>
-                <InputText @bind-Value="ObjComputer.SerialNumber" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjComputer.SerialNumber" class="form-control  w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.ModelName)
                 </label>
-                <InputText @bind-Value="ObjComputer.ModelName" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjComputer.ModelName" class="form-control  w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.AdquisitionDate)
                 </label>
-                <InputDate @bind-Value="ObjComputer.AdquisitionDate" class="form-control form-control-sm w-75"></InputDate>
+                <InputDate @bind-Value="ObjComputer.AdquisitionDate" class="form-control w-75"></InputDate>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.Cost)
                 </label>
-                <InputText @bind-Value="ObjComputer.Cost" class="form-control form-control-sm w-75"></InputText>
-                
+                <InputText @bind-Value="ObjComputer.Cost" class="form-text w-75"></InputText>
+
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.Processor)
                 </label>
-                <InputText @bind-Value="ObjComputer.Processor" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjComputer.Processor" class="form-text w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.HaveSSD)
                 </label>
-                <InputCheckbox @bind-Value="ObjComputer.HaveSSD" class=" w-50"></InputCheckbox>
+                <InputCheckbox @bind-Value="ObjComputer.HaveSSD" class="form-check w-75"></InputCheckbox>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.SizeDisk)
                 </label>
-                <InputNumber @bind-Value="ObjComputer.SizeDisk" class="form-control form-control-sm w-75"></InputNumber>
+                <InputNumber @bind-Value="ObjComputer.SizeDisk" class="form-control w-75"></InputNumber>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.SizeRAM)
                 </label>
-                <InputNumber @bind-Value="ObjComputer.SizeRAM" class="form-control form-control-sm w-75"></InputNumber>
+                <InputNumber @bind-Value="ObjComputer.SizeRAM" class="form-control  w-75"></InputNumber>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.RAMType)
                 </label>
-                <InputText @bind-Value="ObjComputer.RAMType" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjComputer.RAMType" class="form-text w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.Description)
                 </label>
-                <InputTextArea @bind-Value="ObjComputer.Description" class="form-control form-control-sm w-75"></InputTextArea>
+                <InputTextArea @bind-Value="ObjComputer.Description" class="form-text w-75"></InputTextArea>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.KeyboardLayout)
                 </label>
-                <InputText @bind-Value="ObjComputer.KeyboardLayout" class="form-control form-control-sm w-75"></InputText>
+                <InputText @bind-Value="ObjComputer.KeyboardLayout" class="form-text w-75"></InputText>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.HasNumericKeyboard)
                 </label>
-                <InputCheckbox @bind-Value="ObjComputer.HasNumericKeyboard" class=" w-50"></InputCheckbox>
+                <InputCheckbox @bind-Value="ObjComputer.HasNumericKeyboard" class=" w-75"></InputCheckbox>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.IsActive)
                 </label>
-                <InputCheckbox @bind-Value="ObjComputer.IsActive" class=" w-50"></InputCheckbox>
+                <InputCheckbox @bind-Value="ObjComputer.IsActive" class=" w-75"></InputCheckbox>
             </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
+            <div class="form-group d-flex flex-row justify-content-between">
+                <label class="w-25">
                     @nameof(ObjComputer.BrandId)
                 </label>
-                <InputSelect @bind-Value="ObjComputer.BrandId" class=" w-50">
+                <InputSelect @bind-Value="ObjComputer.BrandId" class=" w-75">
                     @foreach (Brand item in Brands)
                     {
                         <option value="@item.BrandId"> @item.Name </option>

@@ -4,12 +4,19 @@
 
 <h3>Computadoras</h3>
 
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <AddComputerComponent OnComputerAdded="UpdateComputerList" />
 
 
-<AddComputerComponent OnComputerAdded="UpdateComputerList" />
+
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
 
 <TableComputers Computers="@Computers" />
-
 
 
 @code {

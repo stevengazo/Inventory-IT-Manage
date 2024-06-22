@@ -19,12 +19,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServ
 builder.Services.AddDbContext<InventoryDbContext>(options => options.UseSqlServer(InventoryconnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
-// Contracts to CRUD DB
+#region Contracts to CRUD DB
 builder.Services.AddScoped<IControllerServices<Brand>, BrandService>();
 builder.Services.AddScoped<IControllerServices<ComputerModel>, ComputerService>();
 builder.Services.AddScoped<IControllerServices<Employee>, EmployeeService>();
@@ -36,16 +37,15 @@ builder.Services.AddScoped<IControllerServices<PhoneExtension>, PhoneExtensionSe
 builder.Services.AddScoped<IControllerServices<PhoneNumber>, PhoneNumbersService>();
 builder.Services.AddScoped<IControllerServices<Phone_Number_User_Model>, Phone_Number_UserService>();
 
-
-builder.Services.AddSingleton<WeatherForecastService>();
+#endregion
+//builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
 
-// Create The Database
+#region Create The Database
 
-
-using( var scope = app.Services.CreateScope())
+using ( var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
     if (db.Database.CanConnect())
@@ -66,11 +66,36 @@ using( var scope = app.Services.CreateScope())
         }
         finally
         {
-
         }
-
     }
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    if (db.Database.CanConnect())
+    {
+        Console.WriteLine("Base de datos existente");
+    }
+    else
+    {
+        Console.WriteLine("La base de datos no existe. Intentando crearla");
+        try
+        {
+            db.Database.Migrate();
+            Console.WriteLine("Base de datos creada");
+        }
+        catch (System.Exception ex)
+        {
+            Console.WriteLine($"Error al intentar crear la base de datos: {ex.Message}");
+        }
+        finally
+        {
+        }
+    }
+}
+
+#endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

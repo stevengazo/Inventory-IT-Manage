@@ -1,0 +1,37 @@
+﻿@using InventoryIT.Data
+@using Microsoft.AspNetCore.Identity
+@inject ApplicationDbContext DbContext;
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Usuario</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (users != null)
+        {
+            foreach (var item in users)
+            {
+                <tr>
+                    <td>
+                        @item.UserName
+                    </td>
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>
+
+
+@code{
+    List<IdentityUser> users { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = DbContext.Users.ToList();
+        base.OnInitializedAsync();
+    }
+}
