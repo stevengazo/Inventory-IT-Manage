@@ -6,7 +6,7 @@
 
 <AuthorizeView Roles="Administrador,Lector">
     <Authorized>
-        <AddComputerComponent OnComputerAdded="UpdateComputerList" />
+        
 
 
 
@@ -16,6 +16,7 @@
     </NotAuthorized>
 </AuthorizeView>
 
+<AddComputerComponent OnComputerAdded="UpdateComputerList" />
 <TableComputers Computers="@Computers" />
 
 

@@ -33,6 +33,7 @@ namespace InventoryIT.Controllers
         {
             return _inventoryDb.Computer
                 .Include(i => i.Employee)
+                                .ThenInclude(PNM => PNM.Departament)
                 .Include(i=>i.Brand)
                 .FirstOrDefault(i => i.ComputerModelID == id);
         }

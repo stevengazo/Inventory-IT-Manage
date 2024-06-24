@@ -60,7 +60,7 @@
                             @item.Employee.Name @item.Employee.LastName
                         </td>
                         <td>
-                            <button @onclick="()=>DownloadPDF(item)"  class="btn btn-outline-info">
+                            <button @onclick="()=>DownloadPDF(item)" class="btn btn-outline-info">
                                 Descargar Entregable
                             </button>
                         </td>
@@ -89,26 +89,22 @@
     public List<Phone_Number_User_Model> phone_Number_User_Models { get; set; }
 
 
-private async Task DownloadPDF(Phone_Number_User_Model e)
-{
-    try
+    private async Task DownloadPDF(Phone_Number_User_Model e)
+    {
+        try
         {
-            byte[] pdfBytes = await pdfService.GeneratePDF(e);
+            byte[] pdfBytes = await pdfService.GeneratePDFPhone(e);
 
 
             // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
             string pdfBase64 = Convert.ToBase64String(pdfBytes);
 
             // Invocar una función JavaScript para iniciar la descarga del PDF
-            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, "sample.pdf");
+            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Entrega Telefono {e.Employee.Name} {e.Employee.LastName} {DateTime.Now.ToShortTimeString()}.pdf");
         }
         catch (Exception ec)
         {
-            
             throw;
         }
-
-}
-
-
+    }
 }

@@ -1,4 +1,8 @@
-﻿
+﻿@inject PDFService pdfService
+@inject IJSRuntime JS
+@inject IHttpContextAccessor httpContextAccessor
+
+
 <div class="shadow p-2">
     <h3>Computadoras Existentes</h3>
     <table class="table">
@@ -95,6 +99,19 @@
                         {
                             <td>Sin Asignar</td>
                         }
+
+                        @if (C.Employee != null)
+                        {
+                            <td>
+                                <button @onclick="()=>DownloadPDF(C)" class="btn btn-sm btn-outline-info">Documento Entrega</button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <button class="btn btn-sm btn-outline-warning">No disponible</button>
+                            </td>
+                        }
                         <td>
                             <a href="/computers/@C.ComputerModelID" class="btn btn-sm btn-outline-info">Ver</a>
                         </td>
@@ -121,5 +138,25 @@
     {
         base.OnParametersSet();
         StateHasChanged(); // Notificar a Blazor que se han actualizado los parámetros y debe renderizar de nuevo
+    }
+
+
+    private async Task DownloadPDF(ComputerModel e)
+    {
+        try
+        {
+            byte[] pdfBytes = await pdfService.GeneratePDFComputer(e);
+
+
+            // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
+            string pdfBase64 = Convert.ToBase64String(pdfBytes);
+
+            // Invocar una función JavaScript para iniciar la descarga del PDF
+            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Entrega Computadora {e.Employee.Name} {e.Employee.LastName} {DateTime.Now.ToShortTimeString()}.pdf");
+        }
+        catch (Exception ec)
+        {
+            throw;
+        }
     }
 }
