@@ -1,0 +1,22 @@
+﻿@page "/phone-number-user/{id}"
+@inject IControllerServices<Phone_Number_User_Model> _Phone_Number_UserService;
+
+
+
+    <DeletePhone_Number_UserComponent item="@i" />
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    private Phone_Number_User_Model i = new();
+    protected override async Task OnInitializedAsync()
+    {
+        int.TryParse(id, out int _id);
+        i = _Phone_Number_UserService.GetById(_id);
+        base.OnInitializedAsync();   
+    }
+
+
+}

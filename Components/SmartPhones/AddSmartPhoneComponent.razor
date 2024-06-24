@@ -104,7 +104,6 @@
     {
         try
         {
-            ObjSmartPhone.BrandId = 1;
             _SmartPhoneService.Add(ObjSmartPhone);
             // Dispara el evento para indicar que se agregó una nueva computadora
             await OnSmartPhoneAdded.InvokeAsync();

@@ -60,8 +60,9 @@
     <button class="btn btn-outline-info my-2" @onclick="Save">
         Agregar
     </button>
+    
 </EditForm>
-
+<label class="text-danger">@ErrorMessage</label>
 
 
 
@@ -70,45 +71,79 @@
     public EventCallback eventCallback { get; set; }
     private Phone_Number_User_Model ObjPNU = new();
 
+    private string ErrorMessage = "";
     List<Employee> employees { get; set; }
     List<SmartPhoneModel> smartPhones { get; set; }
     List<PhoneNumber> lines { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
+            employees = _EmployeeService.GetAll();
+            smartPhones = _SmartPhoneService.GetAll();
+            lines = _PhoneNumberService.GetAll();
 
-        employees = _EmployeeService.GetAll();
-        smartPhones = _SmartPhoneService.GetAll();
-        lines = _PhoneNumberService.GetAll();
+            ObjPNU.SmartPhoneModelId = (smartPhones != null) ? smartPhones.FirstOrDefault().SmartPhoneModelId : 0;
+            ObjPNU.PhoneNumberId = (lines != null) ? lines.FirstOrDefault().PhoneNumberId : 0;
+            ObjPNU.EmployeeId = (employees != null) ? employees.FirstOrDefault().EmployeeId : 0;
+        }
+        catch(Exception e)
+        {
+            ErrorMessage = "No hay datos con los que trabajar";
+        }
 
-        ObjPNU.SmartPhoneModelId = (smartPhones != null) ? smartPhones.FirstOrDefault().SmartPhoneModelId : 0;
-        ObjPNU.PhoneNumberId = (lines != null) ? lines.FirstOrDefault().PhoneNumberId : 0;
-        ObjPNU.EmployeeId = (employees != null) ? employees.FirstOrDefault().EmployeeId : 0;
 
         base.OnInitializedAsync();
     }
     async void Save()
     {
 
-        ObjPNU.CreationDate = DateTime.Now;
-        _PNU_Service.Add(ObjPNU);
-
         var employee = employees.FirstOrDefault(i => i.EmployeeId == ObjPNU.EmployeeId);
         var phone = smartPhones.FirstOrDefault(i => i.SmartPhoneModelId == ObjPNU.SmartPhoneModelId);
         var line = lines.FirstOrDefault(i => i.PhoneNumberId == ObjPNU.PhoneNumberId);
-        HistoryModel newHistory = new()
-            {
-                Description = $"Se ha asignado el telefono, con la linea {line.Number}, a {employee.Name} {employee.LastName} ",
-                CreationDate = DateTime.Now,
-                SmartPhoneModelId = phone.SmartPhoneModelId
+        bool isValid = await IsValid(line.PhoneNumberId, phone.SmartPhoneModelId);
+        if (isValid)
+        {
+            ObjPNU.CreationDate = DateTime.Now;
+            ObjPNU.IsActive = true;
+            _PNU_Service.Add(ObjPNU);
 
-            };
-        _HistoryService.Add(newHistory);
+            HistoryModel newHistory = new()
+                {
+                    Description = $"Se ha asignado el telefono, con la linea {line.Number}, a {employee.Name} {employee.LastName} ",
+                    CreationDate = DateTime.Now,
+                    SmartPhoneModelId = phone.SmartPhoneModelId
 
-        phone.PhoneNumber = line.Number.ToString();
-        _SmartPhoneService.Update(phone);
+                };
+            _HistoryService.Add(newHistory);
+
+            phone.PhoneNumber = line.Number.ToString();
+            _SmartPhoneService.Update(phone);
 
 
-        await eventCallback.InvokeAsync();
+            await eventCallback.InvokeAsync();
+        }
     }
+
+
+    async Task<bool> IsValid(int PhoneNumberId, int SmartPhoneId)
+    {
+        var list = _PNU_Service.GetAll();
+        var results = (from i in list
+                       where i.PhoneNumberId == PhoneNumberId && i.SmartPhoneModelId == SmartPhoneId && i.IsActive == true
+                       select i).FirstOrDefault();
+        if(results!=null)
+        {
+            ErrorMessage = $@"Ya existe un registro con el numero {results.PhoneNumber.Number}, telefono con la serie: {results.PhoneNumberModel.PhoneSerial} asignado a {results.Employee.Name} {results.Employee.LastName}.
+Elimine la asignacion e intentelo de nuevo";
+            return false;
+        }
+        else
+        {
+            ErrorMessage = "";
+            return true;
+        }
+    }
+
 }

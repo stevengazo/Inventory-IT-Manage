@@ -37,7 +37,13 @@ namespace InventoryIT.Controllers
 
         public Phone_Number_User_Model GetById(int id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Phone_Number_User
+                .Include(i => i.PhoneNumber)
+                .Include(i => i.Employee)
+                .ThenInclude(PNM => PNM.Departament)
+                .Include(i => i.PhoneNumberModel)
+                .ThenInclude(PNM => PNM.Brand)
+                .FirstOrDefault(i => i.Id == id);
         }
 
         public List<Phone_Number_User_Model> Search(string value)
@@ -47,7 +53,8 @@ namespace InventoryIT.Controllers
 
         public void Update(Phone_Number_User_Model entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Phone_Number_User.Update(entity);
+            _dbContext.SaveChanges();
         }
     }
 }

@@ -20,7 +20,7 @@
             </div>
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
-                    Tipo
+                    Fecha Adquisicion
                 </label>
                 <InputDate @bind-Value="ObjPeripheral.AdquisitionDate" class="form-control w-75"></InputDate>
             </div>
@@ -28,7 +28,7 @@
                 <label class="w-25">
                     Modelo
                 </label>
-                <InputText @bind-Value="ObjPeripheral.Type" class="form-text w-75"></InputText>
+                <InputText @bind-Value="ObjPeripheral.Model" class="form-text w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
@@ -50,9 +50,17 @@
             </div>
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
-                    Modelo
+                    Tipo
                 </label>
-                <InputText @bind-Value="ObjPeripheral.Model" class="form-text w-75"></InputText>
+                <InputSelect @bind-Value="ObjPeripheral.Type" class="form-select w-75">
+                    <option "Audifonos">Audifonos</option>
+                    <option "Teclado">Teclado</option>
+                    <option "Telefono Oficina">Telefono Oficina</option>
+                    <option "Monitor">Monitor</option>
+                    <option "Parlante">Proyector</option>
+                    <option "Camara">Camara</option>
+                    <option "Otro">Otro</option>
+                </InputSelect>
             </div>
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">

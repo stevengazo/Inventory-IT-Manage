@@ -14,5 +14,8 @@ namespace InventoryIT.Model
         public SmartPhoneModel? PhoneNumberModel { get; set; }
         public int? EmployeeId { get; set; }
         public Employee? Employee { get; set; }  
+        public bool IsActive { get; set; }  
+        public DateTime LastModification {  get; set; }
+
     }
 }

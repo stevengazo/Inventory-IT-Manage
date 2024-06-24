@@ -5,6 +5,9 @@
     <thead>
         <tr>
             <th>
+                Fecha Registro
+            </th>
+            <th>
                 Numero Telefonico
             </th>
             <th>
@@ -29,31 +32,39 @@
         {
             foreach (var item in phone_Number_User_Models)
             {
-                <tr>
-                    <td>
-                        @item.PhoneNumber.Number
-                    </td>
-                    <td>
-                        @item.PhoneNumberModel.Brand.Name
-                    </td>
-                    <td>
-                        @item.PhoneNumberModel.PhoneModel
-                    </td>
-                    <td>
-                        @item.PhoneNumberModel.PhoneSerial
-                    </td>
-                    <td>
-                        @item.Employee.Name @item.Employee.LastName
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-outline-info">
-                            Editar
-                        </a>
-                        <a href="#" class="btn btn-outline-danger">
-                            Eliminar
-                        </a>
-                    </td>
-                </tr>
+                if (item.IsActive)
+                {
+                    <tr>
+                        <td>
+                            @item.CreationDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.PhoneNumber.Number
+                        </td>
+                        <td>
+                            @item.PhoneNumberModel.Brand.Name
+                        </td>
+                        <td>
+                            @item.PhoneNumberModel.PhoneModel
+                        </td>
+                        <td>
+                            @item.PhoneNumberModel.PhoneSerial
+                        </td>
+                        <td>
+                            @item.Employee.Name @item.Employee.LastName
+                        </td>
+                        <td>
+                            <button  class="btn btn-outline-info">
+                                Descargar Entregable
+                            </button>
+                        </td>
+                        <td>
+                            <a href="/phone-number-user/@item.Id" class="btn btn-outline-danger">
+                                Eliminar Asignacion
+                            </a>
+                        </td>
+                    </tr>
+                }
             }
         }
 

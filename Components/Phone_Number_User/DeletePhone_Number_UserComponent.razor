@@ -1,0 +1,103 @@
+﻿@inject IControllerServices<Phone_Number_User_Model> _Phone_Number_UserService;
+@inject NavigationManager Nav;
+
+
+
+
+<div class="shadow-lg p-3">
+    <h5>
+        Deseas eliminar este registro
+    </h5>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>
+                    Fecha Asignación
+                </th>
+                <td>
+                    @item.CreationDate.ToLongDateString()
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Telefono
+                </th>
+                <td>
+                    @item.PhoneNumberModel.Brand.Name
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Modelo
+                </th>
+                <td>
+                    @item.PhoneNumberModel.PhoneModel
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Serie
+                </th>
+                <td>
+                    @item.PhoneNumberModel.PhoneSerial
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Descripcion
+                </th>
+                <td>
+                    @item.PhoneNumberModel.Description
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Encargado
+                </th>
+                <td>
+                    @item.Employee.Name @item.Employee.LastName
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Cédula
+                </th>
+                <td>
+                    @item.Employee.EmployeeId
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Departamento
+                </th>
+                <td>
+                    @item.Employee.Departament.Name
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex flex-row gap-2">
+        <button @onclick="Delete" class="btn btn-outline-danger" >Eliminar Asignacion</button>
+    <button @onclick="Cancel" class="btn btn-outline-warning">Cancelar</button>
+
+    </div>
+    
+</div>
+
+
+@code {
+    [Parameter]
+    public  Phone_Number_User_Model item { get; set; }
+
+    private void Delete()
+    {
+        item.IsActive = false;
+        _Phone_Number_UserService.Update(item);
+        Nav.NavigateTo($"phone-number-user");
+
+    }
+    private void Cancel()
+    {
+        Nav.NavigateTo($"phone-number-user");
+    }
+}
