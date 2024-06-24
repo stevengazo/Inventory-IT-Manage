@@ -30,6 +30,7 @@ namespace InventoryIT.Controllers
             return _dbContext.Phone_Number_User
                 .Include(i=>i.PhoneNumber)
                 .Include(i => i.Employee)
+                .ThenInclude(PNM => PNM.Departament)
                 .Include(i => i.PhoneNumberModel)
                 .ThenInclude(PNM=>PNM.Brand)
                 .ToList();

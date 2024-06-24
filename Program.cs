@@ -3,12 +3,15 @@ using InventoryIT.Controllers;
 using InventoryIT.Data;
 using InventoryIT.Model;
 using InventoryIT.Contracts;
+using InventoryIT.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using PdfSharp.Charting;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
+// PDF generation
+builder.Services.AddScoped<PDFService>();
+builder.Services.AddHttpContextAccessor(); // Agregar el IHttpContextAccessor para acceder al contexto HTTP
+
+
 #region Contracts to CRUD DB
 builder.Services.AddScoped<IControllerServices<Brand>, BrandService>();
 builder.Services.AddScoped<IControllerServices<ComputerModel>, ComputerService>();
@@ -36,6 +44,7 @@ builder.Services.AddScoped<IControllerServices<PeripheralModel>, PeripheralServi
 builder.Services.AddScoped<IControllerServices<PhoneExtension>, PhoneExtensionService>();
 builder.Services.AddScoped<IControllerServices<PhoneNumber>, PhoneNumbersService>();
 builder.Services.AddScoped<IControllerServices<Phone_Number_User_Model>, Phone_Number_UserService>();
+
 
 #endregion
 //builder.Services.AddSingleton<WeatherForecastService>();

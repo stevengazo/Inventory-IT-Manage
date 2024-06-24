@@ -6,3 +6,12 @@
 }
 
 <component type="typeof(App)" render-mode="ServerPrerendered" />
+<script>
+    window.downloadPDF = function (pdfBase64, fileName) {
+        // Crear un enlace en el DOM para iniciar la descarga
+        const link = document.createElement('a');
+        link.href = 'data:application/pdf;base64,' + pdfBase64;
+        link.download = fileName;
+        link.click();
+    };
+</script>
