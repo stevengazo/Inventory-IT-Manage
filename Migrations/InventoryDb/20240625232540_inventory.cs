@@ -45,6 +45,7 @@ namespace InventoryIT.Migrations.InventoryDb
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Operator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IMEIs = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cost = table.Column<float>(type: "real", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),

@@ -1,7 +1,16 @@
-﻿<h3> Extensiones Registradas</h3>
-<p>
-    Esta tabla muestra la informacion sobre la asignacion, la extension y el pbx utilizado.
-</p>
+﻿@inject PDFService pdfService
+@inject IJSRuntime JS
+@inject IHttpContextAccessor httpContextAccessor
+
+
+<h3> Extensiones Registradas</h3>
+<div class="d-flex flex-row justify-content-between">
+    <p>
+        Esta tabla muestra la informacion sobre la asignacion, la extension y el pbx utilizado.
+    </p>
+    <button @onclick="DownloadPDF" class="btn btn-outline-warning btn-sm">Descargar</button>
+
+</div>
 
 
 <table class="table">
@@ -88,4 +97,24 @@
 @code {
     [Parameter]
     public List<PhoneExtension> Extensions { get; set; }
+
+
+    private async Task DownloadPDF()
+    {
+        try
+        {
+            byte[] pdfBytes = await pdfService.GenerateListExtensions(Extensions);
+
+
+            // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
+            string pdfBase64 = Convert.ToBase64String(pdfBytes);
+
+            // Invocar una función JavaScript para iniciar la descarga del PDF
+            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Extensiones {DateTime.Today.ToString("yyyy-MMM-dd")}.pdf");
+        }
+        catch (Exception ec)
+        {
+            throw;
+        }
+    }
 }

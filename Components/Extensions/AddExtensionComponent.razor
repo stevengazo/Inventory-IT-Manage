@@ -9,43 +9,56 @@
         </button>
     }
     else
-    {<div>
-        <h4>
-            Registro de Extension
-        </h4>
+    {
+        <div>
+            <h4>
+                Registro de Extension
+            </h4>
 
-        <EditForm Model="ObjExtension">
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>Nombre</label>
-                <InputText @bind-Value="ObjExtension.PhoneExtensionName" class="form-control form-control-sm w-75"></InputText>
-            </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>Extension</label>
-                <InputNumber @bind-Value="ObjExtension.Extension" class="form-control form-control-sm w-75"></InputNumber>
-            </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>Descripcion</label>
-                <InputText @bind-Value="ObjExtension.Description"  class="form-control form-control-sm w-75"></InputText>
-            </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>Numero de Usuario</label>
-                <InputText @bind-Value="ObjExtension.UserNumber" class="form-control form-control-sm w-75"></InputText>
-            </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>Contrasena</label>
-                <InputText @bind-Value="ObjExtension.Password" class="form-control form-control-sm w-75"></InputText>
-            </div>
-            <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>Telefono PBX</label>
-                <InputNumber @bind-Value="ObjExtension.PhoneNumberPBX" class="form-control form-control-sm w-75"></InputNumber>
-            </div>
-        </EditForm>
-        <button @onclick="Save" class="btn btn-outline-info">
-            Agregar
-        </button>
-        <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
-            Cancelar
-        </button>
+            <EditForm Model="ObjExtension">
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Nombre</label>
+                    <InputText @bind-Value="ObjExtension.PhoneExtensionName" class="form-control  w-75"></InputText>
+                </div>
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Tipo de Extension</label>
+                    <InputSelect @bind-Value="ObjExtension.Type" class="form-select w-75">
+                        <option value="Móvil">Móvil</option>
+                        <option value="Oficina">Oficina</option>
+                        <option value="No Definido">No Definido</option>
+                    </InputSelect>
+                </div>
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Extension</label>
+                    <InputNumber @bind-Value="ObjExtension.Extension" class="form-control  w-75"></InputNumber>
+                </div>
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Desvios</label>
+                    <InputText @bind-Value="ObjExtension.Forwardings" class="form-control w-75"></InputText>
+                </div>
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Descripcion</label>
+                    <InputText @bind-Value="ObjExtension.Description" class="form-control  w-75"></InputText>
+                </div>
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Numero de Usuario</label>
+                    <InputText @bind-Value="ObjExtension.UserNumber" class="form-control  w-75"></InputText>
+                </div>
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Contrasena</label>
+                    <InputText @bind-Value="ObjExtension.Password" class="form-control  w-75"></InputText>
+                </div>
+                <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+                    <label>Telefono PBX</label>
+                    <InputNumber @bind-Value="ObjExtension.PhoneNumberPBX" class="form-control  w-75"></InputNumber>
+                </div>
+            </EditForm>
+            <button @onclick="Save" class="btn btn-outline-info">
+                Agregar
+            </button>
+            <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
+                Cancelar
+            </button>
         </div>
     }
 </div>
@@ -57,7 +70,7 @@
 
     PhoneExtension ObjExtension = new();
     bool HideForm = true;
-    
+
 
     protected override async Task OnInitializedAsync()
     {

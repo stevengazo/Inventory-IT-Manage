@@ -10,6 +10,7 @@ namespace InventoryIT.Model
         public DateTime StartDate { get; set; }
         public string Operator { get; set; }
         public string Type { get; set; }
+        public string IMEIs {  get; set; }
         public string Description { get; set; } 
         public float Cost {  get; set; }    
         public DateTime ExpireDate { get; set; }    
