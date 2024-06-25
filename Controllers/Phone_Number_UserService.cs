@@ -27,14 +27,15 @@ namespace InventoryIT.Controllers
 
         public List<Phone_Number_User_Model> GetAll()
         {
-            return _dbContext.Phone_Number_User
-                .Include(i=>i.PhoneNumber)
+            var D = _dbContext.Phone_Number_User
+                .Include(i => i.PhoneNumber)
                 .Include(i => i.Employee)
-                .ThenInclude(PNM => PNM.Departament)
+                .ThenInclude(e=>e.Departament)
                 .Include(i => i.PhoneNumberModel)
-                .ThenInclude(PNM=>PNM.Brand)
-                .OrderBy( i=>i.PhoneNumberId)
+                .ThenInclude(PNM => PNM.Brand)
+                .OrderBy(i => i.PhoneNumberId)
                 .ToList();
+            return D;
         }
 
         public Phone_Number_User_Model GetById(int id)

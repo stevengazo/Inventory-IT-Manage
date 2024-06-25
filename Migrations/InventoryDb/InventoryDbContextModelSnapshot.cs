@@ -404,6 +404,10 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Property<int>("Extension")
                         .HasColumnType("int");
 
+                    b.Property<string>("Forwardings")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
@@ -412,6 +416,10 @@ namespace InventoryIT.Migrations.InventoryDb
 
                     b.Property<int>("PhoneNumberPBX")
                         .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserNumber")
                         .HasColumnType("nvarchar(max)");

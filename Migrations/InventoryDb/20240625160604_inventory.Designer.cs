@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations.InventoryDb
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240624204156_inventory")]
+    [Migration("20240625160604_inventory")]
     partial class inventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -406,6 +406,10 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Property<int>("Extension")
                         .HasColumnType("int");
 
+                    b.Property<string>("Forwardings")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
@@ -414,6 +418,10 @@ namespace InventoryIT.Migrations.InventoryDb
 
                     b.Property<int>("PhoneNumberPBX")
                         .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserNumber")
                         .HasColumnType("nvarchar(max)");
