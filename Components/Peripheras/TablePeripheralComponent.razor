@@ -1,4 +1,8 @@
-﻿
+﻿@inject PDFService pdfService
+@inject IJSRuntime JS
+@inject IHttpContextAccessor httpContextAccessor
+
+
 
 
 <div class="shadow p-2">
@@ -33,7 +37,7 @@
                 <td>
                     Empleado
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                     Acciones
                 </td>
             </tr>
@@ -80,11 +84,23 @@
                         {
                             <td>Sin Asignar</td>
                         }
+                        @if (C.Employee != null)
+                        {
+                            <td>
+                                <button @onclick="()=>DownloadPDF(C)" class="btn btn-sm btn-outline-info">Documento Entrega</button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <button class="btn btn-sm btn-outline-warning">No disponible</button>
+                            </td>
+                        }
                         <td>
-                            <a href="/computers/@C.PeripheralModelId" class="btn btn-sm btn-outline-info">Ver</a>
+                            <a href="/peripherals/@C.PeripheralModelId" class="btn btn-sm btn-outline-info">Ver</a>
                         </td>
                         <td>
-                            <a href="/computers/edit/@C.PeripheralModelId" class="btn btn-sm btn-outline-success">Editar</a>
+                            <a href="/peripherals/edit/@C.PeripheralModelId" class="btn btn-sm btn-outline-success">Editar</a>
                         </td>
                     </tr>
                 }
@@ -102,8 +118,29 @@
 @code {
     [Parameter]
     public List<PeripheralModel> Peripherals { get; set; }
+  
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+    }
+
+
+    private async Task DownloadPDF(PeripheralModel e)
+    {
+        try
+        {
+            byte[] pdfBytes = await pdfService.GeneratePDFPeripheral(e);
+
+
+            // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
+            string pdfBase64 = Convert.ToBase64String(pdfBytes);
+
+            // Invocar una función JavaScript para iniciar la descarga del PDF
+            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Entrega Activo {e.Employee.Name} {e.Employee.LastName} {DateTime.Now.ToShortTimeString()}.pdf");
+        }
+        catch (Exception ec)
+        {
+            throw;
+        }
     }
 }

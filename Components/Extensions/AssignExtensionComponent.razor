@@ -3,7 +3,7 @@
 
 @inject NavigationManager Nav;
 
-<div class="shadow-sm my-2 p-2">
+<div class="shadow-sm my-2 p-2 w-50">
     <h3>Asignación de Extension</h3>
 
     <div class="d-flex flex-row  ">
@@ -29,7 +29,10 @@
 @code {
     [Parameter]
     public PhoneExtension PhoneExtension { get; set; }
-    
+
+    [Parameter]
+    public EventCallback OnUpdated{ get; set; }
+
 
     List<Employee> Employees = new();
     protected override async Task OnInitializedAsync()
@@ -43,7 +46,8 @@
         try
         {
             _ExtensionsService.Update(PhoneExtension);
-            Nav.NavigateTo("extensions");
+            await OnUpdated.InvokeAsync();
+            Nav.NavigateTo("/extensions");
         }
         catch (Exception e)
         {

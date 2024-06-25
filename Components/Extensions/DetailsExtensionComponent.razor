@@ -1,0 +1,87 @@
+﻿
+
+
+<table class="table w-50">
+    <tbody>
+        <tr>
+            <th>
+                @nameof(Extension.PhoneExtensionName)
+            </th>
+            <td>
+                @Extension.PhoneExtensionName
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(Extension.Extension)
+            </th>
+            <td>
+                @Extension.Extension
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(Extension.Description)
+            </th>
+            <td>
+                <p>
+                    @Extension.Description
+                </p>
+            </td>
+        </tr>
+
+        @if (Extension.Employee !=null)
+        {
+            <tr>
+                <th>
+                    @nameof(Extension.Employee)
+                </th>
+                <td>
+                    @Extension.Employee.Name @Extension.Employee.LastName
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <th>
+                    Empleado
+                </th>
+                <td>
+                    No Asignado
+                </td>
+            </tr>
+        }
+        <tr class="bg-gradient">
+            <th>
+                @nameof(Extension.UserNumber)
+            </th>
+            <td>
+                @Extension.UserNumber
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(Extension.Password)
+            </th>
+            <td>
+                @Extension.Password
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(Extension.PhoneNumberPBX)
+            </th>
+            <td>
+                @Extension.PhoneNumberPBX
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+@code {
+    [Parameter]
+    public PhoneExtension Extension { get; set; }
+}

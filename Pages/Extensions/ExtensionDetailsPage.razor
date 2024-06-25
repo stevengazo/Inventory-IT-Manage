@@ -1,0 +1,49 @@
+﻿@page "/extensions/{id}"
+@inject IControllerServices<PhoneExtension> _ExtensionsService;
+
+<h3>
+    Información de la Extension
+</h3>
+
+@if (flag)
+{
+    <DetailsExtensionComponent Extension="@extension" />
+ <AssignExtensionComponent PhoneExtension="@extension" OnUpdated="@Updated" />
+}
+else
+{
+    <h4>Error "@id " no es valido</h4>
+}
+
+
+
+@code {
+
+    [Parameter]
+    public string id { get; set; }
+
+    bool flag = true;
+    List<HistoryModel> Histories = new();
+    private PhoneExtension extension { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        flag = int.TryParse(id, out int _id);
+
+        extension = (flag) ? _ExtensionsService.GetById(_id) : new();
+
+        base.OnInitializedAsync();
+    }
+
+    private async Task Updated()
+    {
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            flag = int.TryParse(id, out int _id);
+            extension = _ExtensionsService.GetById(_id);
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
+}
+

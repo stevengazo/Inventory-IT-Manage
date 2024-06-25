@@ -25,7 +25,7 @@
             <th>
                 Empleado
             </th>
-            <th colspan="2">
+            <th colspan="1">
                 Acciones
             </th>
         </tr>
@@ -69,10 +69,11 @@
                          Sin Asignar
                         </td>
                     }
-                    <td>
-                        <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-info">Asignación</a>
-                    </td>
-                    <td>
+                    <td class="d-flex flex-row gap-1">
+                        <a href="/extensions/@item.PhoneExtensionId" class="btn btn-outline-info">Detalles</a>
+                    
+                        <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-success">Asignación</a>
+                    
                         <a href="/extension/edit/@item.PhoneExtensionId" class="btn btn-outline-info">Editar</a>
                     </td>
                 </tr>

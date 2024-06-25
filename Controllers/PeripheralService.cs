@@ -34,7 +34,11 @@ namespace InventoryIT.Controllers
 
         public PeripheralModel GetById(int id)
         {
-            throw new NotImplementedException();
+            return _inventoryDb.Peripheral
+                  .Include(i => i.Brand)
+                  .Include(i=>i.Employee)
+                  .ThenInclude(e=>e.Departament)
+                  .FirstOrDefault(i => i.PeripheralModelId == id);
         }
 
         public List<PeripheralModel> Search(string value)
@@ -44,7 +48,11 @@ namespace InventoryIT.Controllers
 
         public void Update(PeripheralModel entity)
         {
-            throw new NotImplementedException();
+            entity.Employee = entity.EmployeeId == 0 ? null : entity.Employee;
+            entity.EmployeeId = entity.EmployeeId == 0 ? null : entity.EmployeeId;
+
+            _inventoryDb.Peripheral.Update(entity);
+            _inventoryDb.SaveChanges();
         }
     }
 }

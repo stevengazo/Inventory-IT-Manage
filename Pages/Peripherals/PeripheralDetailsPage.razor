@@ -1,0 +1,39 @@
+﻿@page "/peripherals/{id}"
+@inject IControllerServices<PeripheralModel> _PeripheralsService;
+
+
+<DetailsPeripheralComponent peripheral="@peripheral" />
+<AssignPeripheralComponent OnUpdated="@Update" Peripheral="@peripheral" />
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    int _id = 0;
+
+    PeripheralModel peripheral = new();
+    protected override async Task OnInitializedAsync()
+    {
+        bool flag = int.TryParse(id, out _id);
+        if (flag)
+        {
+            peripheral = _PeripheralsService.GetById(_id);
+        }
+        base.OnInitializedAsync();   
+    }
+
+    private async Task Update()
+    {
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            bool flag = int.TryParse(id, out _id);
+            if (flag)
+            {
+                peripheral = _PeripheralsService.GetById(_id);
+            }
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
+
+}

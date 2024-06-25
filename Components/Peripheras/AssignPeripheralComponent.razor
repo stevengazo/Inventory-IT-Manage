@@ -1,0 +1,88 @@
+﻿@inject IControllerServices<Employee> _EmployeeService
+@inject IHistoryServices<HistoryModel> _HistoryService
+@inject IControllerServices<PeripheralModel> _PeripheralsService;
+
+<div class="shadow-sm my-2 p-2">
+    <h3>Asignación de Computadora</h3>
+
+    <div class="d-flex flex-row  ">
+        <EditForm Model="@Peripheral" class="">
+            <InputSelect @bind-Value="Peripheral.EmployeeId" class="form-control">
+                <option value="0">Sin Asignar</option>
+                @foreach (Employee item in Employees)
+                {
+                    <option value="@item.EmployeeId">@item.Name @item.LastName</option>
+                }
+            </InputSelect>
+        </EditForm>
+        <button class="btn btn-outline-info mx-2" @onclick="Update">
+            Asignar
+        </button>
+    </div>
+</div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public EventCallback OnUpdated { get; set; }
+    [Parameter]
+    public PeripheralModel Peripheral { get; set; }
+    private string LastEmployee { get; set; }
+
+    List<Employee> Employees = new();
+    protected override async Task OnInitializedAsync()
+    {
+        if (Peripheral.Employee != null)
+        {
+            LastEmployee = $"{Peripheral.Employee.Name} {Peripheral.Employee.LastName} ";
+        }
+        else
+        {
+            LastEmployee = "";
+        }
+
+        base.OnInitializedAsync();
+        Employees = _EmployeeService.GetAll();
+    }
+
+    private async Task Update()
+    {
+        try
+        {
+            _PeripheralsService.Update(Peripheral);
+
+            HistoryModel newHistory = new();
+            var employee = Employees.FirstOrDefault(i => i.EmployeeId == Peripheral.EmployeeId);
+            if (string.IsNullOrEmpty(LastEmployee) && Peripheral.EmployeeId == null)
+            {
+                // Primera asignacion
+                newHistory.Description = $" El activo '{Peripheral.SerialNumber}', Modelo '{Peripheral.Model}'. Se ha asignado a {employee.Name} {employee.LastName} ";
+            }
+            else if (Peripheral.EmployeeId == null && !string.IsNullOrEmpty(LastEmployee))
+            {
+                newHistory.Description = $@" El activo '{Peripheral.SerialNumber}', Modelo '{Peripheral.Model}'. Se la eliminado la asignacion de {LastEmployee}. Equipo disponible.";
+                LastEmployee = string.Empty;
+            }
+            else
+            {
+                // nueva asignacion
+                newHistory.Description = $@" El activo '{Peripheral.SerialNumber}', Modelo '{Peripheral.Model}', ha cambiado de asignación a {employee.Name} {employee.LastName} ";
+                LastEmployee = $"{employee.Name} {employee.LastName}";
+            }
+            newHistory.CreationDate = DateTime.Today;
+            newHistory.PeripheralModelId = Peripheral.PeripheralModelId;
+            _HistoryService.Add(newHistory);
+
+            OnUpdated.InvokeAsync();
+        }
+        catch (Exception e)
+        {
+
+            throw;
+        }
+
+    }
+}

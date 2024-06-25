@@ -1,0 +1,86 @@
+﻿
+
+
+<table class="table">
+    <tbody>
+        <tr>
+            <th>
+                @nameof(peripheral.Brand.Name)
+            </th>
+            <td>
+                @peripheral.Brand.Name
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(peripheral.Name)
+            </th>
+            <td>
+                @peripheral.Name
+            </td>
+        </tr>
+                <tr>
+            <th>
+                @nameof(peripheral.Type)
+            </th>
+            <td>
+                @peripheral.Type
+            </td>
+        </tr>
+                <tr>
+            <th>
+                @nameof(peripheral.SerialNumber)
+            </th>
+            <td>
+                @peripheral.SerialNumber
+            </td>
+        </tr>
+                <tr>
+            <th>
+                @nameof(peripheral.Model)
+            </th>
+            <td>
+                @peripheral.Model
+            </td>
+        </tr>
+                <tr>
+            <th>
+                @nameof(peripheral.AdquisitionDate)
+            </th>
+            <td>
+                @peripheral.AdquisitionDate.ToLongDateString()
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(peripheral.Cost)
+            </th>
+            <td>
+                @peripheral.Cost
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(peripheral.Employee)
+            </th>
+            @if (peripheral.Employee != null)
+            {
+                <td>
+                    @peripheral.Employee.Name @peripheral.Employee.LastName
+                </td>
+            }
+            else
+            {
+                <td>
+                    Sin Asignar
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>
+
+
+@code {
+    [Parameter]
+    public PeripheralModel peripheral { get; set; }
+}
