@@ -3,7 +3,7 @@
 @inject IHttpContextAccessor httpContextAccessor
 
 
-<div class="shadow p-2">
+<div class="shadow p-2 rounded ">
     <h3>Computadoras Existentes</h3>
     <table class="table">
         <thead>
@@ -41,7 +41,7 @@
                 <td>
                     Encargado
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                     Acciones
                 </td>
             </tr>
@@ -99,24 +99,28 @@
                         {
                             <td>Sin Asignar</td>
                         }
+                        <td class="d-flex flex-row gap-1">
+                            @if (C.Employee != null)
+                            {
+                                <button @onclick="()=>DownloadPDF(C)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
+                                    <span class="oi oi-document text-white" aria-hidden="true"></span>
+                                </button>
+                            }
+                            else
+                            {
 
-                        @if (C.Employee != null)
-                        {
-                            <td>
-                                <button @onclick="()=>DownloadPDF(C)" class="btn btn-sm btn-outline-info">Documento Entrega</button>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
                                 <button class="btn btn-sm btn-outline-warning">No disponible</button>
-                            </td>
-                        }
-                        <td>
-                            <a href="/computers/@C.ComputerModelID" class="btn btn-sm btn-outline-info">Ver</a>
-                        </td>
-                        <td>
-                            <a href="/computers/edit/@C.ComputerModelID" class="btn btn-sm btn-outline-success">Editar</a>
+
+                            }
+                            <a href="/computers/@C.ComputerModelID" class="bg-info h-100 h-100 rounded rounded-1 p-2">
+                                <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                            </a>
+                            <a href="/computers/edit/@C.ComputerModelID" class="bg-success h-100 h-100 rounded rounded-1 p-2">
+                                <span class="oi oi-pencil text-white" aria-hidden="true"></span>
+                            </a>
+                            <a href="" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
+                                <span class="oi oi-delete text-white" aria-hidden="true"></span>
+                            </a>
                         </td>
                     </tr>
                 }

@@ -21,24 +21,47 @@
     <tbody>
 @foreach (Employee item in Employees)
         {
-            <tr>
-                <td>
-                    @item.EmployeeId
-                </td>
-                <td>
-                    @item.Name @item.LastName @item.SecondLastName
-                </td>
-                <td>
-                    @item.Email
-                </td>
-                <td>
-                    @item.PhoneNumber      
-                </td>
-                <td>
-                    <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
-                </td>
-
-            </tr>
+            @if (item.Fired)
+            {
+                <tr class="text-danger">
+                    <td>
+                        @item.EmployeeId
+                    </td>
+                    <td>
+                        @item.Name @item.LastName @item.SecondLastName
+                    </td>
+                    <td>
+                        @item.Email
+                    </td>
+                    <td>
+                        @item.PhoneNumber
+                    </td>
+                    <td>
+                        <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr class="">
+                    <td>
+                        @item.EmployeeId
+                    </td>
+                    <td>
+                        @item.Name @item.LastName @item.SecondLastName
+                    </td>
+                    <td>
+                        @item.Email
+                    </td>
+                    <td>
+                        @item.PhoneNumber
+                    </td>
+                    <td>
+                        <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
+                    </td>
+                </tr>
+            }
+            
         }
     </tbody>
     </table>

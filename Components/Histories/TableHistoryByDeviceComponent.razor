@@ -1,15 +1,22 @@
 ﻿
 
-<div class="mx-3 my-2 shadow-sm p-2">
-    <h4>Historial del Dispositivo</h4>
+<div class="p-2 my-3 shadow rounded rounded-1 border border-1">
+    <div class="d-flex flex-row justify-content-between">
+        <h4>Historial del Dispositivo</h4>
 
-    @if (HiddeTable)
+        @if (HiddeTable)
+        {
+            <button @onclick="()=>HiddeTable=false" class="btn btn-outline-primary">Ver Historial</button>
+        }
+        else
+        {
+            <button @onclick="()=>HiddeTable=true" class="btn btn-outline-primary my-2">Ocultar Historial</button>
+        }
+    </div>
+
+
+    @if (!HiddeTable)
     {
-        <button @onclick="()=>HiddeTable=false" class="btn btn-outline-primary">Ver Historial</button>
-    }
-    else
-    {
-        <button @onclick="()=>HiddeTable=true" class="btn btn-outline-primary my-2">Ocultar Historial</button>
         <table class="table ">
             <thead>
                 <tr>
@@ -35,7 +42,6 @@
                 }
             </tbody>
         </table>
-
     }
 </div>
 

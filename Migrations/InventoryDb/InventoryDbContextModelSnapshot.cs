@@ -230,6 +230,9 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DNI")
+                        .HasColumnType("int");
+
                     b.Property<int?>("DepartamentID")
                         .HasColumnType("int");
 

@@ -5,6 +5,14 @@
     <table class="table">
         <tr>
             <th>
+                @nameof(EmployeeObj.DNI)
+            </th>
+            <td>
+                @EmployeeObj.DNI
+            </td>
+        </tr>
+        <tr>
+            <th>
                 @nameof(EmployeeObj.Name)
             </th>
             <td>
@@ -33,6 +41,14 @@
             </th>
             <td>
                 @EmployeeObj.Email
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @nameof(EmployeeObj.Birthday)
+            </th>
+            <td>
+                @EmployeeObj.Birthday.ToLongDateString()
             </td>
         </tr>
         <tr>

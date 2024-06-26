@@ -56,8 +56,17 @@ namespace InventoryIT.Controllers
 
         public void Update(Phone_Number_User_Model entity)
         {
-            _dbContext.Phone_Number_User.Update(entity);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Phone_Number_User.Update(entity);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception r)
+            {
+
+                throw;
+            }
+            
         }
     }
 }

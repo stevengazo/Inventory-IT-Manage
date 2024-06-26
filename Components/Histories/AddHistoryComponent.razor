@@ -1,0 +1,47 @@
+﻿
+
+
+
+
+
+
+<h4>Registrar Servicio</h4>
+
+<div>
+<EditForm Model="newHistory">
+    <div>
+        <label>
+            @nameof(newHistory.Description)
+        </label>
+        <InputTextArea @bind-Value="newHistory.Description">
+
+        </InputTextArea>
+    </div>
+</EditForm>
+<button class="btn btn-outline-info">
+    Agregar
+</button>
+</div>
+
+
+
+
+
+@code {
+    [Parameter]
+    public int PeripheralId { get; set; }
+    [Parameter]
+    public int ComputerId { get; set; }
+    [Parameter]
+    public int SmartPhoneId { get; set; }
+    [Parameter]
+    public EventCallback OnUpdated { get; set; }
+
+    private HistoryModel newHistory = new();
+
+
+    private void Save()
+    {
+        
+    }
+}

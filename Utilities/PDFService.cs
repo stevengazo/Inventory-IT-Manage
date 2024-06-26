@@ -380,7 +380,7 @@ namespace InventoryIT.Utilities
                     { nameof(i.PhoneNumber.Operator), i.PhoneNumber.Operator.ToString() },
                     { nameof(i.PhoneNumber.Type), i.PhoneNumber.Type.ToString() },
                     { nameof(i.CreationDate), i.CreationDate.ToShortDateString() },
-                    { nameof(i.Employee.EmployeeId), i.Employee.EmployeeId.ToString() },
+                    { nameof(i.Employee.DNI), i.Employee.DNI.ToString() },
                     { nameof(i.Employee.Name), i.Employee.Name.ToString() },
                     { nameof(i.Employee.LastName), i.Employee.LastName.ToString() },
                     { nameof(i.Employee.PhoneNumber), i.Employee.PhoneNumber.ToString() },
@@ -420,7 +420,7 @@ namespace InventoryIT.Utilities
 
                 // Incrementar la coordenada y para crear separación
                 gfx.DrawLine(XPens.Black, 50, y + data.GetLength(0) * cellHeight + 270, page.Width.Point - 80, y + data.GetLength(0) * cellHeight + 270);
-                gfx.DrawString($"Firma de quien recibe: {i.Employee.Name} {i.Employee.LastName} {i.Employee.SecondLastName}", font, XBrushes.Black,
+                gfx.DrawString($"Firma y nombre: {i.Employee.Name} {i.Employee.LastName} {i.Employee.SecondLastName} - {i.Employee.DNI}", font, XBrushes.Black,
                     new XRect(50, y + data.GetLength(0) * cellHeight + 280, page.Width.Point - 50, 0),
                     XStringFormats.TopLeft);
 

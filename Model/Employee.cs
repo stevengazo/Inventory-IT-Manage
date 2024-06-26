@@ -6,6 +6,7 @@ namespace InventoryIT.Model
     {
         [Key]
         public int EmployeeId { get; set; }
+        public int DNI {  get; set; }   
         public string Name { get; set; }
         public string LastName { get; set; }
         public string SecondLastName { get; set; }

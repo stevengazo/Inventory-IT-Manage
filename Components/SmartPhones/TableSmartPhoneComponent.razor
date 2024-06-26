@@ -72,11 +72,16 @@
                         Inactivo
                     </td>
                 }
-                <td>
+
+                <td class="d-flex flex-row gap-1">
                     <a href="/phone-number-user" class="btn btn-outline-success">Asignacion</a>
-                </td>
-                <td>
-                    <a href="/smartphone/edit/@i.SmartPhoneModelId" class="btn btn-outline-success">Editar</a>
+
+                    <a href="/smartphone/edit/@i.SmartPhoneModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
+                        <span class="oi oi-pencil text-white" aria-hidden="true"></span>
+                    </a>
+                    <a href="" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
+                        <span class="oi oi-delete text-white" aria-hidden="true"></span>
+                    </a>
                 </td>
             </tr>
         }

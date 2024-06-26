@@ -2,12 +2,12 @@
 @inject IControllerServices<Employee> _EmployeeService
 @inject IHistoryServices<HistoryModel> _HistoryService
 
-<div class="shadow-sm my-2 p-2">
-    <h3>Asignación de Computadora</h3>
+<div class="shadow my-2 p-2 rounded rounded-1 align-content-center border border-1 d-flex flex-row justify-content-between">
+    <h5 >Asignación de Computadora</h5>
 
-    <div class="d-flex flex-row  ">
-        <EditForm Model="@ComputerModel" class="">
-            <InputSelect @bind-Value="ComputerModel.EmployeeId" class="form-control">
+    <div class="d-flex flex-row flex-row gap-2 ">
+        <EditForm Model="@ComputerModel">
+            <InputSelect @bind-Value="ComputerModel.EmployeeId" class="form-control mx-1">
                 <option value="0">Sin Asignar</option>
                 @foreach (Employee item in Employees)
                 {
@@ -15,7 +15,7 @@
                 }
             </InputSelect>
         </EditForm>
-        <button class="btn btn-outline-info mx-2" @onclick="Update">
+        <button class="btn btn-outline-info" @onclick="Update">
             Asignar
         </button>
     </div>

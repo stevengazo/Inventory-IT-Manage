@@ -26,7 +26,11 @@ namespace InventoryIT.Controllers
 
         public List<Employee> GetAll()
         {
-            return _InventoryDB.Employee.ToList();
+            return _InventoryDB.Employee
+                .Include(i=>i.Departament)
+                .OrderBy( i=> i.Fired)
+                .ThenBy( i=> i.LastName)
+                .ToList();
         }
 
         public Employee GetById(int id)

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations.InventoryDb
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240625232540_inventory")]
+    [Migration("20240626141434_inventory")]
     partial class inventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -231,6 +231,9 @@ namespace InventoryIT.Migrations.InventoryDb
 
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("DNI")
+                        .HasColumnType("int");
 
                     b.Property<int?>("DepartamentID")
                         .HasColumnType("int");
