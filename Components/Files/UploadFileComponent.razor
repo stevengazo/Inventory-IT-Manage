@@ -28,6 +28,8 @@
 <p>@uploadMessage</p>
 
 @code {
+    [Parameter]
+    public int id{ get; set; }
     // Variables de estado del componente
     private IBrowserFile _File;             // Archivo seleccionado por el usuario
     private byte[] fileContent;             // Contenido del archivo en bytes
@@ -52,10 +54,11 @@
                         FileSize = _File.Size,           // Tamaño del archivo en bytes
                         ContentType = _File.ContentType, // Tipo MIME del archivo
                         Content = fileContent,           // Contenido del archivo en bytes
+                        ComputerModelID = id
                     };
 
                 // Llamar al servicio para guardar el archivo
-                // await FService.SaveFileAsync(fileModel);
+                await FService.SaveFileAsync(fileModel);
 
                 // Actualizar mensaje de estado
                 uploadMessage = $"File '{fileModel.FileName}' uploaded successfully!";

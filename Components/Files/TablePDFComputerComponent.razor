@@ -1,0 +1,71 @@
+﻿
+@inject IJSRuntime JS
+@inject FileService FService
+
+
+<div class="p-2 my-3 shadow rounded rounded-1 border border-1">
+    <h4>Lista de Documentos</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Fecha Registro
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (FileModel item in fileModels)
+        {
+            <tr>
+                <th>
+                    @item.FileName
+                </th>
+                <th>
+                    
+                </th>
+                <th>
+                    <button @onclick="()=>DownloadPDF(item)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
+                        <span class="oi oi-document text-white" aria-hidden="true"></span>
+                    </button>
+                </th>
+            </tr>
+
+        }
+    </tbody>
+</table>
+</div>
+@code {
+    [Parameter]
+    public int id { get; set; }
+    List<FileModel> fileModels = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        fileModels = await FService.GetAllFilesAsync();
+        base.OnInitializedAsync();
+    }
+
+
+    private async Task DownloadPDF(FileModel e)
+    {
+        try
+        {
+            // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
+            string pdfBase64 = Convert.ToBase64String(e.Content);
+            // Invocar una función JavaScript para iniciar la descarga del PDF
+            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"{e.FileName}.pdf");
+        }
+        catch (Exception ec)
+        {
+            throw;
+        }
+    }
+
+}

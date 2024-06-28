@@ -2,6 +2,7 @@
 using InventoryIT.Data;
 using InventoryIT.Model;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {
@@ -14,20 +15,20 @@ namespace InventoryIT.Controllers
             this.dbContext = dbContext;
         }
 
-        public Task<IEnumerable<FileModel>> GetAllFilesAsync()
+        public Task<List<FileModel>> GetAllFilesAsync()
         {
-            throw new NotImplementedException();
+            return  dbContext.File.ToListAsync();
         }
 
         public Task<FileModel> GetFileByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return dbContext.File.FirstOrDefaultAsync(f => f.Id == id); 
         }
 
         public async Task SaveFileAsync(FileModel file)
         {
             dbContext.File.Add(file);
-            dbContext.SaveChangesAsync();
+           await dbContext.SaveChangesAsync();
         }
     }
 }

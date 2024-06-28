@@ -7,6 +7,6 @@ namespace InventoryIT.Contracts
     {
             Task SaveFileAsync(FileModel file);
             Task<FileModel> GetFileByIdAsync(int id);
-            Task<IEnumerable<FileModel>> GetAllFilesAsync();    
+            Task<List<FileModel>> GetAllFilesAsync();    
     }
 }

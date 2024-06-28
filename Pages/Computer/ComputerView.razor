@@ -12,7 +12,8 @@
     
     <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
     <TableHistoryByDeviceComponent Histories="@Histories" />
-    <UploadFileComponent />
+    <UploadFileComponent  id="_id" />
+    <TablePDFComputerComponent/>
 
 }
 else
@@ -26,14 +27,14 @@ else
 
     [Parameter]
     public string id { get; set; }
-
+    int _id = 0;
     bool flag = true;
     List<HistoryModel> Histories = new();
     private ComputerModel Computer { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        flag = int.TryParse(id, out int _id);
+        flag = int.TryParse(id, out _id);
 
         Computer = (flag) ? _ComputerService.GetById(_id) : new();
         Histories = (flag) ? _HistoryService.HistoriesOfComputer(_id) : new();
@@ -46,7 +47,7 @@ else
         // Actualizar la lista de computadoras después de agregar una nueva computadora
         await InvokeAsync(() =>
         {
-            flag = int.TryParse(id, out int _id);
+            flag = int.TryParse(id, out _id);
             Computer = _ComputerService.GetById(_id);
             Histories = _HistoryService.HistoriesOfComputer(_id);
             StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
