@@ -3,20 +3,48 @@
 @inject ApplicationDbContext DbContext;
 
 
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>Usuario</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         @if (users != null)
         {
-            foreach (var item in users)
+            foreach (IdentityUser item in users)
             {
                 <tr>
                     <td>
                         @item.UserName
+                    </td>
+                    <td>
+                        @item.Email
+                    </td>
+                    @if (item.EmailConfirmed)
+                    {
+                        <td>
+                             Activo
+                        </td>
+                    }else
+                    {
+                        <td class="text-danger">
+                            Inactivo
+                        </td>
+                    }
+                    <td> 
+                        <a href="#" class=" mx-1 bg-info h-100 h-100 rounded rounded-1 p-2 text-white text-decoration-none">
+                            <span class="oi oi-eye text-white" aria-hidden="true"></span> Ver
+                        </a>
+                        <a href="/users/password/@item.Id" class="mx-1 bg-success h-100 h-100 rounded rounded-1 p-2 text-white text-decoration-none">
+                            <span class="oi oi-question-mark text-white" aria-hidden="true"> </span> Contraseña
+                        </a>
+                        <a href="#" class="mx-1 bg-danger h-100 h-100 rounded rounded-1 p-2  text-white text-decoration-none">
+                            <span class="oi oi-delete text-white" aria-hidden="true"></span> Desactivar
+                        </a>
                     </td>
                 </tr>
             }
@@ -27,11 +55,13 @@
 
 
 @code{
-    List<IdentityUser> users { get; set; }
+    [Parameter]
+    public List<IdentityUser> users { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
-        users = DbContext.Users.ToList();
+        
         base.OnInitializedAsync();
     }
 }

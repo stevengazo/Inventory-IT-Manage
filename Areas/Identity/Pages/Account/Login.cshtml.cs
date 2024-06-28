@@ -113,8 +113,8 @@ namespace InventoryIT.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var username = _applicationdb.Users.FirstOrDefault(i => i.UserName.ToLower() == Input.User.ToLower()).Email;
-                var result = await _signInManager.PasswordSignInAsync(username.ToString(), Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var username = _applicationdb.Users.FirstOrDefault(i => i.UserName.ToLower() == Input.User.ToLower()).UserName;
+                var result = await _signInManager.PasswordSignInAsync(username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

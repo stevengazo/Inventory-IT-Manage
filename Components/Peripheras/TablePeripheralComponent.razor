@@ -84,23 +84,28 @@
                         {
                             <td>Sin Asignar</td>
                         }
-                        @if (C.Employee != null)
-                        {
-                            <td>
-                                <button @onclick="()=>DownloadPDF(C)" class="btn btn-sm btn-outline-info">Documento Entrega</button>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
+                        <td class="d-flex flex-row gap-1">
+                            @if (C.Employee != null)
+                            {
+                                <button @onclick="()=>DownloadPDF(C)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
+                                    <span class="oi oi-document text-white" aria-hidden="true"></span>
+                                </button>
+                            }
+                            else
+                            {
+
                                 <button class="btn btn-sm btn-outline-warning">No disponible</button>
-                            </td>
-                        }
-                        <td>
-                            <a href="/peripherals/@C.PeripheralModelId" class="btn btn-sm btn-outline-info">Ver</a>
-                        </td>
-                        <td>
-                            <a href="/peripherals/edit/@C.PeripheralModelId" class="btn btn-sm btn-outline-success">Editar</a>
+
+                            }
+                            <a href="/peripherals/@C.PeripheralModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
+                                <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                            </a>
+                            <a href="/peripherals/edit/@C.PeripheralModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
+                                <span class="oi oi-pencil text-white" aria-hidden="true"></span>
+                            </a>
+                            <a href="" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
+                                <span class="oi oi-delete text-white" aria-hidden="true"></span>
+                            </a>
                         </td>
                     </tr>
                 }
@@ -108,12 +113,6 @@
         </tbody>
     </table>
 </div>
-
-
-
-
-
-
 
 @code {
     [Parameter]

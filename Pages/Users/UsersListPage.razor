@@ -1,9 +1,31 @@
 ﻿@page "/users"
+@using InventoryIT.Data
+@using Microsoft.AspNetCore.Identity
+@inject ApplicationDbContext DbContext;
 
 <h3>Lista de usuarios</h3>
+<AddUserComponent OnComputerAdded="Updated"/>
 
-<UsersList/>
+<UsersList users="users"/>
 
 @code {
+
+    List<IdentityUser> users { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = DbContext.Users.ToList();
+        base.OnInitializedAsync();
+    }
+
+    private async Task Updated()
+    {
+        users = DbContext.Users.ToList();
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
 
 }

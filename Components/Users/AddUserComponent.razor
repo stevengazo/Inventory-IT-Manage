@@ -1,0 +1,104 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject UserManager<IdentityUser> userManager;
+@using InventoryIT.Data
+@using Microsoft.AspNetCore.Identity
+@inject ApplicationDbContext DbContext;
+
+
+
+
+
+
+<div class="border m-2 p-3 rounded rounded-1 shadow">
+    @if (HideForm)
+    {
+        <button @onclick="()=>HideForm=false" class="btn btn-outline-success">
+            Nuevo Registro
+        </button>
+    }
+    else
+    {
+
+        <EditForm Model="user">
+
+            <div>
+                <label>
+                    @nameof(user.UserName)
+                </label>
+                <InputText @bind-Value="user.UserName" class="form-control" />
+            </div>
+            <div>
+                <label>
+                    @nameof(user.Email)
+                </label>
+                <InputText @bind-Value="user.Email" class="form-control" />
+            </div>
+            <div>
+                <label>
+                    @nameof(user.PhoneNumber)
+                </label>
+                <InputText @bind-Value="user.PhoneNumber" class="form-control" />
+            </div>
+        </EditForm>
+        <div>
+            <label>
+                @nameof(Password)
+            </label>
+            <input type="password" @bind-value="Password" class="form-control" />
+        </div>
+        <div>
+            <label>
+                @nameof(ConfirmPassword)
+            </label>
+            <input type="password" @bind-value="ConfirmPassword" class="form-control" />
+        </div>
+        <label>
+            @ErrorMessage
+        </label>
+        <button @onclick="Add" class="btn btn-outline-info">
+            Agregar
+        </button>
+        <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
+            Cancelar
+        </button>
+    }
+</div>
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public EventCallback OnComputerAdded { get; set; }
+
+    private string Password = "";
+    private string ConfirmPassword = "";
+    private string ErrorMessage = "";
+    private bool Error = false;
+    bool HideForm = true;
+    private IdentityUser user = new();
+
+    private async Task Add()
+    {
+        if(Password != ConfirmPassword)
+        {
+            ErrorMessage = "Verifica la contrase;a";
+        }
+        else
+        {
+            user.Id = Guid.NewGuid().ToString();
+            user.NormalizedEmail = user.Email.ToUpper();
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
+            DbContext.Users.Add(user);
+            DbContext.SaveChanges();
+            await userManager.AddPasswordAsync(user, Password);
+            await OnComputerAdded.InvokeAsync();
+            user = new();
+            HideForm = true;
+        }
+
+    }
+}
