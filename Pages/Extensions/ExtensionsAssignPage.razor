@@ -4,12 +4,21 @@
 
 
 <h3>
-    Asignacion de Extension
+    Asignación de Extension
 </h3>
-<p>
-    Indique el nombre del empleado que tendra asignada la extension en cuestion
-</p>
-<AssignExtensionComponent PhoneExtension="@extension" />
+
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <p>
+            Indique el nombre del empleado que tendrá asignada la extension en cuestión
+        </p>
+        <AssignExtensionComponent PhoneExtension="@extension" />
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
 
 
 @code {

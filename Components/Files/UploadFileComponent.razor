@@ -3,14 +3,18 @@
 
 
 
-<div class="shadow my-2 p-2 rounded rounded-1 border border-1 ">
+<div class="shadow my-2 p-2 align-middle rounded rounded-1 border border-1 ">
+    
+
     <!-- Sección de carga de archivos -->
-    <div class="d-flex flex-row  justify-content-between">
-
-        <!-- Encabezado del componente -->
-        <h3>Cargar Nuevo Archivo</h3>
-
-        <div class="d-flex flex-row gap2 w-50">
+    <div class="d-flex flex-row justify-content-between ">
+        <div class="d-flex flex-row gap-2 align-middle justify-content-center">
+            <span class=" bg-info h-100 h-100 p-2 rounded rounded-1 oi oi-data-transfer-upload text-white" aria-hidden="true"></span>
+            <!-- Encabezado del componente -->
+            <h4 class="text-start h-100 align-content-center">Cargar Nuevo Archivo</h4>
+        </div>
+            
+        <div class="d-flex flex-row gap-2 w-50">
             <InputFile OnChange="LoadFile" accept=".pdf" class="form-control w-100 " />
             <!-- Botón de carga de archivos -->
             <button @onclick="AddFile" class="btn btn-outline-info" disabled="@(!canUpload || isLoading)">
@@ -29,9 +33,9 @@
         </div>
     </div>
     <!-- Mensaje de estado de la carga -->
-    <p class="text-info p-1 text-end">@uploadMessage</p>
+    
 </div>
-
+<label class="text-info p-1 text-end">@uploadMessage</label>
 
 
 

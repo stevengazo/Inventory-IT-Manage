@@ -18,9 +18,16 @@
                 <td>
                     Modelo
                 </td>
-                <td>
-                    Costo
-                </td>
+                <AuthorizeView Roles="Administrador,Lector">
+                    <Authorized>
+                        <td>
+                            Costo
+                        </td>
+                    </Authorized>
+                    <NotAuthorized>
+
+                    </NotAuthorized>
+                </AuthorizeView>
                 <td>
                     Tipo Disco
                 </td>
@@ -62,9 +69,18 @@
                         <td>
                             @C.ModelName
                         </td>
-                        <td>
-                            @C.Cost
-                        </td>
+                        <AuthorizeView Roles="Administrador,Lector">
+                            <Authorized>
+                                <td>
+                                    @C.Cost
+                                </td>
+                            </Authorized>
+                            <NotAuthorized>
+
+                            </NotAuthorized>
+                        </AuthorizeView>
+
+
                         @if (C.HaveSSD)
                         {
                             <td>SSD</td>

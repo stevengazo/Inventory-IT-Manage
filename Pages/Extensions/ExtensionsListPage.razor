@@ -3,12 +3,24 @@
 @inject IControllerServices<PhoneExtension> _ExtensionsService;
 
 
+
+
 <h3>
     Lista de Extensiones
 </h3>
 
-<AddExtensionComponent OnExtensionAdded="UpdatedExtension" />
-<TableExtensionsComponent Extensions="@phoneExtensions"/>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <AddExtensionComponent OnExtensionAdded="UpdatedExtension" />
+        <TableExtensionsComponent Extensions="@phoneExtensions" PublicInfo="@false" />
+    </Authorized>
+    <NotAuthorized>
+        <TableExtensionsComponent Extensions="@phoneExtensions" PublicInfo="true" />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
 
 @code {
     private List<PhoneExtension> phoneExtensions = new();

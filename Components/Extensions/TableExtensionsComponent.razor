@@ -22,12 +22,15 @@
             <th>
                 PBX
             </th>
-            <th>
-                Usuario
-            </th>
-            <th>
-                Contrasena
-            </th>
+            @if (!infoisPublic)
+            {
+                <th>
+                    Usuario
+                </th>
+                <th>
+                    Contraseña
+                </th>
+            }
             <th>
                 Extension
             </th>
@@ -51,12 +54,15 @@
                     <td>
                         @item.PhoneNumberPBX
                     </td>
-                    <td>
-                        @item.UserNumber
-                    </td>
-                    <td>
-                        @item.Password
-                    </td>
+                    @if (!infoisPublic)
+                    {
+                        <td>
+                            @item.UserNumber
+                        </td>
+                        <td>
+                            @item.Password
+                        </td>
+                    }
                     <td>
                         @item.Extension
                     </td>
@@ -78,13 +84,25 @@
                          Sin Asignar
                         </td>
                     }
-                    <td class="d-flex flex-row gap-1">
-                        <a href="/extensions/@item.PhoneExtensionId" class="btn btn-outline-info">Detalles</a>
+                    <AuthorizeView Roles="Administrador,Lector">
+                        <Authorized>
+                            <td class="d-flex flex-row gap-1">
+                                <a href="/extensions/@item.PhoneExtensionId" class="btn btn-outline-info">Detalles</a>
+
+                                <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-success">Asignación</a>
+
+                                <a href="/extension/edit/@item.PhoneExtensionId" class="btn btn-outline-info">Editar</a>
+                            </td>
+
+                        </Authorized>
+                        <NotAuthorized>
+                            <td class="text-warning">
+                                Acciones no disponibles
+                            </td>
+                        </NotAuthorized>
+                    </AuthorizeView>
+
                     
-                        <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-success">Asignación</a>
-                    
-                        <a href="/extension/edit/@item.PhoneExtensionId" class="btn btn-outline-info">Editar</a>
-                    </td>
                 </tr>
 
             }
@@ -97,7 +115,16 @@
 @code {
     [Parameter]
     public List<PhoneExtension> Extensions { get; set; }
+    [Parameter]
+    public bool PublicInfo { get; set; }
 
+    private bool infoisPublic = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        infoisPublic = PublicInfo;
+        base.OnInitializedAsync();   
+    }
 
     private async Task DownloadPDF()
     {

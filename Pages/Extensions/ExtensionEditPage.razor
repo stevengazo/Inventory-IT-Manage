@@ -6,10 +6,21 @@
 <h3>
     Edicion de Extension
 </h3>
-<p>
-    Cambie los valores de la extension según lo requiera
-</p>
-<UpdateExtensionComponent ObjExtension="@extension" />
+
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <p>
+            Cambie los valores de la extension según lo requiera
+        </p>
+        <UpdateExtensionComponent ObjExtension="@extension" />
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
 
 
 @code {

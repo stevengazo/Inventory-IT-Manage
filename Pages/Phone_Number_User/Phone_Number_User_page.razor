@@ -2,10 +2,17 @@
 @inject IControllerServices<Phone_Number_User_Model> _Phone_Number_UserService;
 
 <h3>
-    Lista de Asignaciones de Celulares y Lineas Telefonicas
+    Lista de Asignaciones de Celulares y Líneas Telefónicas
 </h3>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <AddPhone_Number_UserComponent eventCallback="UpdateList" phone_Number_s="@phone_Numbers" />
+    </Authorized>
+    <NotAuthorized>
 
-<AddPhone_Number_UserComponent eventCallback="UpdateList"  phone_Number_s="@phone_Numbers" />
+    </NotAuthorized>
+</AuthorizeView>
+
 <TablePhone_Number_UserComponent phone_Number_User_Models="@phone_Numbers"  />
 
 

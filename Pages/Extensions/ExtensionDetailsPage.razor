@@ -5,15 +5,24 @@
     Información de la Extension
 </h3>
 
-@if (flag)
-{
-    <DetailsExtensionComponent Extension="@extension" />
- <AssignExtensionComponent PhoneExtension="@extension" OnUpdated="@Updated" />
-}
-else
-{
-    <h4>Error "@id " no es valido</h4>
-}
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        @if (flag)
+        {
+            <DetailsExtensionComponent Extension="@extension" />
+            <AssignExtensionComponent PhoneExtension="@extension" OnUpdated="@Updated" />
+        }
+        else
+        {
+            <h4>Error "@id " no es valido</h4>
+        }
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
 
 
 

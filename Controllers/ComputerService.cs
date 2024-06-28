@@ -29,7 +29,9 @@ namespace InventoryIT.Controllers
 
         public List<ComputerModel> GetAll()
         {
-            return _inventoryDb.Computer.Include(i => i.Employee).ToList();
+            return _inventoryDb.Computer
+                .Include(i => i.Brand)
+                .Include(i => i.Employee).ToList();
         }
         public ComputerModel GetById(int id) 
         {

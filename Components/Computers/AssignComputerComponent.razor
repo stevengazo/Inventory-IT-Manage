@@ -3,8 +3,11 @@
 @inject IHistoryServices<HistoryModel> _HistoryService
 
 <div class="shadow my-2 p-2 rounded rounded-1 align-content-center border border-1 d-flex flex-row justify-content-between">
-    <h5 >Asignación de Computadora</h5>
-
+    <div class="d-flex flex-row gap-2 align-middle justify-content-center">
+        <span class=" bg-warning h-100 h-100 p-2 rounded rounded-1 oi oi-person text-white" aria-hidden="true"></span>
+        <!-- Encabezado del componente -->
+        <h4 class="text-start h-100 align-content-center">Asignar Activo</h4>
+    </div>
     <div class="d-flex flex-row flex-row gap-2 ">
         <EditForm Model="@ComputerModel">
             <InputSelect @bind-Value="ComputerModel.EmployeeId" class="form-control mx-1">

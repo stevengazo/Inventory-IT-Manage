@@ -3,7 +3,18 @@
 
 <h3>Edicion de Laptop</h3>
 
-<UpdateComputerComponent ObjComputer="@computerModel"/>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <UpdateComputerComponent ObjComputer="@computerModel" />
+
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
 
 @code {
     [Parameter]
