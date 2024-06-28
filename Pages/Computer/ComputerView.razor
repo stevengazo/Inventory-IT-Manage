@@ -13,7 +13,7 @@
     <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
     <TableHistoryByDeviceComponent Histories="@Histories" />
     <UploadFileComponent  id="_id" />
-    <TablePDFComputerComponent/>
+    <TablePDFComputerComponent id="_id"/>
 
 }
 else
@@ -41,6 +41,10 @@ else
         
         base.OnInitializedAsync();   
     }
+
+
+    
+
 
     private async Task UpdateComputerList()
     {

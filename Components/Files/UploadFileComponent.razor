@@ -1,31 +1,39 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @inject FileService FService
 
-<!-- Encabezado del componente -->
-<h3>Upload File Component</h3>
 
-<!-- Sección de carga de archivos -->
-<div class="d-flex flex-row gap-2">
-    <InputFile OnChange="LoadFile" accept=".pdf" class="form-control" />
+
+<div class="shadow my-2 p-2 rounded rounded-1 border border-1 ">
+    <!-- Sección de carga de archivos -->
+    <div class="d-flex flex-row  justify-content-between">
+
+        <!-- Encabezado del componente -->
+        <h3>Cargar Nuevo Archivo</h3>
+
+        <div class="d-flex flex-row gap2 w-50">
+            <InputFile OnChange="LoadFile" accept=".pdf" class="form-control w-100 " />
+            <!-- Botón de carga de archivos -->
+            <button @onclick="AddFile" class="btn btn-outline-info" disabled="@(!canUpload || isLoading)">
+                @if (isLoading)
+                {
+                    <!-- Indicador de carga -->
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span>Loading...</span>
+                }
+                else
+                {
+                    <!-- Texto del botón -->
+                    <span>Subir</span>
+                }
+            </button>
+        </div>
+    </div>
+    <!-- Mensaje de estado de la carga -->
+    <p class="text-info p-1 text-end">@uploadMessage</p>
 </div>
 
-<!-- Botón de carga de archivos -->
-<button @onclick="AddFile" class="btn btn-outline-info" disabled="@(!canUpload || isLoading)">
-    @if (isLoading)
-    {
-        <!-- Indicador de carga -->
-        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        <span>Loading...</span>
-    }
-    else
-    {
-        <!-- Texto del botón -->
-        <span>Subir</span>
-    }
-</button>
 
-<!-- Mensaje de estado de la carga -->
-<p>@uploadMessage</p>
+
 
 @code {
     [Parameter]
@@ -61,7 +69,7 @@
                 await FService.SaveFileAsync(fileModel);
 
                 // Actualizar mensaje de estado
-                uploadMessage = $"File '{fileModel.FileName}' uploaded successfully!";
+                uploadMessage = $"Archivo '{fileModel.FileName}' Cargado!";
 
                 // Limpiar variables después de la carga
                 _File = null;

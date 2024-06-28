@@ -22,7 +22,9 @@ namespace InventoryIT.Controllers
 
         public void Delete(ComputerModel entity)
         {
-            throw new NotImplementedException();
+            entity.IsActive = false;    
+            _inventoryDb.Computer.Update(entity);
+            _inventoryDb.SaveChanges();
         }
 
         public List<ComputerModel> GetAll()

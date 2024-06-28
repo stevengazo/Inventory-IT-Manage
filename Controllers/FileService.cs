@@ -15,9 +15,31 @@ namespace InventoryIT.Controllers
             this.dbContext = dbContext;
         }
 
+        public Task Delete(FileModel file)
+        {
+            dbContext.File.Remove(file);
+            dbContext.SaveChanges();
+            return Task.CompletedTask;
+        }
+
         public Task<List<FileModel>> GetAllFilesAsync()
         {
             return  dbContext.File.ToListAsync();
+        }
+
+        public Task<List<FileModel>> GetAllFilesComputerAsync(int id)
+        {
+            return dbContext.File.Where(i=>i.ComputerModelID == id).ToListAsync();
+        }
+
+        public Task<List<FileModel>> GetAllPeripheralsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<FileModel>> GetAllPhoneAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<FileModel> GetFileByIdAsync(int id)
