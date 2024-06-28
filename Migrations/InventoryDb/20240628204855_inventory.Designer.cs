@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations.InventoryDb
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240628171756_inventory")]
+    [Migration("20240628204855_inventory")]
     partial class inventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -296,9 +296,19 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("PeripheralModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SmartPhoneModelId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ComputerModelID");
+
+                    b.HasIndex("PeripheralModelId");
+
+                    b.HasIndex("SmartPhoneModelId");
 
                     b.ToTable("File");
                 });
@@ -594,7 +604,19 @@ namespace InventoryIT.Migrations.InventoryDb
                         .WithMany("Files")
                         .HasForeignKey("ComputerModelID");
 
+                    b.HasOne("InventoryIT.Model.PeripheralModel", "PeripheralModel")
+                        .WithMany("Files")
+                        .HasForeignKey("PeripheralModelId");
+
+                    b.HasOne("InventoryIT.Model.SmartPhoneModel", "SmartPhoneModel")
+                        .WithMany("Files")
+                        .HasForeignKey("SmartPhoneModelId");
+
                     b.Navigation("ComputerModel");
+
+                    b.Navigation("PeripheralModel");
+
+                    b.Navigation("SmartPhoneModel");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.HistoryModel", b =>
@@ -710,6 +732,8 @@ namespace InventoryIT.Migrations.InventoryDb
 
             modelBuilder.Entity("InventoryIT.Model.PeripheralModel", b =>
                 {
+                    b.Navigation("Files");
+
                     b.Navigation("History");
                 });
 
@@ -720,6 +744,8 @@ namespace InventoryIT.Migrations.InventoryDb
 
             modelBuilder.Entity("InventoryIT.Model.SmartPhoneModel", b =>
                 {
+                    b.Navigation("Files");
+
                     b.Navigation("History");
 
                     b.Navigation("Phone_Number_User_s");

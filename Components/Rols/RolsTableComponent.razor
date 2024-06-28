@@ -1,0 +1,74 @@
+﻿@using InventoryIT.Data;
+@using Microsoft.AspNetCore.Identity
+@inject ApplicationDbContext DbContext
+
+<h3>RolsTableComponent</h3>
+
+<div class="d-flex flex-row">
+    <EditForm Model="userRole" class="form-control">
+        <InputSelect @bind-Value="userRole.RoleId">
+            @foreach (IdentityRole role in roles)
+            {
+                <option value="@role.Id">@role.Name</option>
+            }
+        </InputSelect>
+    </EditForm>
+    <button class="btn btn-outline-info" @onclick="AddRole">
+        Agregar
+    </button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Rol
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in rolesUser)
+        {
+            <tr>
+                <td>@role.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+
+    IdentityUserRole<string> userRole = new IdentityUserRole<string>();
+    List<IdentityRole> roles = new List<IdentityRole>();
+    List<IdentityRole> rolesUser = new List<IdentityRole>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = DbContext.Roles.ToList();
+        rolesUser = (from ur in DbContext.UserRoles
+                     join r in DbContext.Roles on ur.RoleId equals r.Id
+                     where ur.UserId == UserId
+                     select r).ToList();
+    }
+
+    private async Task AddRole()
+    {
+        if (!string.IsNullOrEmpty(userRole.RoleId))
+        {
+            var newRole = await DbContext.Roles.FindAsync(userRole.RoleId);
+            if (newRole != null)
+            {
+                var userRoleEntity = new IdentityUserRole<string>
+                    {
+                        RoleId = newRole.Id,
+                        UserId = UserId
+                    };
+                DbContext.UserRoles.Add(userRoleEntity);
+                await DbContext.SaveChangesAsync();
+                rolesUser.Add(newRole);
+            }
+        }
+    }
+}

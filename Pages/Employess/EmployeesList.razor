@@ -2,11 +2,19 @@
 @inject IControllerServices<Employee> _EmployeesServices;
 <h3>Lista de Empleados</h3>
 
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <AddDepartamentComponent />
+        <AddEmployeeComponent OnEmployeeAdded="UpdateEmployeeList" />
+        <TableEmployeeComponent Employees="@Employees" />
+    </Authorized>
+    <NotAuthorized>
+        No posee permisos
+    </NotAuthorized>
+</AuthorizeView>
 
 
-<AddDepartamentComponent />
-<AddEmployeeComponent OnEmployeeAdded="UpdateEmployeeList" />
-<TableEmployeeComponent  Employees="@Employees" />
+
 
 
 

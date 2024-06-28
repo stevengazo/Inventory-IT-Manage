@@ -35,16 +35,16 @@
                             Inactivo
                         </td>
                     }
-                    <td> 
-                        <a href="#" class=" mx-1 bg-info h-100 h-100 rounded rounded-1 p-2 text-white text-decoration-none">
+                    <td>
+                        <a href="/users/@item.Id" class=" mx-1 bg-info h-100 h-100 rounded rounded-1 p-2 text-white text-decoration-none">
                             <span class="oi oi-eye text-white" aria-hidden="true"></span> Ver
                         </a>
                         <a href="/users/password/@item.Id" class="mx-1 bg-success h-100 h-100 rounded rounded-1 p-2 text-white text-decoration-none">
                             <span class="oi oi-question-mark text-white" aria-hidden="true"> </span> Contraseña
                         </a>
-                        <a href="#" class="mx-1 bg-danger h-100 h-100 rounded rounded-1 p-2  text-white text-decoration-none">
+                        <button @onclick="()=>Delete(item)" class="mx-1 btn btn-danger btn-sm  rounded p-2 border border-0  text-white">
                             <span class="oi oi-delete text-white" aria-hidden="true"></span> Desactivar
-                        </a>
+                        </button>
                     </td>
                 </tr>
             }
@@ -61,7 +61,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         base.OnInitializedAsync();
+    }
+
+    protected void Delete(IdentityUser U)
+    {
+        var UR = DbContext.UserRoles.Where(i => i.UserId == U.Id).ToList();
+        DbContext.UserRoles.RemoveRange(UR);
+        DbContext.Users.Remove(U);
+        DbContext.SaveChanges();
+        users.Remove(U);
     }
 }

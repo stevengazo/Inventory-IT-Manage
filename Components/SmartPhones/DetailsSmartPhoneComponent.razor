@@ -1,0 +1,79 @@
+﻿
+<div class="p-2 my-3 shadow rounded rounded-1 border border-1">
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>
+                    @nameof(smartPhone.PhoneNumber)
+                </th>
+                <td>
+                    @smartPhone.PhoneNumber
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @nameof(smartPhone.AdquisitionDate)
+                </th>
+                <td>
+                    @smartPhone.AdquisitionDate.ToLongDateString()
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @nameof(smartPhone.PhoneModel)
+                </th>
+                <td>
+                    @smartPhone.PhoneModel
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @nameof(smartPhone.PhoneNumber)
+                </th>
+                <td>
+                    @smartPhone.PhoneNumber
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @nameof(smartPhone.Description)
+                </th>
+                <td>
+                    @smartPhone.Description
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @nameof(smartPhone.Cost)
+                </th>
+                <td>
+                    @smartPhone.Cost.ToString();
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @nameof(smartPhone.Status)
+                </th>
+                <td>
+                    @smartPhone.Status
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    @nameof(smartPhone.Brand)
+                </th>
+                <td>
+                    @smartPhone.Brand.Name
+                </td>
+            </tr>
+        </tbody>
+        
+    </table>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public SmartPhoneModel smartPhone { get; set; }
+}

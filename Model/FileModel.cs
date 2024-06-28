@@ -15,5 +15,11 @@ namespace InventoryIT.Model
         public int? ComputerModelID { get; set; }
         public ComputerModel? ComputerModel { get; set; }
 
+        public int? SmartPhoneModelId { get; set; }
+        public SmartPhoneModel? SmartPhoneModel { get; set; }
+
+        public int? PeripheralModelId { get; set; }
+        public PeripheralModel? PeripheralModel { get; set; }
+
     }
 }

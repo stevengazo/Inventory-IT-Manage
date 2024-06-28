@@ -21,5 +21,6 @@ namespace InventoryIT.Model
         public int? EmployeeId { get; set; }
         public Employee? Employee { get; set; }
         public ICollection<HistoryModel>? History { get; set; }
+        public ICollection<FileModel>? Files { get; set; }
     }
 }

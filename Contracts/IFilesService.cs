@@ -8,6 +8,7 @@ namespace InventoryIT.Contracts
         Task SaveFileAsync(FileModel file);
         Task<FileModel> GetFileByIdAsync(int id);
         Task<List<FileModel>> GetAllFilesComputerAsync(int id);
+        Task<List<FileModel>> GetAllFilesSmartPhoneAsync(int id);
         Task<List<FileModel>> GetAllPhoneAsync(int id);
         Task<List<FileModel>> GetAllPeripheralsAsync();
         Task Delete(FileModel e);

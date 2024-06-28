@@ -1,0 +1,10 @@
+﻿@page "/users/{id}"
+
+<h3>Informacion Usuario</h3>
+
+<RolsTableComponent UserId="@id" />
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+}

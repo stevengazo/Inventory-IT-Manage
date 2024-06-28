@@ -249,7 +249,9 @@ namespace InventoryIT.Migrations.InventoryDb
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    ComputerModelID = table.Column<int>(type: "int", nullable: true)
+                    ComputerModelID = table.Column<int>(type: "int", nullable: true),
+                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: true),
+                    PeripheralModelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -259,6 +261,16 @@ namespace InventoryIT.Migrations.InventoryDb
                         column: x => x.ComputerModelID,
                         principalTable: "Computer",
                         principalColumn: "ComputerModelID");
+                    table.ForeignKey(
+                        name: "FK_File_Peripheral_PeripheralModelId",
+                        column: x => x.PeripheralModelId,
+                        principalTable: "Peripheral",
+                        principalColumn: "PeripheralModelId");
+                    table.ForeignKey(
+                        name: "FK_File_SmartPhone_SmartPhoneModelId",
+                        column: x => x.SmartPhoneModelId,
+                        principalTable: "SmartPhone",
+                        principalColumn: "SmartPhoneModelId");
                 });
 
             migrationBuilder.CreateTable(
@@ -344,6 +356,16 @@ namespace InventoryIT.Migrations.InventoryDb
                 name: "IX_File_ComputerModelID",
                 table: "File",
                 column: "ComputerModelID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_File_PeripheralModelId",
+                table: "File",
+                column: "PeripheralModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_File_SmartPhoneModelId",
+                table: "File",
+                column: "SmartPhoneModelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_History_ComputerModelID",

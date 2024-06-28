@@ -22,7 +22,9 @@ namespace InventoryIT.Controllers
 
         public void Delete(SmartPhoneModel entity)
         {
-            throw new NotImplementedException();
+            entity.isActive =false;
+            _inventoryDbContext.SmartPhone.Update(entity);
+            _inventoryDbContext.SaveChanges();
         }
 
         public List<SmartPhoneModel> GetAll()
@@ -32,7 +34,9 @@ namespace InventoryIT.Controllers
 
         public SmartPhoneModel GetById(int id)
         {
-            return _inventoryDbContext.SmartPhone.FirstOrDefault(i => i.SmartPhoneModelId == id);
+            return _inventoryDbContext.SmartPhone
+                .Include(i=>i.Brand)
+                .FirstOrDefault(i => i.SmartPhoneModelId == id);
         }
 
         public List<SmartPhoneModel> Search(string value)

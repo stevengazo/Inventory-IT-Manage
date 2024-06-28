@@ -44,7 +44,10 @@ namespace InventoryIT.Controllers
 
         public List<HistoryModel> HistoriesOfSmartphones(int id)
         {
-            throw new NotImplementedException();
+            var data = (from i in _inventoryDB.History
+                        where i.SmartPhoneModelId == id
+                        select i).ToList();
+            return data;
         }
 
         public List<HistoryModel> Search(string value)

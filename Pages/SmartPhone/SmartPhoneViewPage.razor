@@ -1,0 +1,29 @@
+﻿@inject IControllerServices<SmartPhoneModel> _SmartPhoneService;
+@inject IHistoryServices<HistoryModel> _HistoryService
+@page "/smartphone/{id}"
+
+<h3>Información del Teléfono</h3>
+
+
+<DetailsSmartPhoneComponent smartPhone="@smartPhone"/>
+<TableHistoryByDeviceComponent Histories="@Histories"  />
+<UploadFileComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" />
+<TablePDFComputerComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" />
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    public SmartPhoneModel smartPhone = new();
+    List<HistoryModel> Histories = new();
+
+    private int _id = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var flag = int.TryParse(id, out _id);
+        smartPhone = _SmartPhoneService.GetById(_id);
+        Histories = (flag) ? _HistoryService.HistoriesOfSmartphones(_id) : new();
+        base.OnInitializedAsync();
+    }
+}

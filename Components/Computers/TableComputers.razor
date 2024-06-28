@@ -100,29 +100,52 @@
                         {
                             <td>Sin Asignar</td>
                         }
-                        <td class="d-flex flex-row gap-1">
-                            @if (C.Employee != null)
-                            {
-                                <button @onclick="()=>DownloadPDF(C)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
-                                    <span class="oi oi-document text-white" aria-hidden="true"></span>
-                                </button>
-                            }
-                            else
-                            {
+                        <AuthorizeView Roles="Administrador">
+                            <Authorized>
+                                <td class="d-flex flex-row gap-1">
+                                    @if (C.Employee != null)
+                                    {
+                                        <button @onclick="()=>DownloadPDF(C)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
+                                            <span class="oi oi-document text-white" aria-hidden="true"></span>
+                                        </button>
+                                    }
+                                    else
+                                    {
 
-                                <button class="btn btn-sm btn-outline-warning">No disponible</button>
+                                        <button class="btn btn-sm btn-outline-warning">No disponible</button>
 
-                            }
-                            <a href="/computers/@C.ComputerModelID" class="bg-info h-100 h-100 rounded rounded-1 p-2">
-                                <span class="oi oi-eye text-white" aria-hidden="true"></span>
-                            </a>
-                            <a href="/computers/edit/@C.ComputerModelID" class="bg-success h-100 h-100 rounded rounded-1 p-2">
-                                <span class="oi oi-pencil text-white" aria-hidden="true"></span>
-                            </a>
-                            <button @onclick="()=>Disable(C)" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
-                                <span class="oi oi-delete text-white" aria-hidden="true"></span>
-                            </button>
-                        </td>
+                                    }
+                                    <a href="/computers/@C.ComputerModelID" class="bg-info h-100 h-100 rounded rounded-1 p-2">
+                                        <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                                    </a>
+                                    <a href="/computers/edit/@C.ComputerModelID" class="bg-success h-100 h-100 rounded rounded-1 p-2">
+                                        <span class="oi oi-pencil text-white" aria-hidden="true"></span>
+                                    </a>
+                                    <button @onclick="()=>Disable(C)" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
+                                        <span class="oi oi-delete text-white" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+
+                            </Authorized>
+                            <NotAuthorized>
+                                <td class="d-flex flex-row gap-1">
+                                    @if (C.Employee != null)
+                                    {
+                                        <button @onclick="()=>DownloadPDF(C)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
+                                            <span class="oi oi-document text-white" aria-hidden="true"></span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+
+                                        <button class="btn btn-sm btn-outline-warning">No disponible</button>
+
+                                    }
+                                </td>
+                            </NotAuthorized>
+                        </AuthorizeView>
+
+                        
                     </tr>
                 }
             }

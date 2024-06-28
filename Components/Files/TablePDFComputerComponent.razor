@@ -27,7 +27,7 @@
                         @item.FileName
                     </th>
                     <th>
-
+                        @item.CreationDate.ToLongDateString()
                     </th>
                     <th>
                         <button @onclick="()=>DownloadPDF(item)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
@@ -38,7 +38,6 @@
                         </button>
                     </th>
                 </tr>
-
             }
         </tbody>
     </table>
@@ -48,9 +47,23 @@
     public int id { get; set; }
     List<FileModel> fileModels = new();
 
+    [Parameter]
+    public string TypeModel { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        fileModels = await FService.GetAllFilesComputerAsync(id);
+        switch (TypeModel)
+        {
+            case nameof(SmartPhoneModel):
+                fileModels = await FService.GetAllFilesSmartPhoneAsync(id);
+                break;
+            case nameof(ComputerModel):
+                fileModels = await FService.GetAllFilesComputerAsync(id);
+                break;
+            default:
+                break;
+        }
+        
         base.OnInitializedAsync();
     }
 

@@ -1,4 +1,6 @@
-﻿<h3>Telefonos Registrados</h3>
+﻿@inject IControllerServices<SmartPhoneModel> _SmartPhoneService;
+
+<h3>Teléfonos Registrados</h3>
 
 
 
@@ -41,49 +43,53 @@
     <tbody>
         @foreach(SmartPhoneModel i in SmartPhones)
         {
-            <tr>
-                <td>
-                    @i.PhoneNumber
-                </td>
-                <td>
-                    @i.AdquisitionDate.ToLongDateString()
-                </td>
-                <td>
-                    @i.Brand.Name
-                </td>
-                <td>
-                    @i.PhoneModel
-                </td>
-                <td>
-                    @i.PhoneSerial
-                </td>
-                <td>
-                    @i.Cost
-                </td>
-                @if (i.isActive)
-                {
+            if (i.isActive)
+            {
+                <tr>
                     <td>
-                        Telefono Activo
+                        @i.PhoneNumber
                     </td>
-                }
-                else
-                {
                     <td>
-                        Inactivo
+                        @i.AdquisitionDate.ToLongDateString()
                     </td>
-                }
-
-                <td class="d-flex flex-row gap-1">
-                    <a href="/phone-number-user" class="btn btn-outline-success">Asignacion</a>
-
-                    <a href="/smartphone/edit/@i.SmartPhoneModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
-                        <span class="oi oi-pencil text-white" aria-hidden="true"></span>
-                    </a>
-                    <a href="" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
-                        <span class="oi oi-delete text-white" aria-hidden="true"></span>
-                    </a>
-                </td>
-            </tr>
+                    <td>
+                        @i.Brand.Name
+                    </td>
+                    <td>
+                        @i.PhoneModel
+                    </td>
+                    <td>
+                        @i.PhoneSerial
+                    </td>
+                    <td>
+                        @i.Cost
+                    </td>
+                    @if (i.isActive)
+                    {
+                        <td>
+                            Teléfono Activo
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            Inactivo
+                        </td>
+                    }
+                    <td class="d-flex flex-row gap-1">
+                        <a href="/phone-number-user" class="btn btn-outline-success">Asignación</a>
+                        <a href="/smartphone/@i.SmartPhoneModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
+                            <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                        </a>
+                        <a href="/smartphone/edit/@i.SmartPhoneModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
+                            <span class="oi oi-pencil text-white" aria-hidden="true"></span>
+                        </a>
+                        <button @onclick="()=> Disable(i)" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
+                            <span class="oi oi-delete text-white" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
@@ -98,6 +104,12 @@
     [Parameter]
     public List<SmartPhoneModel> SmartPhones { get; set; }
 
-    
- 
+
+
+    private void Disable(SmartPhoneModel e)
+    {
+        _SmartPhoneService.Delete(e);
+        SmartPhones.Remove(e);
+    }
+
 }

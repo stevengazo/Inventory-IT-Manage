@@ -37,7 +37,7 @@
 
 @code {
     [Parameter]
-    public int id{ get; set; }
+    public int id { get; set; }
     // Variables de estado del componente
     private IBrowserFile _File;             // Archivo seleccionado por el usuario
     private byte[] fileContent;             // Contenido del archivo en bytes
@@ -46,6 +46,9 @@
     private bool isLoading = false;         // Indica si se está procesando la carga
     int MaxSize = (13 * 1024 * 1024);       // Tamaño máximo permitido para el archivo (13MB)
 
+    [Parameter]
+    public string TypeModel { get; set; }
+
     // Método para manejar la carga del archivo
     private async Task AddFile()
     {
@@ -53,8 +56,6 @@
         {
             try
             {
-                isLoading = true;  // Inicia el indicador de carga
-
                 // Crear modelo de archivo para enviar al servicio
                 var fileModel = new FileModel
                     {
@@ -62,8 +63,23 @@
                         FileSize = _File.Size,           // Tamaño del archivo en bytes
                         ContentType = _File.ContentType, // Tipo MIME del archivo
                         Content = fileContent,           // Contenido del archivo en bytes
-                        ComputerModelID = id
+                        CreationDate = DateTime.Now
                     };
+                switch (TypeModel)
+                {
+                    case nameof(SmartPhoneModel):
+                        fileModel.SmartPhoneModelId = id;
+                        break;
+                    case nameof(ComputerModel):
+                        fileModel.ComputerModelID = id;
+                        break;
+                    default:
+                        break;
+                }
+
+                isLoading = true;  // Inicia el indicador de carga
+
+              
 
                 // Llamar al servicio para guardar el archivo
                 await FService.SaveFileAsync(fileModel);

@@ -3,24 +3,29 @@
 @inject IControllerServices<ComputerModel> _ComputerService
 @inject IHistoryServices<HistoryModel> _HistoryService
 
-    <h3>
-        Información de Computadora
-    </h3>
-@if (flag)
-{
-    <DetailsComputerComponent ComputerModel="@Computer" />
-    
-    <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
-    <TableHistoryByDeviceComponent Histories="@Histories" />
-    <UploadFileComponent  id="_id" />
-    <TablePDFComputerComponent id="_id"/>
+<h3>
+    Información de Computadora
+</h3>
 
-}
-else
-{
-    <h4>Error "@id " no es valido</h4>
-}
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        @if (flag)
+        {
+            <DetailsComputerComponent ComputerModel="@Computer" />
+            <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
+            <TableHistoryByDeviceComponent Histories="@Histories" />
+            <UploadFileComponent id="_id" TypeModel="@nameof(ComputerModel)" />
+            <TablePDFComputerComponent id="_id" TypeModel="@nameof(ComputerModel)" />
+        }
+        else
+        {
+            <h4>Error "@id " no es valido</h4>
+        }
+    </Authorized>
+    <NotAuthorized>
 
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {
@@ -38,12 +43,12 @@ else
 
         Computer = (flag) ? _ComputerService.GetById(_id) : new();
         Histories = (flag) ? _HistoryService.HistoriesOfComputer(_id) : new();
-        
-        base.OnInitializedAsync();   
+
+        base.OnInitializedAsync();
     }
 
 
-    
+
 
 
     private async Task UpdateComputerList()
