@@ -20,6 +20,7 @@ namespace InventoryIT.Model
         public bool HasNumericKeyboard { get; set; }
         public bool IsActive { get; set; }
         public ICollection<HistoryModel>? Histories { get; set; }
+        public ICollection<FileModel>? Files { get; set; } 
         public int? BrandId { get; set; }
         public Brand? Brand { get; set; }
 

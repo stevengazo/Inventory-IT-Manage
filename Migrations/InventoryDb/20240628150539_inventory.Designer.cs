@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations.InventoryDb
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240626141434_inventory")]
+    [Migration("20240628150539_inventory")]
     partial class inventory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -265,6 +265,39 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.HasIndex("DepartamentID");
 
                     b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.FileModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("ComputerModelID")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComputerModelID");
+
+                    b.ToTable("File");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.HistoryModel", b =>
@@ -552,6 +585,15 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Navigation("Departament");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.FileModel", b =>
+                {
+                    b.HasOne("InventoryIT.Model.ComputerModel", "ComputerModel")
+                        .WithMany("Files")
+                        .HasForeignKey("ComputerModelID");
+
+                    b.Navigation("ComputerModel");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.HistoryModel", b =>
                 {
                     b.HasOne("InventoryIT.Model.ComputerModel", "ComputerModel")
@@ -642,6 +684,8 @@ namespace InventoryIT.Migrations.InventoryDb
 
             modelBuilder.Entity("InventoryIT.Model.ComputerModel", b =>
                 {
+                    b.Navigation("Files");
+
                     b.Navigation("Histories");
                 });
 

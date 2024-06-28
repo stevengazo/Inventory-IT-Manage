@@ -9,8 +9,11 @@
 @if (flag)
 {
     <DetailsComputerComponent ComputerModel="@Computer" />
+    
     <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
     <TableHistoryByDeviceComponent Histories="@Histories" />
+    <UploadFileComponent />
+
 }
 else
 {

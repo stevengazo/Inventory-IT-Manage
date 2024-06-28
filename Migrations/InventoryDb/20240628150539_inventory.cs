@@ -239,6 +239,28 @@ namespace InventoryIT.Migrations.InventoryDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "File",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ComputerModelID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_File", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_File_Computer_ComputerModelID",
+                        column: x => x.ComputerModelID,
+                        principalTable: "Computer",
+                        principalColumn: "ComputerModelID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "History",
                 columns: table => new
                 {
@@ -318,6 +340,11 @@ namespace InventoryIT.Migrations.InventoryDb
                 column: "DepartamentID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_File_ComputerModelID",
+                table: "File",
+                column: "ComputerModelID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_History_ComputerModelID",
                 table: "History",
                 column: "ComputerModelID");
@@ -370,6 +397,9 @@ namespace InventoryIT.Migrations.InventoryDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "File");
+
             migrationBuilder.DropTable(
                 name: "History");
 
