@@ -5,7 +5,11 @@
 
 
 <div class="shadow p-2 rounded ">
-    <h3>Computadoras Existentes</h3>
+    <div class="d-flex flex-row justify-content-between p-2">
+        <h3 class="w-100">Computadoras Existentes</h3>
+        <input type="text" placeholder="Busqueda" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
+    </div>
+    
     <table class="table">
         <thead>
             <tr>
@@ -55,9 +59,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (Computers != null)
+            @if (computerstemp != null)
             {
-                @foreach (var C in Computers)
+                @foreach (var C in computerstemp)
                 {
                     <tr>
                         <td>
@@ -178,8 +182,13 @@
 @code {
     [Parameter]
     public List<ComputerModel> Computers { get; set; }
+    private List<ComputerModel> computerstemp = new();
+
+    
+
     protected override void OnParametersSet()
     {
+        computerstemp = Computers;
         base.OnParametersSet();
         StateHasChanged(); // Notificar a Blazor que se han actualizado los parámetros y debe renderizar de nuevo
     }
@@ -190,6 +199,22 @@
     {
         _ComputerService.Delete(e);
         Computers.Remove(e);
+    }
+
+    private void Search(string SearchValue="")
+    {
+        if (!string.IsNullOrEmpty(SearchValue))
+        {
+            computerstemp = (from i in Computers
+                             where i.SerialNumber.Contains(SearchValue) || i.ModelName.Contains(SearchValue)
+                             select i)
+                .ToList();
+       }
+        else
+        {
+            computerstemp = Computers;
+        }
+        
     }
 
     private async Task DownloadPDF(ComputerModel e)
