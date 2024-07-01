@@ -2,8 +2,21 @@
 @inject IControllerServices<SmartPhoneModel> _SmarthPhoneService;
 <h3>Telefonos Celulares</h3>
 
-<AddSmartPhoneComponent OnSmartPhoneAdded="@UpdateComputerList" />
-<TableSmartPhoneComponent SmartPhones="@SmartPhones"/>
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <AddSmartPhoneComponent OnSmartPhoneAdded="@UpdateComputerList" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <TableSmartPhoneComponent SmartPhones="@SmartPhones" />
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
 

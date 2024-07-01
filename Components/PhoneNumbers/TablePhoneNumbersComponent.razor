@@ -65,9 +65,20 @@
                             </td>
                         }
                     }
-                    <td>
-                        <a href="/phones-numbers/@i.PhoneNumberId" class="btn btn-outline-info">Editar</a>
-                    </td>
+
+                    <AuthorizeView Roles="Administrador">
+                        <Authorized>
+                            <td>
+                                <a href="/phones-numbers/@i.PhoneNumberId" class="btn btn-outline-info">Editar</a>
+                            </td>
+
+                        </Authorized>
+                        <NotAuthorized>
+
+                        </NotAuthorized>
+                    </AuthorizeView>
+
+
                 </tr>
             }
         }

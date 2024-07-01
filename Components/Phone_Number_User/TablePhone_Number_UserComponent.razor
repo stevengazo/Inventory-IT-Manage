@@ -65,7 +65,7 @@
                             <button @onclick="()=>DownloadPDF(item)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2 mx-1">
                                 <span class="oi oi-document text-white" aria-hidden="true"></span>
                             </button>
-                            <AuthorizeView Roles="Administrador,Lector">
+                            <AuthorizeView Roles="Administrador">
                                 <Authorized>
                                     <a href="/phone-number-user/@item.Id" class="bg-danger h-100 h-100 rounded rounded-1 p-2 mx-1">
                                         <span class="oi oi-delete text-white" aria-hidden="true"></span>

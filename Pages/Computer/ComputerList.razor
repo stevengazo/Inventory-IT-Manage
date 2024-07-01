@@ -1,13 +1,13 @@
 ﻿@page "/computers"
 
+
 @inject IControllerServices<ComputerModel> _ComputerService;
 
 <h3>Computadoras</h3>
 
-<AuthorizeView Roles="Administrador,Lector">
+<AuthorizeView Roles="Administrador">
     <Authorized>
         <AddComputerComponent OnComputerAdded="UpdateComputerList" />
-
     </Authorized>
     <NotAuthorized>
 

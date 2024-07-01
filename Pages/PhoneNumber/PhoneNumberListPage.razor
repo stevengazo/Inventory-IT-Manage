@@ -5,11 +5,18 @@
 
 <h3>Lineas Telefonicas</h3>
 
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <AddPhoneNumberComponent OnPhoneNumberAdded="UpdateList" />
 
-
-<AddPhoneNumberComponent OnPhoneNumberAdded="UpdateList" />
+    </Authorized>
+    <NotAuthorized>
+        <h3>No posee permisos</h3>
+    </NotAuthorized>
+</AuthorizeView>
 
 <TablePhoneNumbersComponent PhoneNumbers="@Phones" />
+
 
 
 

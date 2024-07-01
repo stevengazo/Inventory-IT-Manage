@@ -80,18 +80,25 @@
                             Inactivo
                         </td>
                     }
-                    <td class="d-flex flex-row gap-1">
-                        <a href="/phone-number-user" class="btn btn-outline-success">Asignación</a>
-                        <a href="/smartphone/@i.SmartPhoneModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
-                            <span class="oi oi-eye text-white" aria-hidden="true"></span>
-                        </a>
-                        <a href="/smartphone/edit/@i.SmartPhoneModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
-                            <span class="oi oi-pencil text-white" aria-hidden="true"></span>
-                        </a>
-                        <button @onclick="()=> Disable(i)" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
-                            <span class="oi oi-delete text-white" aria-hidden="true"></span>
-                        </button>
-                    </td>
+
+                        <AuthorizeView Roles="Administrador">
+                            <Authorized>
+                                <td class="d-flex flex-row gap-1">
+                                    <a href="/phone-number-user" class="btn btn-outline-success">Asignación</a>
+                                    <a href="/smartphone/@i.SmartPhoneModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
+                                        <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                                    </a>
+                                    <a href="/smartphone/edit/@i.SmartPhoneModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
+                                        <span class="oi oi-pencil text-white" aria-hidden="true"></span>
+                                    </a>
+                                    <button @onclick="()=> Disable(i)" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
+                                        <span class="oi oi-delete text-white" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </Authorized>
+                            <NotAuthorized>
+                            </NotAuthorized>
+                        </AuthorizeView>
                 </tr>
             }
         }

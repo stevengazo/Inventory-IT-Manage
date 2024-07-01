@@ -4,9 +4,17 @@
 @inject ApplicationDbContext DbContext;
 
 <h3>Lista de usuarios</h3>
-<AddUserComponent OnComputerAdded="Updated"/>
 
-<UsersList users="users"/>
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <AddUserComponent OnComputerAdded="Updated" />
+        <UsersList users="users" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+
+
 
 @code {
 

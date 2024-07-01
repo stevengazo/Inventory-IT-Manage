@@ -9,10 +9,35 @@
 <AuthorizeView Roles="Administrador,Lector">
     <Authorized>
         <DetailsPeripheralComponent peripheral="@peripheral" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Roles="Administrador">
+    <Authorized>
         <AssignPeripheralComponent OnUpdated="@Update" Peripheral="@peripheral" />
         <AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(PeripheralModel)" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
         <TableHistoryByDeviceComponent Histories="@Histories" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Roles="Administrador">
+    <Authorized>
         <UploadFileComponent id="_id" TypeModel="@nameof(PeripheralModel)" OnUpdated="@Update" />
+        
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
         <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(PeripheralModel)" />
     </Authorized>
     <NotAuthorized>

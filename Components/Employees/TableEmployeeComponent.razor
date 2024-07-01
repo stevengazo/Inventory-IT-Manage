@@ -46,8 +46,7 @@
             }
             else
             {
-                <AuthorizeView Roles="Administrador">
-                    <Authorized>
+               
                         <tr class="">
                             <td>
                                 @item.EmployeeId
@@ -61,15 +60,18 @@
                             <td>
                                 @item.PhoneNumber
                             </td>
+                <AuthorizeView Roles="Administrador,lector">
+                    <Authorized>
                             <td>
                                 <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
                             </td>
-                        </tr>
-                    </Authorized>
-                    <NotAuthorized>
+                        </Authorized>
+                        <NotAuthorized>
 
-                    </NotAuthorized>
-                </AuthorizeView>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                        </tr>
+                
 
  
             }

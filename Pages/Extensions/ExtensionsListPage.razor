@@ -9,7 +9,7 @@
     Lista de Extensiones
 </h3>
 
-<AuthorizeView Roles="Administrador,Lector">
+<AuthorizeView Roles="Administrador">
     <Authorized>
         <AddExtensionComponent OnExtensionAdded="UpdatedExtension" />
         <TableExtensionsComponent Extensions="@phoneExtensions" PublicInfo="@false" />

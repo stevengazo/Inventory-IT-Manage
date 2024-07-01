@@ -97,15 +97,15 @@
                                 <button class="btn btn-sm btn-outline-warning">No disponible</button>
 
                             }
-                            <a href="/peripherals/@C.PeripheralModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
-                                <span class="oi oi-eye text-white" aria-hidden="true"></span>
-                            </a>
-                            <a href="/peripherals/edit/@C.PeripheralModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
-                                <span class="oi oi-pencil text-white" aria-hidden="true"></span>
-                            </a>
-                            <a href="" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
-                                <span class="oi oi-delete text-white" aria-hidden="true"></span>
-                            </a>
+
+                            <AuthorizeView Roles="Administrador">
+                                <Authorized>
+                                    <a href="/peripherals/@C.PeripheralModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
+                                        <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                                    </a>
+                                </NotAuthorized>
+                            </AuthorizeView>
+                            
                         </td>
                     </tr>
                 }

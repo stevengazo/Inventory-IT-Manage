@@ -8,19 +8,22 @@
 <h3>
     Dispositivos 
 </h3>
-<AuthorizeView Roles="Administrador,Lector">
+<AuthorizeView Roles="Administrador">
     <Authorized>
         <AddPeripheralComponenet OnPeripheralAdded="@UpdateList" />
-        <TablePeripheralComponent Peripherals="@peripherals" />
-
     </Authorized>
     <NotAuthorized>
-
     </NotAuthorized>
 </AuthorizeView>
 
 
-
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <TablePeripheralComponent Peripherals="@peripherals" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
     List<PeripheralModel> peripherals { get; set; }
