@@ -37,9 +37,9 @@ namespace InventoryIT.Controllers
             return dbContext.File.Where(i => i.SmartPhoneModelId == id).ToListAsync();
         }
 
-        public Task<List<FileModel>> GetAllPeripheralsAsync()
+        public Task<List<FileModel>> GetAllPeripheralsAsync(int id)
         {
-            throw new NotImplementedException();
+            return dbContext.File.Where(i => i.PeripheralModelId == id).ToListAsync();
         }
 
         public Task<List<FileModel>> GetAllPhoneAsync(int id)

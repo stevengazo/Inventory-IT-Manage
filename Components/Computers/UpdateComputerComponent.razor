@@ -14,80 +14,80 @@
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.ModelName)
+                    Modelo
                 </label>
                 <InputText @bind-Value="ObjComputer.ModelName" class="form-control  w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.AdquisitionDate)
+                    Fecha Adquisición
                 </label>
                 <InputDate @bind-Value="ObjComputer.AdquisitionDate" class="form-control  w-75"></InputDate>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.Cost)
+                    Costo (Dólar)
                 </label>
                 <InputText @bind-Value="ObjComputer.Cost" class="form-control  w-75"></InputText>
 
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.Processor)
+                    Procesador
                 </label>
                 <InputText @bind-Value="ObjComputer.Processor" class="form-control  w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.HaveSSD)
+                    Tiene SSD
                 </label>
                 <InputCheckbox @bind-Value="ObjComputer.HaveSSD" class=" w-50"></InputCheckbox>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.SizeDisk)
+                    Disco (GB)
                 </label>
                 <InputNumber @bind-Value="ObjComputer.SizeDisk" class="form-control  w-75"></InputNumber>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.SizeRAM)
+                    RAM (GB)
                 </label>
                 <InputNumber @bind-Value="ObjComputer.SizeRAM" class="form-control  w-75"></InputNumber>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.RAMType)
+                    Tipo RAM
                 </label>
                 <InputText @bind-Value="ObjComputer.RAMType" class="form-control  w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.Description)
+                    Descripción
                 </label>
                 <InputTextArea @bind-Value="ObjComputer.Description" class="form-control  w-75"></InputTextArea>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.KeyboardLayout)
+                    Teclado
                 </label>
                 <InputText @bind-Value="ObjComputer.KeyboardLayout" class="form-control  w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.HasNumericKeyboard)
+                    Distribución Teclado
                 </label>
                 <InputCheckbox @bind-Value="ObjComputer.HasNumericKeyboard" class=" w-50"></InputCheckbox>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.IsActive)
+                    Esta Activo
                 </label>
                 <InputCheckbox @bind-Value="ObjComputer.IsActive" class=" w-50"></InputCheckbox>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjComputer.BrandId)
+                    Computadora
                 </label>
                 <InputSelect @bind-Value="ObjComputer.BrandId" class=" w-50">
                     @foreach (Brand item in Brands)
@@ -97,12 +97,15 @@
                 </InputSelect>
             </div>
         </EditForm>
+    <div class="d-flex justify-content-end gap-2 px-5 my-2">
         <button @onclick="Save" class="btn btn-outline-info">
-            Agregar
+            Actualizar
         </button>
         <button @onclick="Cancel" class="btn btn-outline-warning">
             Cancelar
         </button>
+    </div>
+        
 </div>
 
 

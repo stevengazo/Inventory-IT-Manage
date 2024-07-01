@@ -1,27 +1,53 @@
-﻿
+﻿@inject IHistoryServices<HistoryModel> _HistoryService
 
-
-
-
-
-
-<h4>Registrar Servicio</h4>
-
-<div>
-<EditForm Model="newHistory">
-    <div>
-        <label>
-            @nameof(newHistory.Description)
-        </label>
-        <InputTextArea @bind-Value="newHistory.Description">
-
-        </InputTextArea>
+@if (Hidden)
+{
+    <div class="shadow my-2 p-2 rounded rounded-1 align-content-center border border-1 d-flex flex-col justify-content-between">
+        <div class="d-flex flex-row gap-2 align-middle  justify-content-center ">
+            <span class=" bg-warning h-100 h-25 p-2 rounded rounded-1 oi oi-person text-white" aria-hidden="true"></span>
+            <!-- Encabezado del componente -->
+            <h5 class="text-start h-100 align-content-center">Registro Historial</h5>
+        </div>
+        <div class="d-flex flex-column gap-2 w-25  ">
+                <button class="btn btn-outline-info " @onclick="()=>Hidden = false">
+                    Agregar
+                </button>
+        </div>
     </div>
-</EditForm>
-<button class="btn btn-outline-info">
-    Agregar
-</button>
-</div>
+}
+else
+{
+    <div class="shadow my-2 p-2 rounded rounded-1 align-content-center border border-1 d-flex flex-col justify-content-between">
+        <div class="d-flex flex-row gap-2 align-middle  justify-content-center ">
+            <span class=" bg-warning h-100 h-25 p-2 rounded rounded-1 oi oi-person text-white" aria-hidden="true"></span>
+            <!-- Encabezado del componente -->
+            <h5 class="text-start h-100 align-content-center">Registro Historial</h5>
+        </div>
+        <div class="d-flex flex-column gap-2 w-75  ">
+            <EditForm Model="newHistory">
+                <div class="d-flex flex-column">
+                    <label>
+                        Descripción
+                    </label>
+                    <InputTextArea @bind-Value="newHistory.Description" class="form-text">
+
+                    </InputTextArea>
+                </div>
+            </EditForm>
+            <div>
+                <button class="btn btn-outline-info " @onclick="Save">
+                    Agregar
+                </button>
+                <button class="btn btn-outline-danger " @onclick="Cancel">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+
+
 
 
 
@@ -29,19 +55,46 @@
 
 @code {
     [Parameter]
-    public int PeripheralId { get; set; }
-    [Parameter]
-    public int ComputerId { get; set; }
-    [Parameter]
-    public int SmartPhoneId { get; set; }
+    public int id { get; set; }
     [Parameter]
     public EventCallback OnUpdated { get; set; }
 
     private HistoryModel newHistory = new();
 
+    private bool Hidden = true;
+
+
+    [Parameter]
+    public string TypeModel { get; set; }
 
     private void Save()
     {
-        
+        newHistory.CreationDate = DateTime.Now;
+        switch (TypeModel)
+        {
+            case nameof(SmartPhoneModel):
+                newHistory.SmartPhoneModelId = id;
+                break;
+            case nameof(ComputerModel):
+                newHistory.ComputerModelID = id;
+                break;
+            case nameof(PeripheralModel):
+                newHistory.PeripheralModelId = id;
+                break;
+            default:
+                break;
+        }
+        _HistoryService.Add(newHistory);
+        newHistory = new();
+
+        OnUpdated.InvokeAsync();
+        Hidden = true;
     }
+
+    private void Cancel()
+    {
+        newHistory = new();
+        Hidden = true;
+    }
+
 }

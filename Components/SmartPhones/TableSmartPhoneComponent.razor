@@ -1,7 +1,11 @@
 ﻿@inject IControllerServices<SmartPhoneModel> _SmartPhoneService;
 
-<h3>Teléfonos Registrados</h3>
 
+<div class="shadow p-2 rounded ">
+<div class="d-flex flex-row justify-content-between p-2">
+    <h3 class="w-100">Telefonos</h3>
+    <input type="text" placeholder="Busqueda" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
+</div>
 
 
 <table class="table">
@@ -41,7 +45,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(SmartPhoneModel i in SmartPhones)
+        @foreach(SmartPhoneModel i in SmartPhonestemp)
         {
             if (i.isActive)
             {
@@ -94,7 +98,7 @@
     </tbody>
 </table>
 
-
+</div>
 
 
 
@@ -103,13 +107,34 @@
 @code {
     [Parameter]
     public List<SmartPhoneModel> SmartPhones { get; set; }
-
-
+    private List<SmartPhoneModel> SmartPhonestemp = new();
 
     private void Disable(SmartPhoneModel e)
     {
         _SmartPhoneService.Delete(e);
         SmartPhones.Remove(e);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SmartPhonestemp = SmartPhones;   
+        base.OnInitializedAsync();   
+    }
+
+    private void Search(string SearchValue = "")
+    {
+        if (!string.IsNullOrEmpty(SearchValue))
+        {
+            SmartPhonestemp = (from i in SmartPhones
+                             where i.PhoneSerial.ToLower().Contains(SearchValue.ToLower()) || i.PhoneModel.ToLower().Contains(SearchValue.ToLower())
+                             select i)
+                .ToList();
+        }
+        else
+        {
+            SmartPhonestemp = SmartPhones;
+        }
+
     }
 
 }

@@ -51,6 +51,10 @@
     int MaxSize = (13 * 1024 * 1024);       // Tamaño máximo permitido para el archivo (13MB)
 
     [Parameter]
+    public EventCallback OnUpdated { get; set; }
+
+
+    [Parameter]
     public string TypeModel { get; set; }
 
     // Método para manejar la carga del archivo
@@ -77,13 +81,16 @@
                     case nameof(ComputerModel):
                         fileModel.ComputerModelID = id;
                         break;
+                    case nameof(PeripheralModel):
+                        fileModel.PeripheralModelId = id;
+                        break;
                     default:
                         break;
                 }
 
                 isLoading = true;  // Inicia el indicador de carga
 
-              
+
 
                 // Llamar al servicio para guardar el archivo
                 await FService.SaveFileAsync(fileModel);
@@ -95,6 +102,7 @@
                 _File = null;
                 fileContent = null;
                 canUpload = false;
+                OnUpdated.InvokeAsync();
             }
             catch (Exception ex)
             {

@@ -6,6 +6,7 @@ namespace InventoryIT.Contracts
     {
         List<T> HistoriesOfComputer(int id);
         List<T> HistoriesOfSmartphones(int id);
+        List<T> HistoriesOfPeripherals(int id);
 
     }
 }

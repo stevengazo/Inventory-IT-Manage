@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InventoryIT.Migrations.InventoryDb
 {
-    public partial class inventory : Migration
+    public partial class inventorydb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,7 +45,6 @@ namespace InventoryIT.Migrations.InventoryDb
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Operator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IMEIs = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cost = table.Column<float>(type: "real", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -64,6 +63,7 @@ namespace InventoryIT.Migrations.InventoryDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AdquisitionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IMEIs = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneModel = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneSerial = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cost = table.Column<string>(type: "nvarchar(max)", nullable: false),

@@ -1,16 +1,10 @@
 ﻿@inject IControllerServices<PeripheralModel> _PeripheralsService;
 @inject IControllerServices<Brand> _BrandService;
 
+@inject NavigationManager Nav;
 
-<div class="border m-2 p-3 rounded rounded-1 shadow">
-    @if (HideForm)
-    {
-        <button @onclick="()=>HideForm=false" class="btn btn-outline-success">
-            Nuevo Registro
-        </button>
-    }
-    else
-    {
+
+
         <EditForm Model="ObjPeripheral" class="d-flex flex-column gap-1">
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
@@ -20,7 +14,7 @@
             </div>
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
-                    Fecha Adquisicion
+                    Fecha Adquisición
                 </label>
                 <InputDate @bind-Value="ObjPeripheral.AdquisitionDate" class="form-control w-75"></InputDate>
             </div>
@@ -77,51 +71,52 @@
 
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
-                    @nameof(ObjPeripheral.BrandId)
+                    Marca
                 </label>
                 <InputSelect @bind-Value="ObjPeripheral.BrandId" class="form-select w-75">
+            <option value="0"> Sin Asignar </option>
                     @foreach (Brand item in Brands)
                     {
+                
                         <option value="@item.BrandId"> @item.Name </option>
                     }
                 </InputSelect>
             </div>
         </EditForm>
-        <button @onclick="Save" class="btn btn-outline-info">
-            Agregar
+        <button @onclick="Update" class="btn btn-outline-info">
+            Actualizar
         </button>
-        <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
+        <button  class="btn btn-outline-warning">
             Cancelar
         </button>
-    }
-</div>
 
 
 @code {
     [Parameter]
-    public EventCallback OnPeripheralAdded { get; set; }
+    public int id { get; set; }
 
     PeripheralModel ObjPeripheral = new();
-    bool HideForm = true;
+
     List<Brand> Brands = new();
 
     protected override async Task OnInitializedAsync()
     {
-        ObjPeripheral.AdquisitionDate = DateTime.Now;
+        ObjPeripheral = _PeripheralsService.GetById(id);
         Brands = _BrandService.GetAll();
         base.OnInitializedAsync();
 
     }
 
-    private async Task Save()
+    private async Task Update()
     {
         try
         {
-            _PeripheralsService.Add(ObjPeripheral);
+            ObjPeripheral.EmployeeId = (ObjPeripheral.EmployeeId == 0) ? null : ObjPeripheral.EmployeeId;
+            ObjPeripheral.Employee = (ObjPeripheral.EmployeeId == 0) ? null : ObjPeripheral.Employee;
+            _PeripheralsService.Update(ObjPeripheral);
             // Dispara el evento para indicar que se agregó una nueva computadora
-            await OnPeripheralAdded.InvokeAsync();
             ObjPeripheral = new();
-            HideForm = true;
+            Nav.NavigateTo($"/peripherals/{id}");
         }
         catch (Exception e)
         {

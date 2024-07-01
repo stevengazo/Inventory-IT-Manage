@@ -13,9 +13,10 @@
         {
             <DetailsComputerComponent ComputerModel="@Computer" />
             <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
+            <AddHistoryComponent id="_id" OnUpdated="@UpdateComputerList" TypeModel="@nameof(ComputerModel)" />
             <TableHistoryByDeviceComponent Histories="@Histories" />
-            <UploadFileComponent id="_id" TypeModel="@nameof(ComputerModel)" />
-            <TablePDFComputerComponent id="_id" TypeModel="@nameof(ComputerModel)" />
+            <UploadFileComponent id="_id" TypeModel="@nameof(ComputerModel)" OnUpdated="@UpdateComputerList" />
+            <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(ComputerModel)" />
         }
         else
         {
@@ -36,6 +37,7 @@
     bool flag = true;
     List<HistoryModel> Histories = new();
     private ComputerModel Computer { get; set; }
+    private TablePDFComputerComponent tablePDFComponent;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,7 +52,6 @@
 
 
 
-
     private async Task UpdateComputerList()
     {
         // Actualizar la lista de computadoras después de agregar una nueva computadora
@@ -59,6 +60,7 @@
             flag = int.TryParse(id, out _id);
             Computer = _ComputerService.GetById(_id);
             Histories = _HistoryService.HistoriesOfComputer(_id);
+            tablePDFComponent?.RefreshTable(); // Llamar al método para actualizar la tabla PDF
             StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
         });
     }

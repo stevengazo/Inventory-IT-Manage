@@ -15,49 +15,49 @@
         <EditForm Model="ObjEmployee">
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.EmployeeId)
+                    Cédula
                 </label>
                 <InputNumber @bind-Value="ObjEmployee.DNI" class="form-control form-control-sm w-75"></InputNumber>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.Name)
+                    Nombre
                 </label>
                 <InputText @bind-Value="ObjEmployee.Name" class="form-control form-control-sm w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.LastName)
+                    Primer Apellido
                 </label>
                 <InputText @bind-Value="ObjEmployee.LastName" class="form-control form-control-sm w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.SecondLastName)
+                    Segundo Apellido
                 </label>
                 <InputText @bind-Value="ObjEmployee.SecondLastName" class="form-control form-control-sm w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.Email)
+                    Correo
                 </label>
                 <InputText placeholder="sample@gmail.com" @bind-Value="ObjEmployee.Email" class="form-text w-75"></InputText>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.PhoneNumber)
+                    Téléfono
                 </label>
                 <InputNumber @bind-Value="ObjEmployee.PhoneNumber" class="form-control w-75"></InputNumber>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.Birthday)
+                    Fecha Nacimiento
                 </label>
                 <InputDate @bind-Value="ObjEmployee.Birthday" class="form-control w-75"></InputDate>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
                 <label class="w-25">
-                    @nameof(ObjEmployee.DepartamentID)
+                    Departamento
                 </label>
                 <InputSelect @bind-Value="ObjEmployee.DepartamentID" class="form-select w-75">
 
@@ -68,8 +68,8 @@
                 </InputSelect>
             </div>
         </EditForm>
-        <div>
-            <button @onclick="Save" class="btn btn-outline-info"> Agregar</button>
+        <div class="d-flex justify-content-end gap-2 px-5 my-2">
+            <button @onclick="Save" class="btn btn-outline-success"> Agregar</button>
             <button @onclick="()=>HiddeForm=true" class="btn btn-outline-warning"> Cancelar</button>
         </div>
     }

@@ -68,7 +68,7 @@
                             @C.SerialNumber
                         </td>
                         <td>
-                            @C.AdquisitionDate
+                            @C.AdquisitionDate.ToShortDateString()
                         </td>
                         <td>
                             @C.ModelName
@@ -206,7 +206,7 @@
         if (!string.IsNullOrEmpty(SearchValue))
         {
             computerstemp = (from i in Computers
-                             where i.SerialNumber.Contains(SearchValue) || i.ModelName.Contains(SearchValue)
+                             where i.SerialNumber.ToLower().Contains(SearchValue.ToLower()) || i.ModelName.ToLower().Contains(SearchValue.ToLower())
                              select i)
                 .ToList();
        }

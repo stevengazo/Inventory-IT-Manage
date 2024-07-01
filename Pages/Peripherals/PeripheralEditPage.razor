@@ -1,0 +1,28 @@
+﻿@page "/peripherals/edit/{id}"
+
+<h3>Editar Perifericos</h3>
+
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <UpdatePeripheralComponenet id="_id" />
+
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+    [Parameter]
+    public string id { get; set; }
+
+    int _id = 0;
+    protected override async Task OnInitializedAsync()
+    {
+        int.TryParse(id, out _id);
+        base.OnInitializedAsync();   
+    }
+
+}

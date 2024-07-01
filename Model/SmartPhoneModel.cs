@@ -8,6 +8,7 @@ namespace InventoryIT.Model
         public int SmartPhoneModelId { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime AdquisitionDate { get; set; }
+        public string IMEIs { get; set; }
         public string PhoneModel {  get; set; } 
         public string PhoneSerial { get; set; }
         public string Cost { get; set; }    

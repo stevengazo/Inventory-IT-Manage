@@ -1,25 +1,43 @@
 ﻿@page "/peripherals/{id}"
 @inject IControllerServices<PeripheralModel> _PeripheralsService;
+@inject IHistoryServices<HistoryModel> _HistoryService;
 
 
-<DetailsPeripheralComponent peripheral="@peripheral" />
-<AssignPeripheralComponent OnUpdated="@Update" Peripheral="@peripheral" />
+    <h4>
+        Información Periférico
+    </h4>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <DetailsPeripheralComponent peripheral="@peripheral" />
+        <AssignPeripheralComponent OnUpdated="@Update" Peripheral="@peripheral" />
+        <AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(PeripheralModel)" />
+        <TableHistoryByDeviceComponent Histories="@Histories" />
+        <UploadFileComponent id="_id" TypeModel="@nameof(PeripheralModel)" OnUpdated="@Update" />
+        <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(PeripheralModel)" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
     [Parameter]
     public string id { get; set; }
 
+    private List<HistoryModel> Histories = new();
+    TablePDFComputerComponent tablePDFComponent;
     int _id = 0;
-
     PeripheralModel peripheral = new();
+
     protected override async Task OnInitializedAsync()
     {
         bool flag = int.TryParse(id, out _id);
         if (flag)
         {
             peripheral = _PeripheralsService.GetById(_id);
+            Histories = _HistoryService.HistoriesOfPeripherals(_id);
         }
-        base.OnInitializedAsync();   
+        base.OnInitializedAsync();
     }
 
     private async Task Update()
@@ -31,6 +49,9 @@
             if (flag)
             {
                 peripheral = _PeripheralsService.GetById(_id);
+                Histories = _HistoryService.HistoriesOfPeripherals(_id); 
+                tablePDFComponent?.RefreshTable(); // Llamar al método para actualizar la tabla PDF
+
             }
             StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
         });

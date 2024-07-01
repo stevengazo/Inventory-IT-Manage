@@ -50,6 +50,15 @@ namespace InventoryIT.Controllers
             return data;
         }
 
+
+        public List<HistoryModel> HistoriesOfPeripherals(int id)
+        {
+            var data = (from i in _inventoryDB.History
+                        where i.PeripheralModelId == id
+                        select i).ToList();
+            return data;
+        }
+
         public List<HistoryModel> Search(string value)
         {
             throw new NotImplementedException();

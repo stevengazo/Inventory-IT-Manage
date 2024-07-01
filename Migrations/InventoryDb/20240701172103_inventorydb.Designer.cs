@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations.InventoryDb
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240628204855_inventory")]
-    partial class inventory
+    [Migration("20240701172103_inventorydb")]
+    partial class inventorydb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -500,10 +500,6 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Property<DateTime>("ExpireDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("IMEIs")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -545,6 +541,10 @@ namespace InventoryIT.Migrations.InventoryDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IMEIs")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
