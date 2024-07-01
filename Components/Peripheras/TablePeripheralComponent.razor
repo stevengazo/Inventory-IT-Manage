@@ -103,9 +103,10 @@
                                     <a href="/peripherals/@C.PeripheralModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
                                         <span class="oi oi-eye text-white" aria-hidden="true"></span>
                                     </a>
-                                </NotAuthorized>
+                                </Authorized>
+                                <NotAuthorized></NotAuthorized>
                             </AuthorizeView>
-                            
+
                         </td>
                     </tr>
                 }
@@ -117,7 +118,7 @@
 @code {
     [Parameter]
     public List<PeripheralModel> Peripherals { get; set; }
-  
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();

@@ -73,6 +73,7 @@
             <button @onclick="()=>HiddeForm=true" class="btn btn-outline-warning"> Cancelar</button>
         </div>
     }
+    <label>@Error</label>
 
 
 
@@ -86,7 +87,7 @@
 
     List<Departament> Departaments { get; set; }
     bool HiddeForm = true;
-
+    string Error = "";
     Employee ObjEmployee = new();
     protected override async Task OnInitializedAsync()
     {
@@ -104,11 +105,17 @@
             await OnEmployeeAdded.InvokeAsync();
             ObjEmployee = new();
             HiddeForm = true;
+            Error = "";
+
+        }
+        catch (ArgumentNullException e)
+        {
+            Error = e.Message;
+
         }
         catch (Exception e)
         {
-
-            throw;
+            Error = e.Message;
         }
 
 

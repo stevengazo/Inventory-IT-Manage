@@ -37,7 +37,7 @@
     {
         await InvokeAsync(() =>
         {
-            Employees = _EmployeesServices.GetAll();
+            Employees = _EmployeesServices.GetAll().ToList();
             StateHasChanged();
         });
     }

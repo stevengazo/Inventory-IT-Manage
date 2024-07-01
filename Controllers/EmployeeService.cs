@@ -28,7 +28,7 @@ namespace InventoryIT.Controllers
         {
             return _InventoryDB.Employee
                 .Include(i => i.Departament)
-                .OrderBy(i => i.Fired)
+                .OrderBy(i => i.Fired).ThenBy(i => i.Name)
                 .ThenBy(i => i.LastName)
                 .ToList();
         }
