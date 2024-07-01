@@ -3,7 +3,7 @@
 
 @inject IControllerServices<Employee> _EmployeeService;
 
-<AuthorizeView Roles="Administrador,Lector">
+<AuthorizeView Roles="Administrador">
     <Authorized>
         <UpdateEmployeeComponent ObjEmployee="@employee" />
     </Authorized>

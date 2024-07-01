@@ -46,25 +46,34 @@
             }
             else
             {
-                <tr class="">
-                    <td>
-                        @item.EmployeeId
-                    </td>
-                    <td>
-                        @item.Name @item.LastName @item.SecondLastName
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @item.PhoneNumber
-                    </td>
-                    <td>
-                        <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
-                    </td>
-                </tr>
+                <AuthorizeView Roles="Administrador">
+                    <Authorized>
+                        <tr class="">
+                            <td>
+                                @item.EmployeeId
+                            </td>
+                            <td>
+                                @item.Name @item.LastName @item.SecondLastName
+                            </td>
+                            <td>
+                                @item.Email
+                            </td>
+                            <td>
+                                @item.PhoneNumber
+                            </td>
+                            <td>
+                                <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
+                            </td>
+                        </tr>
+                    </Authorized>
+                    <NotAuthorized>
+
+                    </NotAuthorized>
+                </AuthorizeView>
+
+ 
             }
-            
+ 
         }
     </tbody>
     </table>
