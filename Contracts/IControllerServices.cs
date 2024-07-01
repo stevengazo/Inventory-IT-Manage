@@ -1,15 +1,12 @@
-﻿using System.Threading.Tasks;
-using InventoryIT.Data;
-using InventoryIT.Model;
-namespace InventoryIT.Contracts
+﻿namespace InventoryIT.Contracts
 {
     public interface IControllerServices<T> where T : class
     {
         void Add(T entity);
 
         void Update(T entity);
-        
-        void Delete(T entity);   
+
+        void Delete(T entity);
 
         List<T> GetAll();
         T GetById(int id);

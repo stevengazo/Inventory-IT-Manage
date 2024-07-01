@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {
-    public class PeripheralService : IControllerServices<PeripheralModel> 
+    public class PeripheralService : IControllerServices<PeripheralModel>
     {
         private readonly InventoryDbContext _inventoryDb;
 
@@ -27,17 +27,17 @@ namespace InventoryIT.Controllers
 
         public List<PeripheralModel> GetAll()
         {
-           return _inventoryDb.Peripheral
-                .Include(i=>i.Brand)
-                .ToList();
+            return _inventoryDb.Peripheral
+                 .Include(i => i.Brand)
+                 .ToList();
         }
 
         public PeripheralModel GetById(int id)
         {
             return _inventoryDb.Peripheral
                   .Include(i => i.Brand)
-                  .Include(i=>i.Employee)
-                  .ThenInclude(e=>e.Departament)
+                  .Include(i => i.Employee)
+                  .ThenInclude(e => e.Departament)
                   .FirstOrDefault(i => i.PeripheralModelId == id);
         }
 

@@ -9,17 +9,17 @@ namespace InventoryIT.Model
         public string PhoneNumber { get; set; }
         public DateTime AdquisitionDate { get; set; }
         public string IMEIs { get; set; }
-        public string PhoneModel {  get; set; } 
+        public string PhoneModel { get; set; }
         public string PhoneSerial { get; set; }
-        public string Cost { get; set; }    
+        public string Cost { get; set; }
         public string Description { get; set; }
-        public string Status { get; set; }  
+        public string Status { get; set; }
         public bool isActive { get; set; }
         public int BrandId { get; set; }
         public Brand Brand { get; set; }
-        public ICollection<HistoryModel>? History { get; set; }  
+        public ICollection<HistoryModel>? History { get; set; }
         public ICollection<Phone_Number_User_Model>? Phone_Number_User_s { get; set; }
-        public ICollection<FileModel>? Files { get; set; }  
+        public ICollection<FileModel>? Files { get; set; }
 
     }
 }

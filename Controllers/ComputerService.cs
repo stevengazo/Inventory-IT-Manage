@@ -1,6 +1,6 @@
-﻿using InventoryIT.Data;
+﻿using InventoryIT.Contracts;
+using InventoryIT.Data;
 using InventoryIT.Model;
-using InventoryIT.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
@@ -22,7 +22,7 @@ namespace InventoryIT.Controllers
 
         public void Delete(ComputerModel entity)
         {
-            entity.IsActive = false;    
+            entity.IsActive = false;
             _inventoryDb.Computer.Update(entity);
             _inventoryDb.SaveChanges();
         }
@@ -33,12 +33,12 @@ namespace InventoryIT.Controllers
                 .Include(i => i.Brand)
                 .Include(i => i.Employee).ToList();
         }
-        public ComputerModel GetById(int id) 
+        public ComputerModel GetById(int id)
         {
             return _inventoryDb.Computer
                 .Include(i => i.Employee)
                                 .ThenInclude(PNM => PNM.Departament)
-                .Include(i=>i.Brand)
+                .Include(i => i.Brand)
                 .FirstOrDefault(i => i.ComputerModelID == id);
         }
 

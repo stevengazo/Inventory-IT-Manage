@@ -1,10 +1,7 @@
 ﻿using InventoryIT.Model;
-using PdfSharp.Drawing.Layout;
 using PdfSharp.Drawing;
+using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
-using PdfSharp.Quality;
-using System.IO;
-using InventoryIT.Controllers;
 
 namespace InventoryIT.Utilities
 {
@@ -64,7 +61,7 @@ namespace InventoryIT.Utilities
                 data[0, 1] = "Central";
                 data[0, 2] = "Tipo";
                 data[0, 3] = "Empleado";
-                data[0, 4] = "Apellido" ;
+                data[0, 4] = "Apellido";
 
 
                 // Llenar la matriz con los datos de las extensiones
@@ -104,7 +101,8 @@ namespace InventoryIT.Utilities
                 // Retornar los bytes del PDF generado
                 return memoryStream.ToArray();
 
-            }   }
+            }
+        }
 
         public async Task<byte[]> GeneratePDFPeripheral(PeripheralModel i)
         {

@@ -1,12 +1,10 @@
 ﻿using InventoryIT.Contracts;
-using InventoryIT.Model;
 using InventoryIT.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+using InventoryIT.Model;
 
 namespace InventoryIT.Controllers
 {
-    public class BrandService :  IControllerServices<Brand>
+    public class BrandService : IControllerServices<Brand>
     {
         private readonly InventoryDbContext _inventoryDb;
 
@@ -19,10 +17,10 @@ namespace InventoryIT.Controllers
         {
             _inventoryDb.Brand.Add(entity);
             _inventoryDb.SaveChanges();
-            
+
         }
 
-       public void Delete(Brand entity)
+        public void Delete(Brand entity)
         {
             _inventoryDb.Brand.Remove(entity);
             _inventoryDb.SaveChanges();
@@ -30,7 +28,7 @@ namespace InventoryIT.Controllers
 
         public List<Brand> GetAll()
         {
-                return _inventoryDb.Brand.OrderBy(i=>i.Name).ToList();
+            return _inventoryDb.Brand.OrderBy(i => i.Name).ToList();
         }
 
         public Brand GetById(int id)
@@ -43,7 +41,7 @@ namespace InventoryIT.Controllers
             var data = (
                 from i in _inventoryDb.Brand
                 where i.Name == value
-                select i).ToList(); 
+                select i).ToList();
             return data;
         }
 

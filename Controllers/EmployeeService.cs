@@ -1,6 +1,6 @@
 ﻿using InventoryIT.Contracts;
-using InventoryIT.Model;
 using InventoryIT.Data;
+using InventoryIT.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
@@ -10,7 +10,7 @@ namespace InventoryIT.Controllers
         private readonly InventoryDbContext _InventoryDB;
         public EmployeeService(InventoryDbContext inventoryDbContext)
         {
-            _InventoryDB = inventoryDbContext;  
+            _InventoryDB = inventoryDbContext;
         }
 
         public void Add(Employee entity)
@@ -27,9 +27,9 @@ namespace InventoryIT.Controllers
         public List<Employee> GetAll()
         {
             return _InventoryDB.Employee
-                .Include(i=>i.Departament)
-                .OrderBy( i=> i.Fired)
-                .ThenBy( i=> i.LastName)
+                .Include(i => i.Departament)
+                .OrderBy(i => i.Fired)
+                .ThenBy(i => i.LastName)
                 .ToList();
         }
 

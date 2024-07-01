@@ -15,8 +15,8 @@ namespace InventoryIT.Controllers
 
         public void Add(Departament entity)
         {
-            _db.Departament.Add(entity);    
-            _db.SaveChanges();  
+            _db.Departament.Add(entity);
+            _db.SaveChanges();
         }
 
         public void Delete(Departament entity)
@@ -26,7 +26,7 @@ namespace InventoryIT.Controllers
 
         public List<Departament> GetAll()
         {
-            return _db.Departament.OrderBy(i=>i.Name).ToList();
+            return _db.Departament.OrderBy(i => i.Name).ToList();
         }
 
         public Departament GetById(int id)

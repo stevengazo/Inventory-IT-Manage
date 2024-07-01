@@ -16,9 +16,9 @@ namespace InventoryIT.Data
         public DbSet<PeripheralModel> Peripheral { get; set; }
         public DbSet<SmartPhoneModel> SmartPhone { get; set; }
         public DbSet<PhoneExtension> PhoneExtension { get; set; }
-        public InventoryDbContext(DbContextOptions<InventoryDbContext> options) : base(options) 
+        public InventoryDbContext(DbContextOptions<InventoryDbContext> options) : base(options)
         {
-           
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

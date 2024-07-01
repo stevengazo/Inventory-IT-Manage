@@ -30,7 +30,7 @@ namespace InventoryIT.Controllers
             var D = _dbContext.Phone_Number_User
                 .Include(i => i.PhoneNumber)
                 .Include(i => i.Employee)
-                .ThenInclude(e=>e.Departament)
+                .ThenInclude(e => e.Departament)
                 .Include(i => i.PhoneNumberModel)
                 .ThenInclude(PNM => PNM.Brand)
                 .OrderBy(i => i.PhoneNumberId)
@@ -66,7 +66,7 @@ namespace InventoryIT.Controllers
 
                 throw;
             }
-            
+
         }
     }
 }

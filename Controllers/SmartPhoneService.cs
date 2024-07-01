@@ -22,20 +22,20 @@ namespace InventoryIT.Controllers
 
         public void Delete(SmartPhoneModel entity)
         {
-            entity.isActive =false;
+            entity.isActive = false;
             _inventoryDbContext.SmartPhone.Update(entity);
             _inventoryDbContext.SaveChanges();
         }
 
         public List<SmartPhoneModel> GetAll()
         {
-            return _inventoryDbContext.SmartPhone.Include(i=>i.Brand).ToList(); 
+            return _inventoryDbContext.SmartPhone.Include(i => i.Brand).ToList();
         }
 
         public SmartPhoneModel GetById(int id)
         {
             return _inventoryDbContext.SmartPhone
-                .Include(i=>i.Brand)
+                .Include(i => i.Brand)
                 .FirstOrDefault(i => i.SmartPhoneModelId == id);
         }
 

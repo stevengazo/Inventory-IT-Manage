@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {
-    public class PhoneExtensionService: IControllerServices<PhoneExtension>  
+    public class PhoneExtensionService : IControllerServices<PhoneExtension>
     {
         private readonly InventoryDbContext _inventoryDbContext;
 
@@ -27,12 +27,12 @@ namespace InventoryIT.Controllers
 
         public List<PhoneExtension> GetAll()
         {
-            return _inventoryDbContext.PhoneExtension.Include(i=>i.Employee).ToList();
+            return _inventoryDbContext.PhoneExtension.Include(i => i.Employee).ToList();
         }
 
         public PhoneExtension GetById(int id)
         {
-            return _inventoryDbContext.PhoneExtension.Include(i=>i.Employee).FirstOrDefault(i => i.PhoneExtensionId == id);
+            return _inventoryDbContext.PhoneExtension.Include(i => i.Employee).FirstOrDefault(i => i.PhoneExtensionId == id);
         }
 
         public List<PhoneExtension> Search(string value)

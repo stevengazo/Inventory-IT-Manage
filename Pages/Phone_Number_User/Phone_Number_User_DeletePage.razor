@@ -3,7 +3,17 @@
 
 
 
-    <DeletePhone_Number_UserComponent item="@i" />
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <DeletePhone_Number_UserComponent item="@i" />
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+    
 
 
 @code {

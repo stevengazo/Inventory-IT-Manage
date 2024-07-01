@@ -2,15 +2,21 @@
 @inject IControllerServices<Brand> _BrandServices;
 
 
-    <h3>
-        Marcas Ingresadas
-    </h3>
+<h3>
+    Marcas Ingresadas
+</h3>
 
-    <div class="d-flex flex-row justify-content-around">
-    <AddBrandComponent OnBrandAdded="UpdateBrandList" />
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <div class="d-flex flex-row justify-content-around">
+            <AddBrandComponent OnBrandAdded="UpdateBrandList" />
 
-    <TableBrand Brands="@Brands" />
-    </div>
+            <TableBrand Brands="@Brands" />
+        </div>
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 
@@ -18,13 +24,16 @@
 
 
 
-@code{
+
+
+
+@code {
     List<Brand> Brands { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Brands = _BrandServices.GetAll();
-        base.OnInitializedAsync();   
+        base.OnInitializedAsync();
 
     }
 

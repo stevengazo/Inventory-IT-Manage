@@ -1,16 +1,12 @@
 using InventoryIT.Areas.Identity;
+using InventoryIT.Contracts;
 using InventoryIT.Controllers;
 using InventoryIT.Data;
 using InventoryIT.Model;
-using InventoryIT.Contracts;
 using InventoryIT.Utilities;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-using PdfSharp.Charting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var InventoryconnectionString = builder.Configuration.GetConnectionString("Inventory");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<InventoryDbContext>(options => options.UseSqlServer(InventoryconnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -56,7 +52,7 @@ var app = builder.Build();
 
 #region Create The Database
 
-using ( var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
     if (db.Database.CanConnect())

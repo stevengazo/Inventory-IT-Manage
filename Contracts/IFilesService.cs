@@ -1,5 +1,4 @@
 ﻿using InventoryIT.Model;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace InventoryIT.Contracts
 {

@@ -1,7 +1,6 @@
 ﻿using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
@@ -24,12 +23,12 @@ namespace InventoryIT.Controllers
 
         public Task<List<FileModel>> GetAllFilesAsync()
         {
-            return  dbContext.File.ToListAsync();
+            return dbContext.File.ToListAsync();
         }
 
         public Task<List<FileModel>> GetAllFilesComputerAsync(int id)
         {
-            return dbContext.File.Where(i=>i.ComputerModelID == id).ToListAsync();
+            return dbContext.File.Where(i => i.ComputerModelID == id).ToListAsync();
         }
 
         public Task<List<FileModel>> GetAllFilesSmartPhoneAsync(int id)
@@ -49,13 +48,13 @@ namespace InventoryIT.Controllers
 
         public Task<FileModel> GetFileByIdAsync(int id)
         {
-            return dbContext.File.FirstOrDefaultAsync(f => f.Id == id); 
+            return dbContext.File.FirstOrDefaultAsync(f => f.Id == id);
         }
 
         public async Task SaveFileAsync(FileModel file)
         {
             dbContext.File.Add(file);
-           await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
     }
 }

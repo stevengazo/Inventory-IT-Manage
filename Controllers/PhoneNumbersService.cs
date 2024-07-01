@@ -4,7 +4,7 @@ using InventoryIT.Model;
 
 namespace InventoryIT.Controllers
 {
-    public class PhoneNumbersService: IControllerServices<PhoneNumber>  
+    public class PhoneNumbersService : IControllerServices<PhoneNumber>
     {
         private readonly InventoryDbContext _inventoryDb;
 
@@ -26,7 +26,7 @@ namespace InventoryIT.Controllers
 
         public List<PhoneNumber> GetAll()
         {
-            return _inventoryDb.PhoneNumber.OrderBy(i=>i.Number).ToList();
+            return _inventoryDb.PhoneNumber.OrderBy(i => i.Number).ToList();
         }
 
         public PhoneNumber GetById(int id)

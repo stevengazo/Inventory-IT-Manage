@@ -4,10 +4,21 @@
 
 
 
-    <AddPeripheralComponenet OnPeripheralAdded="@UpdateList"/>
 
+<h3>
+    Dispositivos 
+</h3>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <AddPeripheralComponenet OnPeripheralAdded="@UpdateList" />
+        <TablePeripheralComponent Peripherals="@peripherals" />
 
-    <TablePeripheralComponent Peripherals="@peripherals" />
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
 
 
 

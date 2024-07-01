@@ -1,6 +1,4 @@
-﻿using InventoryIT.Model;
-
-namespace InventoryIT.Contracts
+﻿namespace InventoryIT.Contracts
 {
     public interface IHistoryServices<T> : IControllerServices<T> where T : class
     {
