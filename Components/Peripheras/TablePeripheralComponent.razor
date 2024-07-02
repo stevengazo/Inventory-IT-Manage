@@ -10,36 +10,15 @@
     <table class="table">
         <thead>
             <tr>
-                <td>
-                    Nombre
-                </td>
-                <td>
-                    Tipo
-                </td>
-                <td>
-                    Marca
-                </td>
-                <td>
-                    Numero Serie
-                </td>
-                <td>
-                    Modelo
-                </td>
-                <td>
-                    Fecha Adquisicion
-                </td>
-                <td>
-                    costo
-                </td>
-                <td>
-                    Estado
-                </td>
-                <td>
-                    Empleado
-                </td>
-                <td colspan="3">
-                    Acciones
-                </td>
+                <td>Nombre</td>
+                <td>Marca</td>
+                <td>Tipo</td>
+                <td>Modelo</td>
+                <td>Numero Serie</td>
+                <td>Fecha Adquisicion</td>
+                <td>costo</td>
+                <td>Empleado</td>
+                <td colspan="3">Acciones</td>
             </tr>
         </thead>
         <tbody>
@@ -52,25 +31,22 @@
                             @C.Name
                         </td>
                         <td>
+                            @C.Brand.Name
+                        </td>
+                        <td>
                             @C.Type
                         </td>
                         <td>
-                            @C.Brand.Name
+                            @C.Model
                         </td>
                         <td>
                             @C.SerialNumber
                         </td>
                         <td>
-                            @C.Model
+                            @C.AdquisitionDate.ToShortDateString()
                         </td>
                         <td>
-                            @C.Model
-                        </td>
-                        <td>
-                            @C.AdquisitionDate.ToLongDateString()
-                        </td>
-                        <td>
-                            @C.Cost
+                            $@C.Cost
                         </td>
                         @if (C.Employee != null && !C.Employee.Fired)
                         {

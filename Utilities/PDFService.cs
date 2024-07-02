@@ -1,4 +1,5 @@
-﻿using InventoryIT.Model;
+﻿using InventoryIT.Data;
+using InventoryIT.Model;
 using PdfSharp.Drawing;
 using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
@@ -7,102 +8,137 @@ namespace InventoryIT.Utilities
 {
     public class PDFService
     {
+        private readonly InventoryDbContext inventoryDbContext;
+
+        public PDFService(InventoryDbContext inventoryDbContext)
+        {
+            this.inventoryDbContext = inventoryDbContext;
+        }
+
         public async Task<byte[]> GenerateListExtensions(List<PhoneExtension> extensions)
         {
+            // Agrupar las extensiones por PBX
+            var groupedExtensions = extensions.GroupBy(e => e.PhoneNumberPBX);
+
             using (var memoryStream = new MemoryStream())
             {
-                // Crear un nuevo documento PDF.
+                // Crear un nuevo documento PDF
                 var document = new PdfDocument();
 
-                // Mostrar una sola página.
+                // Mostrar una sola página
                 document.PageLayout = PdfPageLayout.SinglePage;
 
-                // Permitir que la aplicación del visor ajuste la página en la ventana.
+                // Permitir que la aplicación del visor ajuste la página en la ventana
                 document.ViewerPreferences.FitWindow = true;
 
-                // Establecer el título del documento.
+                // Establecer el título del documento
                 document.Info.Title = "Lista de Extensiones";
 
-                // Crear una página vacía.
-                var page = document.AddPage();
-
-                // Obtener un objeto XGraphics para dibujar.
-                var gfx = XGraphics.FromPdfPage(page);
-
-                // Crear una fuente.
-                var font = new XFont("Times New Roman", 12, XFontStyleEx.Regular);
+                // Definir las fuentes a usar
                 var titleFont = new XFont("Times New Roman", 20, XFontStyleEx.Bold);
                 var paragraphFont = new XFont("Times New Roman", 12, XFontStyleEx.Italic);
+                var font = new XFont("Times New Roman", 12, XFontStyleEx.Regular);
 
-                // Crear un objeto XTextFormatter
-                var tf = new XTextFormatter(gfx);
-
-                // Título del documento
-                gfx.DrawString("Lista de Extensiones", titleFont, XBrushes.Black,
-                    new XRect(0, 40, page.Width.Point, 40), XStringFormats.Center);
-
-                // Párrafo antes de la tabla
-                var beforeTableParagraph = "Lista de extensiones existentes";
-                tf.DrawString(beforeTableParagraph, paragraphFont, XBrushes.Black,
-                    new XRect(50, 80, page.Width.Point - 100, 40));
-
-                // Definir el tamaño y posición de la tabla.
-                double tableWidth = 200; // Ancho total de la tabla
-                double cellWidth = 100;
-                double cellHeight = 15;
-                double x = 30; // Centrar la tabla horizontalmente
-                double y = 120; // Ajustar la posición Y para que haya espacio para el párrafo
-
-                int sizeData = (extensions.Count > 0) ? extensions.Count : 1;
-
-                // Datos de ejemplo para la tabla.
-                string[,] data = new string[sizeData + 1, 5];
-                data[0, 0] = "Extension";
-                data[0, 1] = "Central";
-                data[0, 2] = "Tipo";
-                data[0, 3] = "Empleado";
-                data[0, 4] = "Apellido";
-
-
-                // Llenar la matriz con los datos de las extensiones
-                for (int i = 0; i < extensions.Count; i++)
+                // Crear una página para cada grupo de PBX
+                foreach (var group in groupedExtensions)
                 {
-                    data[i + 1, 0] = extensions[i].Extension.ToString();
-                    data[i + 1, 1] = extensions[i].PhoneNumberPBX.ToString();
-                    data[i + 1, 2] = extensions[i].Type;
-                    data[i + 1, 3] = (extensions[i].Employee != null) ? extensions[i].Employee.Name : "";
-                    data[i + 1, 4] = (extensions[i].Employee != null) ? extensions[i].Employee.LastName : ""; ;
-                }
+                    // Crear la primera página para el grupo actual
+                    var page = document.AddPage();
+                    var gfx = XGraphics.FromPdfPage(page);
+                    var tf = new XTextFormatter(gfx);
 
-                // Dibujar la tabla.
-                for (int row = 0; row < data.GetLength(0); row++)
-                {
-                    for (int col = 0; col < data.GetLength(1); col++)
+                    // Dibujar el título del documento en la página actual
+                    gfx.DrawString($"Lista de Extensiones - PBX {group.Key}", titleFont, XBrushes.Black,
+                        new XRect(0, 40, page.Width.Point, 40), XStringFormats.Center);
+
+                    // Dibujar un párrafo antes de la tabla
+                    var beforeTableParagraph = $"Lista de extensiones para PBX {group.Key}";
+                    tf.DrawString(beforeTableParagraph, paragraphFont, XBrushes.Black,
+                        new XRect(50, 80, page.Width.Point - 100, 40));
+
+                    // Definir el tamaño y posición de las celdas de la tabla
+                    double cellWidth = 100;
+                    double cellHeight = 15;
+                    double x = 30; // Coordenada X inicial para la tabla
+                    double y = 120; // Coordenada Y inicial para la tabla
+
+                    // Calcular el número máximo de filas por página
+                    int maxRowsPerPage = (int)((page.Height.Point - y - 40) / cellHeight);
+
+                    // Encabezados de la tabla
+                    var headers = new string[] { "Extension", "Central", "Tipo", "Empleado", "Apellido" };
+                    int currentRow = 0;
+
+                    // Función para dibujar el encabezado de la tabla
+                    void DrawTableHeader(XGraphics g, double startX, double startY)
                     {
-                        // Calcular la posición de la celda.
-                        double cellX = x + col * cellWidth;
-                        double cellY = y + row * cellHeight;
+                        for (int col = 0; col < headers.Length; col++)
+                        {
+                            double cellX = startX + col * cellWidth;
+                            g.DrawRectangle(XPens.Black, cellX, startY, cellWidth, cellHeight);
+                            g.DrawString(headers[col], font, XBrushes.Black,
+                                new XRect(cellX, startY, cellWidth, cellHeight),
+                                XStringFormats.Center);
+                        }
+                    }
 
-                        // Dibujar el borde de la celda.
-                        gfx.DrawRectangle(XPens.Black, cellX, cellY, cellWidth, cellHeight);
+                    // Función para dibujar una fila de datos en la tabla
+                    void DrawTableRow(XGraphics g, double startX, double startY, PhoneExtension ext)
+                    {
+                        var data = new string[]
+                        {
+                    ext.Extension.ToString(),
+                    ext.PhoneNumberPBX.ToString(),
+                    ext.Type,
+                    ext.Employee?.Name ?? "",
+                    ext.Employee?.LastName ?? ""
+                        };
 
+                        for (int col = 0; col < data.Length; col++)
+                        {
+                            double cellX = startX + col * cellWidth;
+                            g.DrawRectangle(XPens.Black, cellX, startY, cellWidth, cellHeight);
+                            g.DrawString(data[col], font, XBrushes.Black,
+                                new XRect(cellX, startY, cellWidth, cellHeight),
+                                XStringFormats.Center);
+                        }
+                    }
 
-                        // Dibujar el texto dentro de la celda.
-                        gfx.DrawString(data[row, col], font, XBrushes.Black,
-                            new XRect(cellX, cellY, cellWidth, cellHeight),
-                            XStringFormats.Center);
+                    // Dibujar el encabezado de la tabla en la página actual
+                    DrawTableHeader(gfx, x, y);
+                    y += cellHeight;
+                    currentRow++;
+
+                    // Dibujar cada extensión en la tabla
+                    foreach (var extension in group)
+                    {
+                        // Si se alcanza el límite de filas por página, agregar una nueva página
+                        if (currentRow >= maxRowsPerPage)
+                        {
+                            page = document.AddPage();
+                            gfx = XGraphics.FromPdfPage(page);
+                            y = 40; // Restablecer la coordenada Y para la nueva página
+                            DrawTableHeader(gfx, x, y); // Dibujar el encabezado en la nueva página
+                            y += cellHeight;
+                            currentRow = 1; // Restablecer el contador de filas para la nueva página
+                        }
+
+                        // Dibujar la fila actual en la tabla
+                        DrawTableRow(gfx, x, y, extension);
+                        y += cellHeight;
+                        currentRow++;
                     }
                 }
 
-                // Guardar el documento...
                 // Guardar el documento en el memoryStream en lugar de en un archivo
                 document.Save(memoryStream, false);
 
                 // Retornar los bytes del PDF generado
                 return memoryStream.ToArray();
-
             }
         }
+
+
 
         public async Task<byte[]> GeneratePDFPeripheral(PeripheralModel i)
         {

@@ -4,126 +4,161 @@
 
 
 <h3> Extensiones Registradas</h3>
-<div class="d-flex flex-row justify-content-between">
-    <p>
-        Esta tabla muestra la informacion sobre la asignacion, la extension y el pbx utilizado.
-    </p>
-    <button @onclick="DownloadPDF" class="btn btn-outline-warning btn-sm">Descargar</button>
 
+<div class="d-flex flex-column justify-content-between p-2">
+    
+    <p>
+        Esta tabla muestra la información sobre la asignación, la extension y el pbx utilizado.
+    </p>
+    <div class="d-flex flex-row justify-content-start gap-2">
+        <input type="text" placeholder="Búsqueda (PBX,Usuario o Extension)" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
+        <button @onclick="DownloadPDF" class="btn btn-outline-warning btn-sm">Descargar</button>
+    </div>
+    
 </div>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Nombre
-            </th>
-            <th>
-                PBX
-            </th>
-            @if (!infoisPublic)
-            {
+<div class="overflow-auto">
+    <table class="table">
+        <thead>
+            <tr>
                 <th>
-                    Usuario
+                    Nombre
                 </th>
                 <th>
-                    Contraseña
+                    PBX
                 </th>
-            }
-            <th>
-                Extension
-            </th>
-            <th>
-                Empleado
-            </th>
-            <th colspan="1">
-                Acciones
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if(Extensions != null)
-        {
-            foreach (PhoneExtension item in Extensions)
+                @if (!infoisPublic)
+                {
+                    <th>
+                        Usuario
+                    </th>
+                    <th>
+                        Contraseña
+                    </th>
+                }
+                <th>
+                    Extension
+                </th>
+                <th>
+                    Empleado
+                </th>
+                <th colspan="1">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Extensionstemp != null)
             {
-                <tr>
-                    <td>
-                        @item.PhoneExtensionName
-                    </td>
-                    <td>
-                        @item.PhoneNumberPBX
-                    </td>
-                    @if (!infoisPublic)
-                    {
+                foreach (PhoneExtension item in Extensionstemp)
+                {
+                    <tr>
                         <td>
-                            @item.UserNumber
+                            @item.PhoneExtensionName
                         </td>
                         <td>
-                            @item.Password
+                            @item.PhoneNumberPBX
                         </td>
-                    }
-                    <td>
-                        @item.Extension
-                    </td>
-                    @if (item.Employee != null && !item.Employee.Fired)
-                    {
-                        <td>
-                            @item.Employee.Name @item.Employee.LastName
-                        </td>
-                    }
-                    else if (item.Employee != null && item.Employee.Fired)
-                    {
-                        <td class="text-danger">
-                            @item.Employee.Name @item.Employee.LastName (despedido)
-                        </td>
-                    }
-                    else 
-                    {
-                        <td class="text-info">
-                         Sin Asignar
-                        </td>
-                    }
-                    <AuthorizeView Roles="Administrador">
-                        <Authorized>
-                            <td class="d-flex flex-row gap-1">
-                                <a href="/extensions/@item.PhoneExtensionId" class="btn btn-outline-info">Detalles</a>
-
-                                <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-success">Asignación</a>
-
-                                <a href="/extension/edit/@item.PhoneExtensionId" class="btn btn-outline-info">Editar</a>
+                        @if (!infoisPublic)
+                        {
+                            <td>
+                                @item.UserNumber
                             </td>
-
-                        </Authorized>
-                        <NotAuthorized>
-                            <td class="text-warning">
-                                Acciones no disponibles
+                            <td>
+                                @item.Password
                             </td>
-                        </NotAuthorized>
-                    </AuthorizeView>
+                        }
+                        <td>
+                            @item.Extension
+                        </td>
+                        @if (item.Employee != null && !item.Employee.Fired)
+                        {
+                            <td>
+                                @item.Employee.Name @item.Employee.LastName
+                            </td>
+                        }
+                        else if (item.Employee != null && item.Employee.Fired)
+                        {
+                            <td class="text-danger">
+                                @item.Employee.Name @item.Employee.LastName (despedido)
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-info">
+                                Sin Asignar
+                            </td>
+                        }
+                        <AuthorizeView Roles="Administrador">
+                            <Authorized>
+                                <td class="d-flex flex-row gap-1">
+                                    <a href="/extensions/@item.PhoneExtensionId" class="btn btn-outline-info">Detalles</a>
 
-                    
-                </tr>
+                                    <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-success">Asignación</a>
 
+                                    <a href="/extension/edit/@item.PhoneExtensionId" class="btn btn-outline-info">Editar</a>
+                                </td>
+
+                            </Authorized>
+                            <NotAuthorized>
+                                <td class="text-warning">
+                                    Acciones no disponibles
+                                </td>
+                            </NotAuthorized>
+                        </AuthorizeView>
+
+
+                    </tr>
+
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
+
 
 
 
 @code {
     [Parameter]
     public List<PhoneExtension> Extensions { get; set; }
+
     [Parameter]
     public bool PublicInfo { get; set; }
 
     private bool infoisPublic = false;
 
+    List<PhoneExtension> Extensionstemp = new();
     protected override async Task OnInitializedAsync()
     {
         infoisPublic = PublicInfo;
+        Extensionstemp = Extensions;
         base.OnInitializedAsync();   
+    }
+
+    private void Search(string SearchValue = "")
+    {
+        bool valid = int.TryParse(SearchValue, out int valueSe);
+
+        if (valid)
+        {
+            if (!string.IsNullOrEmpty(SearchValue))
+            {
+                Extensionstemp = (from i in Extensions
+                                  where i.PhoneNumberPBX == valueSe || i.UserNumber == valueSe.ToString() || i.Extension == valueSe
+                                  select i)
+                    .ToList();
+            }
+            else
+            {
+                Extensionstemp = Extensions;
+            }
+        }
+        else
+        {
+            Extensionstemp = Extensions;
+        }
+
     }
 
     private async Task DownloadPDF()

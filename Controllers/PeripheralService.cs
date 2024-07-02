@@ -29,6 +29,7 @@ namespace InventoryIT.Controllers
         {
             return _inventoryDb.Peripheral
                  .Include(i => i.Brand)
+                 .OrderBy(i => i.Brand.Name)
                  .ToList();
         }
 

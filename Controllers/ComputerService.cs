@@ -31,7 +31,10 @@ namespace InventoryIT.Controllers
         {
             return _inventoryDb.Computer
                 .Include(i => i.Brand)
-                .Include(i => i.Employee).ToList();
+                .Include(i => i.Employee)
+                .OrderByDescending(i => i.Employee.Name)
+                .ThenBy(i=>i.ModelName)
+                .ToList();
         }
         public ComputerModel GetById(int id)
         {
