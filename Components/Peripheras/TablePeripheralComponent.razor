@@ -5,8 +5,11 @@
 
 
 
-<div class="shadow p-2">
-    <h3>Dispositivos Existentes</h3>
+<div class="shadow p-2 rounded">
+    <div class="d-flex flex-row justify-content-between p-2">
+        <h3 class="w-100">Dispositivos Existentes</h3>
+        <input type="text" placeholder="Búsqueda" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
+    </div>
     <table class="table table-sm table-hover">
         <thead>
             <tr>
@@ -15,16 +18,16 @@
                 <td>Tipo</td>
                 <td>Modelo</td>
                 <td>Numero Serie</td>
-                <td>Fecha Adquisicion</td>
+                <td>Fecha Adquisición</td>
                 <td>costo</td>
                 <td>Empleado</td>
                 <td colspan="3">Acciones</td>
             </tr>
         </thead>
         <tbody>
-            @if (Peripherals != null)
+            @if (Peripheralstmp != null)
             {
-                @foreach (var C in Peripherals)
+                @foreach (var C in Peripheralstmp)
                 {
                     <tr>
                         <td>
@@ -94,11 +97,31 @@
 @code {
     [Parameter]
     public List<PeripheralModel> Peripherals { get; set; }
-
+    List<PeripheralModel> Peripheralstmp = new();
     protected override void OnParametersSet()
     {
+        Peripheralstmp = Peripherals;
         base.OnParametersSet();
     }
+
+    private void Search(string SearchValue = "")
+    {
+        if (!string.IsNullOrEmpty(SearchValue))
+        {
+            Peripheralstmp = (from i in Peripherals
+                             where i.SerialNumber.ToLower().Contains(SearchValue.ToLower()) 
+                             || i.Model.ToLower().Contains(SearchValue.ToLower())
+                              || i.Type.ToLower().Contains(SearchValue.ToLower())
+                             select i)
+                .ToList();
+        }
+        else
+        {
+            Peripheralstmp = Peripherals;
+        }
+
+    }
+
 
 
     private async Task DownloadPDF(PeripheralModel e)
