@@ -28,7 +28,7 @@
                 <label class="w-25">
                     Fecha Adquisición
                 </label>
-                <InputDate @bind-Value="ObjComputer.AdquisitionDate" class="form-control w-75"></InputDate>
+                <InputDate @bind-Value="ObjComputer.AdquisitionDate"  class="form-control w-75"></InputDate>
             </div>
             <div class="form-group d-flex flex-row justify-content-between my-1">
                 <label class="w-25">
@@ -66,6 +66,7 @@
                     Tipo RAM
                 </label>
                 <InputSelect @bind-Value="ObjComputer.RAMType" class="form-select w-75">
+                    <option>No indicado</option>
                     <option>DDR-2</option>
                     <option>DDR-3</option>
                     <option>DDR-4</option>
@@ -101,6 +102,7 @@
                     Marca Computadora
                 </label>
                 <InputSelect @bind-Value="ObjComputer.BrandId" class="form-select w-75">
+                    <option value="0"> No Definido </option>
                     @foreach (Brand item in Brands)
                     {
                         <option value="@item.BrandId"> @item.Name </option>
@@ -116,7 +118,7 @@
                 Cancelar
             </button>
             </div>
-        
+        <label class="text-danger">@errorMessage</label>
     }
 </div>
 
@@ -128,10 +130,11 @@
     ComputerModel ObjComputer = new();
     bool HideForm = true;
     List<Brand> Brands = new();
-
+    string errorMessage = "";
     protected override async Task OnInitializedAsync()
     {
         ObjComputer.AdquisitionDate = DateTime.Now;
+        ObjComputer.RAMType = "No indicado";
         Brands = _BrandService.GetAll();
         base.OnInitializedAsync();
 
@@ -141,18 +144,67 @@
     {
         try
         {
-            ObjComputer.BrandId = 1;
-            _ComputerService.Add(ObjComputer);
-
-            // Dispara el evento para indicar que se agregó una nueva computadora
-            await OnComputerAdded.InvokeAsync();
-            ObjComputer = new();
-            HideForm = true;
+            if (IsValid())
+            {
+                _ComputerService.Add(ObjComputer);
+                // Dispara el evento para indicar que se agregó una nueva computadora
+                await OnComputerAdded.InvokeAsync();
+                ObjComputer = new();
+                HideForm = true;
+                errorMessage = string.Empty;
+            }
         }
         catch (Exception e)
         {
 
             throw e;
         }
+    }
+
+    private bool IsValid()
+    {
+        if (string.IsNullOrEmpty(ObjComputer.SerialNumber))
+        {
+            errorMessage = "Verifique el número de serie";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjComputer.ModelName))
+        {
+            errorMessage = "Verifique el modelo";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjComputer.Cost))
+        {
+            errorMessage = "No indica el costo";
+            ObjComputer.Cost = "0";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjComputer.Processor))
+        {
+            errorMessage = "No indica el procesador";
+            return false;
+        }
+        if (ObjComputer.SizeDisk == 0)
+        {
+            errorMessage = "No indica el tamaño del disco";
+            return false;
+        }
+        if (ObjComputer.SizeRAM == 0)
+        {
+            errorMessage = "No indica el tamaño de la RAM";
+            return false;
+        }
+        ObjComputer.Description = string.IsNullOrEmpty(ObjComputer.Description) ? " Sin Asignar" : ObjComputer.Description;
+        if (string.IsNullOrEmpty(ObjComputer.KeyboardLayout))
+        {
+            errorMessage = "No indica la distribución del teclado";
+            return false;
+        }
+        if (ObjComputer.BrandId == 0 ||ObjComputer.BrandId ==null )
+        {
+            errorMessage = "No indica la marca del equipo";
+            return false;
+        }
+        return true;
     }
 }

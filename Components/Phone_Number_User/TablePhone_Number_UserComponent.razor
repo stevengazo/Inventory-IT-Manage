@@ -19,6 +19,12 @@
                     Numero Telefonico
                 </th>
                 <th>
+                    Operador
+                </th>
+                <th>
+                    Tipo
+                </th>
+                <th>
                     Marca
                 </th>
                 <th>
@@ -47,7 +53,13 @@
                                 @item.CreationDate.ToShortDateString()
                             </td>
                             <td>
+                                @item.PhoneNumber.Operator
+                            </td>
+                            <td>
                                 @item.PhoneNumber.Number
+                            </td>
+                            <td>
+                                @item.PhoneNumber.Type
                             </td>
                             <td>
                                 @item.PhoneNumberModel.Brand.Name

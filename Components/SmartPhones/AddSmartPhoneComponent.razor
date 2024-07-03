@@ -14,21 +14,15 @@
         <EditForm Model="ObjSmartPhone" class="d-flex flex-column gap-1">
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
-                    Numero Telefono
-                </label>
-                <InputText @bind-Value="ObjSmartPhone.PhoneNumber" class="form-text w-75"></InputText>
-            </div>
-            <div class="form-group d-flex flex-row justify-content-between">
-                <label class="w-25">
                     Fecha Adquisición
                 </label>
                 <InputDate @bind-Value="ObjSmartPhone.AdquisitionDate" class="form-control w-75"></InputDate>
             </div>
             <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
-                <label>
-                    @nameof(ObjSmartPhone.IMEIs)
+                <label class="w-25">
+                    IMEI
                 </label>
-                <InputTextArea @bind-Value="ObjSmartPhone.IMEIs" class="form-control form-control-sm w-75"></InputTextArea>
+                <InputTextArea @bind-Value="ObjSmartPhone.IMEIs" class="form-text w-75"></InputTextArea>
             </div>
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
@@ -92,6 +86,7 @@
             Cancelar
         </button>
     }
+    <label class="text-danger">@errorMessage</label>
 </div>
 
 
@@ -103,9 +98,11 @@
     bool HideForm = true;
     List<Brand> Brands = new();
 
+    string errorMessage = "";
     protected override async Task OnInitializedAsync()
     {
         ObjSmartPhone.AdquisitionDate = DateTime.Now;
+        ObjSmartPhone.PhoneNumber = "";
         Brands = _BrandService.GetAll();
         base.OnInitializedAsync();
 
@@ -115,16 +112,65 @@
     {
         try
         {
-            _SmartPhoneService.Add(ObjSmartPhone);
-            // Dispara el evento para indicar que se agregó una nueva computadora
-            await OnSmartPhoneAdded.InvokeAsync();
-            ObjSmartPhone = new();
-            HideForm = true;
+            if (IsValid())
+            {
+                _SmartPhoneService.Add(ObjSmartPhone);
+                // Dispara el evento para indicar que se agregó una nueva computadora
+                ObjSmartPhone = new();
+                HideForm = true;
+                errorMessage = "";
+                await OnSmartPhoneAdded.InvokeAsync();
+                
+            }
         }
         catch (Exception e)
         {
-
-            throw e;
+            errorMessage = $"{e.Message} {e.InnerException}";
         }
+    }
+
+    private bool IsValid()
+    {
+        if (string.IsNullOrEmpty(ObjSmartPhone.IMEIs))
+        {
+            errorMessage = $"El IMEI del dispositivo no puede estar vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjSmartPhone.PhoneModel))
+        {
+            errorMessage = $"El modelo del teléfono no puede estar vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjSmartPhone.PhoneSerial))
+        {
+            errorMessage = $"La serie del teléfono no puede estar vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjSmartPhone.IMEIs))
+        {
+            errorMessage = $"El IMEI del dispositivo no puede estar vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjSmartPhone.Cost))
+        {
+            errorMessage = $"El costo del dispositivo no puede estar vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjSmartPhone.Description))
+        {
+            errorMessage = $"La descripción del dispositivo no puede estar vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjSmartPhone.Status))
+        {
+            errorMessage = $"El estado del dispositivo no puede estar vacío";
+            return false;
+        }
+        if (ObjSmartPhone.BrandId == null || ObjSmartPhone.BrandId == 0)
+        {
+            errorMessage = $"Tienen que indicar una marca";
+            return false;
+        }
+        return true;
     }
 }

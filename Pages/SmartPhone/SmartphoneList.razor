@@ -26,7 +26,7 @@
     protected override async Task OnInitializedAsync()
     {
         base.OnInitializedAsync();
-        SmartPhones = _SmarthPhoneService.GetAll();
+        SmartPhones = _SmarthPhoneService.GetAll().OrderByDescending(i=>i.isActive).ThenBy(e=>e.Brand.Name).ToList();
     }
     private async Task UpdateComputerList()
     {

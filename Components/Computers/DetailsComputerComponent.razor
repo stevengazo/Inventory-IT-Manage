@@ -2,10 +2,10 @@
 
 
 <div class="p-2 my-3 shadow rounded rounded-1 border border-1">
-    <table class="table table-hover table-primary">
+    <table class="table table-hover table-sm">
         <tr class="">
             <th>
-                @nameof(ComputerModel.ComputerModelID)
+                Identificador
             </th>
             <td>
                 @ComputerModel.ComputerModelID
@@ -13,7 +13,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.Brand)
+                Marca
             </th>
             <td>
                 @ComputerModel.Brand.Name
@@ -21,7 +21,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.SerialNumber)
+                Número de Serie
             </th>
             <td>
                 @ComputerModel.SerialNumber
@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.ModelName)
+                Modelo
             </th>
             <td>
                 @ComputerModel.ModelName
@@ -37,7 +37,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.AdquisitionDate)
+                Fecha Adquisición
             </th>
             <td>
                 @ComputerModel.AdquisitionDate.ToLongDateString()
@@ -45,7 +45,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.Cost)
+                Costo
             </th>
             <td>
                 $ @ComputerModel.Cost
@@ -53,7 +53,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.HaveSSD)
+                Tipo Disco
             </th>
             @if (ComputerModel.HaveSSD)
             {
@@ -70,7 +70,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.SizeDisk)
+                Tamaño Disco
             </th>
             <td>
                 @ComputerModel.SizeDisk GB
@@ -78,7 +78,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.RAMType)
+                Tipo RAM
             </th>
             <td>
                 @ComputerModel.RAMType
@@ -86,7 +86,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.SizeRAM)
+                Tamaño RAM
             </th>
             <td>
                 @ComputerModel.SizeRAM GB
@@ -94,7 +94,7 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.Processor)
+                Procesador
             </th>
             <td>
                 @ComputerModel.Processor
@@ -102,24 +102,24 @@
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.HasNumericKeyboard)
+                Teclado Numérico
             </th>
             @if (ComputerModel.HasNumericKeyboard)
             {
                 <td>
-                    Tiene Teclado Numerico
+                    Tiene Teclado Numérico
                 </td>
             }
             else
             {
                 <td>
-                    No Tiene teclado Numerico
+                    No Tiene teclado Numérico
                 </td>
             }
         </tr>
         <tr>
             <th>
-                @nameof(ComputerModel.Employee)
+                Empleado
             </th>
             @if (ComputerModel.Employee != null)
             {
@@ -129,7 +129,7 @@
             }
             else
             {
-                <td>
+                <td class="text-info">
                     Sin Asignar
                 </td>
             }

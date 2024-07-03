@@ -47,9 +47,10 @@
     <tbody>
         @foreach(SmartPhoneModel i in SmartPhonestemp)
         {
-            if (i.isActive)
-            {
-                <tr>
+           
+            _style=(i.isActive)? "":"text-danger italic";
+
+                <tr class="@_style">
                     <td>
                         @i.PhoneNumber
                     </td>
@@ -100,7 +101,7 @@
                             </NotAuthorized>
                         </AuthorizeView>
                 </tr>
-            }
+
         }
     </tbody>
 </table>
@@ -114,6 +115,7 @@
 @code {
     [Parameter]
     public List<SmartPhoneModel> SmartPhones { get; set; }
+    string _style = "";
     private List<SmartPhoneModel> SmartPhonestemp = new();
 
     private void Disable(SmartPhoneModel e)

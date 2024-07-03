@@ -89,7 +89,7 @@ namespace InventoryIT.Utilities
                         {
                     ext.Extension.ToString(),
                     ext.PhoneNumberPBX.ToString(),
-                    ext.Type,
+                    ext.Employee ==null? "": ext.Type,
                     ext.Employee?.Name ?? "",
                     ext.Employee?.LastName ?? ""
                         };
@@ -127,8 +127,17 @@ namespace InventoryIT.Utilities
                         DrawTableRow(gfx, x, y, extension);
                         y += cellHeight;
                         currentRow++;
+
                     }
+                    // Agregar pie de página
+                    var footerText = $"Documento generado el {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - Reporte Generado por el Sistema InventoryIT";
+                    gfx.DrawString(footerText, font, XBrushes.Black,
+                        new XRect(50, page.Height.Point - 50, page.Width.Point - 100, 20),
+                        XStringFormats.Center);
+
                 }
+
+
 
                 // Guardar el documento en el memoryStream en lugar de en un archivo
                 document.Save(memoryStream, false);
@@ -180,67 +189,96 @@ namespace InventoryIT.Utilities
                     new XRect(50, 80, page.Width.Point - 100, 40));
 
                 // Definir el tamaño y posición de la tabla.
-                double tableWidth = 200; // Ancho total de la tabla
-                double cellWidth = 100;
                 double cellHeight = 15;
-                double x = (page.Width.Point - tableWidth) / 2; // Centrar la tabla horizontalmente
                 double y = 150; // Ajustar la posición Y para que haya espacio para el párrafo
 
                 // Datos de ejemplo para la tabla.
                 string[,] data = new string[,]
                 {
-                    { "Información", "Datos" },
-                    { nameof(i.Name), i.SerialNumber.ToString() },
-                    { nameof(i.Type), i.Type },
-                    { nameof(i.AdquisitionDate), i.AdquisitionDate.ToShortDateString() },
-                    { nameof(i.SerialNumber), i.SerialNumber },
-                    { nameof(i.Cost), "$ " + i.Cost.ToString() },
-                    { nameof(i.Brand.Name), i.Brand.Name},
-                    { nameof(i.Brand), i.Brand.Name.ToString() },
-                    { nameof(i.Employee.LastName), i.Employee.LastName.ToString() },
-                    { nameof(i.Employee.PhoneNumber), i.Employee.PhoneNumber.ToString() },
-                   // { nameof(i.Employee.Departament.Name), i.Employee.Departament.Name }
+            { "Información", "Datos" },
+            { "Marca", i.Brand.Name},
+            { "Número de Serie", i.SerialNumber.ToString() },
+            { "Modelo", i.Model },
+            { "Tipo", i.Type },
+            { "Adquisición", i.AdquisitionDate.ToShortDateString() },
+            { "Costo", "$ " + i.Cost.ToString() },
+            { "Cédula", i.Employee.DNI.ToString()},
+            { "Nombre", i.Employee.Name },
+            { "Apellido", i.Employee.LastName.ToString() },
+            { "Teléfono", i.Employee.PhoneNumber.ToString() },
                 };
+
+                // Calcular el ancho de cada columna basándose en el tamaño del texto.
+                double[] columnWidths = new double[data.GetLength(1)];
+                for (int col = 0; col < data.GetLength(1); col++)
+                {
+                    double maxWidth = 0;
+                    for (int row = 0; row < data.GetLength(0); row++)
+                    {
+                        var size = gfx.MeasureString(data[row, col], font);
+                        if (size.Width > maxWidth)
+                        {
+                            maxWidth = size.Width;
+                        }
+                    }
+                    columnWidths[col] = maxWidth + 10; // Agregar un pequeño margen
+                }
+
+                // Calcular el ancho total de la tabla.
+                double tableWidth = 0;
+                foreach (double width in columnWidths)
+                {
+                    tableWidth += width;
+                }
+
+                // Calcular la posición X inicial para centrar la tabla.
+                double x = (page.Width.Point - tableWidth) / 2;
 
                 // Dibujar la tabla.
                 for (int row = 0; row < data.GetLength(0); row++)
                 {
+                    double cellX = x;
                     for (int col = 0; col < data.GetLength(1); col++)
                     {
-                        // Calcular la posición de la celda.
-                        double cellX = x + col * cellWidth;
-                        double cellY = y + row * cellHeight;
+                        double cellWidth = columnWidths[col];
 
                         // Dibujar el borde de la celda.
-                        gfx.DrawRectangle(XPens.Black, cellX, cellY, cellWidth, cellHeight);
+                        gfx.DrawRectangle(XPens.Black, cellX, y, cellWidth, cellHeight);
 
                         // Dibujar el texto dentro de la celda.
                         gfx.DrawString(data[row, col], font, XBrushes.Black,
-                            new XRect(cellX, cellY, cellWidth, cellHeight),
+                            new XRect(cellX, y, cellWidth, cellHeight),
                             XStringFormats.Center);
+
+                        cellX += cellWidth;
                     }
+                    y += cellHeight;
                 }
 
                 // Párrafo después de la tabla
-                var afterTableParagraph = $"Se informa a {i.Employee.Name} {i.Employee.LastName} que se llevará a cabo la entrega de un activo asignada para el uso corporativo. El empleado que reciba este activo será responsable de su correcto uso y mantenimiento. Es imperativo utilizar el dispositivo exclusivamente para actividades relacionadas con el trabajo, asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. Asimismo, se recuerda que es responsabilidad del empleado devolver el equipo en buen estado al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización";
+                var afterTableParagraph = $"Se informa a {i.Employee.Name} {i.Employee.LastName}, cédula {i.Employee.DNI}, que se llevará a cabo la entrega de un activo asignada para el uso corporativo, con la serie {i.SerialNumber}. El empleado que reciba este activo será responsable de su correcto uso y mantenimiento. Es imperativo utilizar el dispositivo exclusivamente para actividades relacionadas con el trabajo, asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. Asimismo, se recuerda que es responsabilidad del empleado devolver el equipo en buen estado al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización";
                 tf.DrawString(afterTableParagraph, paragraphFont, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + 20, page.Width.Point - 100, 200));
+                    new XRect(50, y + 20, page.Width.Point - 100, 200));
 
                 // Espacio para las firmas
                 short _y = 200;
-                gfx.DrawLine(XPens.Black, 50, y + data.GetLength(0) * cellHeight + _y, page.Width.Point - 80, y + data.GetLength(0) * cellHeight + _y);
+                gfx.DrawLine(XPens.Black, 50, y + _y, page.Width.Point - 80, y + _y);
                 gfx.DrawString("Firma de quien entrega", font, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + _y, page.Width.Point - 50, 0),
+                    new XRect(50, y + _y, page.Width.Point - 50, 0),
                     XStringFormats.TopLeft);
 
                 // Incrementar la coordenada y para crear separación
-                gfx.DrawLine(XPens.Black, 50, y + data.GetLength(0) * cellHeight + 270, page.Width.Point - 80, y + data.GetLength(0) * cellHeight + 270);
+                gfx.DrawLine(XPens.Black, 50, y + 270, page.Width.Point - 80, y + 270);
                 gfx.DrawString($"Firma de quien recibe: {i.Employee.Name} {i.Employee.LastName} {i.Employee.SecondLastName}", font, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + 280, page.Width.Point - 50, 0),
+                    new XRect(50, y + 280, page.Width.Point - 50, 0),
                     XStringFormats.TopLeft);
 
+                // Agregar pie de página
+                var footerText = $"Documento generado el {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - Reporte Generado por el Sistema InventoryIT";
+                gfx.DrawString(footerText, font, XBrushes.Black,
+                    new XRect(50, page.Height.Point - 50, page.Width.Point - 100, 20),
+                    XStringFormats.Center);
 
-                // Guardar el documento...
                 // Guardar el documento en el memoryStream en lugar de en un archivo
                 document.Save(memoryStream, false);
 
@@ -248,6 +286,7 @@ namespace InventoryIT.Utilities
                 return memoryStream.ToArray();
             }
         }
+
         public async Task<byte[]> GeneratePDFComputer(ComputerModel i)
         {
             using (var memoryStream = new MemoryStream())
@@ -288,71 +327,102 @@ namespace InventoryIT.Utilities
                     new XRect(50, 80, page.Width.Point - 100, 40));
 
                 // Definir el tamaño y posición de la tabla.
-                double tableWidth = 200; // Ancho total de la tabla
-                double cellWidth = 100;
                 double cellHeight = 15;
-                double x = (page.Width.Point - tableWidth) / 2; // Centrar la tabla horizontalmente
                 double y = 150; // Ajustar la posición Y para que haya espacio para el párrafo
 
                 // Datos de ejemplo para la tabla.
                 string[,] data = new string[,]
                 {
-                    { "Información", "Datos" },
-                    { nameof(i.SerialNumber), i.SerialNumber.ToString() },
-                    { nameof(i.ModelName), i.ModelName.ToString() },
-                    { nameof(i.AdquisitionDate), i.AdquisitionDate.ToShortDateString() },
-                    { nameof(i.Cost), i.Cost.ToString() },
-                    { nameof(i.HaveSSD), (i.HaveSSD)? "Tiene SSD":"Tiene HHD" },
-                    { nameof(i.SizeDisk), i.SizeDisk.ToString() + " GB"},
-                    { nameof(i.RAMType), i.RAMType.ToString() },
-                    { nameof(i.SizeRAM), i.SizeRAM.ToString() + " GB" },
-                    { nameof(i.Processor), i.Processor.ToString() },
-                    { nameof(i.KeyboardLayout), (i.HaveSSD)? "Posee":"No posee" },
-                    { nameof(i.Brand), i.Brand.Name.ToString() },
-                    { nameof(i.Employee.LastName), i.Employee.LastName.ToString() },
-                    { nameof(i.Employee.PhoneNumber), i.Employee.PhoneNumber.ToString() },
-                   // { nameof(i.Employee.Departament.Name), i.Employee.Departament.Name }
+            { "Información", "Datos" },
+            { "Número de serie", i.SerialNumber.ToString() },
+            { "Modelo", i.ModelName.ToString() },
+            { "Adquisición", i.AdquisitionDate.ToShortDateString() },
+            { "Costo", i.Cost.ToString() },
+            { "Tipo Disco", (i.HaveSSD)? "Tiene SSD":"Tiene HHD" },
+            { "Tamaño Disco", i.SizeDisk.ToString() + " GB"},
+            { "Tipo RAM", i.RAMType.ToString() },
+            { "Tamaño RAM", i.SizeRAM.ToString() + " GB" },
+            { "Procesador", i.Processor.ToString() },
+            { "Distribución", i.KeyboardLayout },
+            { "Marca", i.Brand.Name.ToString() },
+            { "Cédula", i.Employee.DNI.ToString() },
+            { "Nombre", i.Employee.Name.ToString() },
+            { "Apellido", i.Employee.LastName.ToString() },
+            { "Telefono", i.Employee.PhoneNumber.ToString() },
+                    // { nameof(i.Employee.Departament.Name), i.Employee.Departament.Name }
                 };
+
+                // Calcular el ancho de cada columna basándose en el tamaño del texto.
+                double[] columnWidths = new double[data.GetLength(1)];
+                for (int col = 0; col < data.GetLength(1); col++)
+                {
+                    double maxWidth = 0;
+                    for (int row = 0; row < data.GetLength(0); row++)
+                    {
+                        var size = gfx.MeasureString(data[row, col], font);
+                        if (size.Width > maxWidth)
+                        {
+                            maxWidth = size.Width;
+                        }
+                    }
+                    columnWidths[col] = maxWidth + 10; // Agregar un pequeño margen
+                }
+
+                // Calcular el ancho total de la tabla.
+                double tableWidth = 0;
+                foreach (double width in columnWidths)
+                {
+                    tableWidth += width;
+                }
+
+                // Calcular la posición X inicial para centrar la tabla.
+                double x = (page.Width.Point - tableWidth) / 2;
 
                 // Dibujar la tabla.
                 for (int row = 0; row < data.GetLength(0); row++)
                 {
+                    double cellX = x;
                     for (int col = 0; col < data.GetLength(1); col++)
                     {
-                        // Calcular la posición de la celda.
-                        double cellX = x + col * cellWidth;
-                        double cellY = y + row * cellHeight;
+                        double cellWidth = columnWidths[col];
 
                         // Dibujar el borde de la celda.
-                        gfx.DrawRectangle(XPens.Black, cellX, cellY, cellWidth, cellHeight);
+                        gfx.DrawRectangle(XPens.Black, cellX, y, cellWidth, cellHeight);
 
                         // Dibujar el texto dentro de la celda.
                         gfx.DrawString(data[row, col], font, XBrushes.Black,
-                            new XRect(cellX, cellY, cellWidth, cellHeight),
+                            new XRect(cellX, y, cellWidth, cellHeight),
                             XStringFormats.Center);
+
+                        cellX += cellWidth;
                     }
+                    y += cellHeight;
                 }
 
                 // Párrafo después de la tabla
-                var afterTableParagraph = $"Se informa a {i.Employee.Name} {i.Employee.LastName} que se llevará a cabo la entrega de una computadora asignada para el uso corporativo. El empleado que reciba este activo será responsable de su correcto uso y mantenimiento. Es imperativo utilizar el dispositivo exclusivamente para actividades relacionadas con el trabajo, asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. Asimismo, se recuerda que es responsabilidad del empleado devolver el equipo en buen estado al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización";
+                var afterTableParagraph = $"Se informa a {i.Employee.Name} {i.Employee.LastName}, cédula {i.Employee.DNI} que se llevará a cabo la entrega de una computadora, con la serie {i.SerialNumber} asignada para el uso corporativo. El empleado que reciba este activo será responsable de su correcto uso y mantenimiento. Es imperativo utilizar el dispositivo exclusivamente para actividades relacionadas con el trabajo, asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. Asimismo, se recuerda que es responsabilidad del empleado devolver el equipo en buen estado al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización";
                 tf.DrawString(afterTableParagraph, paragraphFont, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + 20, page.Width.Point - 100, 200));
+                    new XRect(50, y + 20, page.Width.Point - 100, 200));
 
                 // Espacio para las firmas
                 short _y = 200;
-                gfx.DrawLine(XPens.Black, 50, y + data.GetLength(0) * cellHeight + _y, page.Width.Point - 80, y + data.GetLength(0) * cellHeight + _y);
+                gfx.DrawLine(XPens.Black, 50, y + _y, page.Width.Point - 80, y + _y);
                 gfx.DrawString("Firma de quien entrega", font, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + _y, page.Width.Point - 50, 0),
+                    new XRect(50, y + _y, page.Width.Point - 50, 0),
                     XStringFormats.TopLeft);
 
                 // Incrementar la coordenada y para crear separación
-                gfx.DrawLine(XPens.Black, 50, y + data.GetLength(0) * cellHeight + 270, page.Width.Point - 80, y + data.GetLength(0) * cellHeight + 270);
+                gfx.DrawLine(XPens.Black, 50, y + 270, page.Width.Point - 80, y + 270);
                 gfx.DrawString($"Firma de quien recibe: {i.Employee.Name} {i.Employee.LastName} {i.Employee.SecondLastName}", font, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + 280, page.Width.Point - 50, 0),
+                    new XRect(50, y + 280, page.Width.Point - 50, 0),
                     XStringFormats.TopLeft);
 
+                // Agregar pie de página
+                var footerText = $"Documento generado el {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - Reporte Generado por el Sistema InventoryIT";
+                gfx.DrawString(footerText, font, XBrushes.Black,
+                    new XRect(50, page.Height.Point - 50, page.Width.Point - 100, 20),
+                    XStringFormats.Center);
 
-                // Guardar el documento...
                 // Guardar el documento en el memoryStream en lugar de en un archivo
                 document.Save(memoryStream, false);
 
@@ -360,6 +430,8 @@ namespace InventoryIT.Utilities
                 return memoryStream.ToArray();
             }
         }
+
+
         public async Task<byte[]> GeneratePDFPhone(Phone_Number_User_Model i)
         {
             using (var memoryStream = new MemoryStream())
@@ -399,73 +471,100 @@ namespace InventoryIT.Utilities
                 tf.DrawString(beforeTableParagraph, paragraphFont, XBrushes.Black,
                     new XRect(50, 80, page.Width.Point - 100, 40));
 
-                // Definir el tamaño y posición de la tabla.
-                double tableWidth = 200; // Ancho total de la tabla
-                double cellWidth = 100;
-                double cellHeight = 20;
-                double x = (page.Width.Point - tableWidth) / 2; // Centrar la tabla horizontalmente
-                double y = 150; // Ajustar la posición Y para que haya espacio para el párrafo
-
                 // Datos de ejemplo para la tabla.
                 string[,] data = new string[,]
                 {
-                    { "Información", "Datos" },
-                    { nameof(i.PhoneNumber.Number), i.PhoneNumber.Number.ToString() },
-                    { nameof(i.PhoneNumber.Operator), i.PhoneNumber.Operator.ToString() },
-                    { nameof(i.PhoneNumber.Type), i.PhoneNumber.Type.ToString() },
-                    { nameof(i.CreationDate), i.CreationDate.ToShortDateString() },
-                    { nameof(i.Employee.DNI), i.Employee.DNI.ToString() },
-                    { nameof(i.Employee.Name), i.Employee.Name.ToString() },
-                    { nameof(i.Employee.LastName), i.Employee.LastName.ToString() },
-                    { nameof(i.Employee.PhoneNumber), i.Employee.PhoneNumber.ToString() },
-                    { nameof(i.Employee.Departament.Name), i.Employee.Departament.Name }
+            { "Información", "Datos" },
+            { "Número Teléfono", i.PhoneNumber.Number.ToString() },
+            { "Operador", i.PhoneNumber.Operator.ToString() },
+            { "Tipo", i.PhoneNumber.Type.ToString() },
+            { "Serie", i.PhoneNumberModel.PhoneSerial },
+            { "Modelo", i.PhoneNumberModel.PhoneModel },
+            { "Fecha Asignación", i.CreationDate.ToShortDateString() },
+            { "Cédula", i.Employee.DNI.ToString() },
+            { "Nombre", i.Employee.Name.ToString() },
+            { "Apellido", i.Employee.LastName.ToString() },
+            { "Teléfono", i.Employee.PhoneNumber.ToString() },
+            { "Departamento", i.Employee.Departament.Name }
                 };
+
+                // Calcular el ancho de cada columna basándose en el tamaño del texto.
+                double[] columnWidths = new double[data.GetLength(1)];
+                for (int col = 0; col < data.GetLength(1); col++)
+                {
+                    double maxWidth = 0;
+                    for (int row = 0; row < data.GetLength(0); row++)
+                    {
+                        var size = gfx.MeasureString(data[row, col], font);
+                        if (size.Width > maxWidth)
+                        {
+                            maxWidth = size.Width;
+                        }
+                    }
+                    columnWidths[col] = maxWidth + 10; // Agregar un pequeño margen
+                }
+
+                // Calcular el ancho total de la tabla.
+                double tableWidth = 0;
+                foreach (double width in columnWidths)
+                {
+                    tableWidth += width;
+                }
+
+                // Calcular la posición X inicial para centrar la tabla.
+                double x = (page.Width.Point - tableWidth) / 2;
+                double y = 150; // Ajustar la posición Y para que haya espacio para el párrafo
+                double cellHeight = 20;
 
                 // Dibujar la tabla.
                 for (int row = 0; row < data.GetLength(0); row++)
                 {
+                    double cellX = x;
                     for (int col = 0; col < data.GetLength(1); col++)
                     {
-                        // Calcular la posición de la celda.
-                        double cellX = x + col * cellWidth;
-                        double cellY = y + row * cellHeight;
+                        double cellWidth = columnWidths[col];
 
                         // Dibujar el borde de la celda.
-                        gfx.DrawRectangle(XPens.Black, cellX, cellY, cellWidth, cellHeight);
+                        gfx.DrawRectangle(XPens.Black, cellX, y, cellWidth, cellHeight);
 
                         // Dibujar el texto dentro de la celda.
                         gfx.DrawString(data[row, col], font, XBrushes.Black,
-                            new XRect(cellX, cellY, cellWidth, cellHeight),
+                            new XRect(cellX, y, cellWidth, cellHeight),
                             XStringFormats.Center);
+
+                        cellX += cellWidth;
                     }
+                    y += cellHeight;
                 }
 
                 // Párrafo después de la tabla
-                var afterTableParagraph = $"Se informa a {i.Employee.Name} {i.Employee.LastName} que se llevará a cabo la entrega de un teléfono y una línea telefónica asignados para el uso corporativo. El empleado que reciba estos activos será responsable de su correcto uso y mantenimiento. Es imperativo utilizar los dispositivos exclusivamente para actividades relacionadas con el trabajo, asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. Asimismo, se recuerda que es responsabilidad del empleado devolver el equipo en buen estado al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización.";
+                var afterTableParagraph = $"Se informa a {i.Employee.Name} {i.Employee.LastName}, cédula {i.Employee.DNI}, que se llevará a cabo la entrega de un teléfono y una línea telefónica asignados para el uso corporativo. El empleado que reciba estos activos será responsable de su correcto uso y mantenimiento. Es imperativo utilizar los dispositivos exclusivamente para actividades relacionadas con el trabajo, asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. Asimismo, se recuerda que es responsabilidad del empleado devolver el equipo en buen estado al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización.";
                 tf.DrawString(afterTableParagraph, paragraphFont, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + 20, page.Width.Point - 100, 200));
+                    new XRect(50, y + 20, page.Width.Point - 100, 200));
+
+                // Posicionar imeitext
+                var imeitext = $"El IMEI del teléfono corresponde a: {i.PhoneNumberModel.IMEIs}, con la serie {i.PhoneNumberModel.PhoneSerial}.";
+                tf.DrawString(imeitext, paragraphFont, XBrushes.Red, new XRect(50, y + 180, page.Width.Point - 100, 40));
 
                 // Espacio para las firmas
-                short _y = 200;
-                gfx.DrawLine(XPens.Black, 50, y + data.GetLength(0) * cellHeight + _y, page.Width.Point - 80, y + data.GetLength(0) * cellHeight + _y);
+                short _y = 280;
+                gfx.DrawLine(XPens.Black, 50, y + _y, page.Width.Point - 80, y + _y);
                 gfx.DrawString("Firma de quien entrega", font, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + _y, page.Width.Point - 50, 0),
+                    new XRect(50, y + _y, page.Width.Point - 50, 0),
                     XStringFormats.TopLeft);
 
                 // Incrementar la coordenada y para crear separación
-                gfx.DrawLine(XPens.Black, 50, y + data.GetLength(0) * cellHeight + 270, page.Width.Point - 80, y + data.GetLength(0) * cellHeight + 270);
+                gfx.DrawLine(XPens.Black, 50, y + 350, page.Width.Point - 80, y + 350);
                 gfx.DrawString($"Firma y nombre: {i.Employee.Name} {i.Employee.LastName} {i.Employee.SecondLastName} - {i.Employee.DNI}", font, XBrushes.Black,
-                    new XRect(50, y + data.GetLength(0) * cellHeight + 280, page.Width.Point - 50, 0),
+                    new XRect(50, y + 360, page.Width.Point - 50, 0),
                     XStringFormats.TopLeft);
 
-
                 // Agregar pie de página
-                var footerText = $"Documento generado el {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - Reporte generado por el sistema InventoryIT";
+                var footerText = $"Documento generado el {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - Reporte Generado por el Sistema InventoryIT";
                 gfx.DrawString(footerText, font, XBrushes.Black,
                     new XRect(50, page.Height.Point - 50, page.Width.Point - 100, 20),
                     XStringFormats.Center);
 
-                // Guardar el documento...
                 // Guardar el documento en el memoryStream en lugar de en un archivo
                 document.Save(memoryStream, false);
 
@@ -473,5 +572,6 @@ namespace InventoryIT.Utilities
                 return memoryStream.ToArray();
             }
         }
+
     }
 }

@@ -105,7 +105,7 @@
             Cancelar
         </button>
     </div>
-        
+    <label class="text-danger">@errorMessage</label>
 </div>
 
 
@@ -114,6 +114,7 @@
     public ComputerModel ObjComputer{ get; set; }
 
     List<Brand> Brands = new();
+    string errorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -127,18 +128,71 @@
     {
         try
         {
-            _ComputerService.Update(ObjComputer);
-            Nav.NavigateTo($"computers/{ObjComputer.ComputerModelID}");
+            if (IsValid())
+            {
+                _ComputerService.Update(ObjComputer);
+                errorMessage = "";
+                Nav.NavigateTo($"computers/{ObjComputer.ComputerModelID}");
+            }
+
         }
         catch (Exception e)
         {
-
-            throw e;
+            errorMessage = $"{e.Message}\n{e.InnerException}";
         }
     }
 
     private async Task Cancel()
     {
         Nav.NavigateTo($"computers");
+    }
+
+
+
+    private bool IsValid()
+    {
+        if (string.IsNullOrEmpty(ObjComputer.SerialNumber))
+        {
+            errorMessage = "Verifique el número de serie";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjComputer.ModelName))
+        {
+            errorMessage = "Verifique el modelo";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjComputer.Cost))
+        {
+            errorMessage = "No indica el costo";
+            ObjComputer.Cost = "0";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjComputer.Processor))
+        {
+            errorMessage = "No indica el procesador";
+            return false;
+        }
+        if (ObjComputer.SizeDisk == 0)
+        {
+            errorMessage = "No indica el tamaño del disco";
+            return false;
+        }
+        if (ObjComputer.SizeRAM == 0)
+        {
+            errorMessage = "No indica el tamaño de la RAM";
+            return false;
+        }
+        ObjComputer.Description = string.IsNullOrEmpty(ObjComputer.Description) ? " Sin Asignar" : ObjComputer.Description;
+        if (string.IsNullOrEmpty(ObjComputer.KeyboardLayout))
+        {
+            errorMessage = "No indica la distribución del teclado";
+            return false;
+        }
+        if (ObjComputer.BrandId == 0 || ObjComputer.BrandId == null)
+        {
+            errorMessage = "No indica la marca del equipo";
+            return false;
+        }
+        return true;
     }
 }

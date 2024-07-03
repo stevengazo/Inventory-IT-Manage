@@ -38,12 +38,6 @@
             </div>
             <div class="form-group d-flex flex-row justify-content-between">
                 <label class="w-25">
-                    Modelo
-                </label>
-                <InputText @bind-Value="ObjPeripheral.Model" class="form-text w-75"></InputText>
-            </div>
-            <div class="form-group d-flex flex-row justify-content-between">
-                <label class="w-25">
                     Costo
                 </label>
                 <InputNumber @bind-Value="ObjPeripheral.Cost" class="form-control w-75"></InputNumber>
@@ -57,6 +51,7 @@
                     <option "Teclado">Teclado</option>
                     <option "Telefono Oficina">Telefono Oficina</option>
                     <option "Monitor">Monitor</option>
+                    <option "Impresora">Impresora</option>
                     <option "Parlante">Proyector</option>
                     <option "Camara">Camara</option>
                     <option "Otro">Otro</option>
@@ -93,6 +88,7 @@
         <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
             Cancelar
         </button>
+        <label class="text-danger">@ErrorMessage</label>
     }
 </div>
 
@@ -104,6 +100,7 @@
     PeripheralModel ObjPeripheral = new();
     bool HideForm = true;
     List<Brand> Brands = new();
+    string ErrorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,16 +114,62 @@
     {
         try
         {
-            _PeripheralsService.Add(ObjPeripheral);
-            // Dispara el evento para indicar que se agregó una nueva computadora
-            await OnPeripheralAdded.InvokeAsync();
-            ObjPeripheral = new();
-            HideForm = true;
+            if(IsValid())
+            {
+                _PeripheralsService.Add(ObjPeripheral);
+                // Dispara el evento para indicar que se agregó una nueva computadora
+                await OnPeripheralAdded.InvokeAsync();
+                ObjPeripheral = new();
+                HideForm = true;
+                ErrorMessage = string.Empty;
+            }
         }
         catch (Exception e)
         {
-
-            throw e;
+            ErrorMessage = $"{e.Message} - {e.InnerException}";
+            ObjPeripheral = new();
         }
+
     }
+    private bool IsValid()
+    {
+        if (string.IsNullOrEmpty(ObjPeripheral.Name))
+        {
+            ErrorMessage = "Nombre vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjPeripheral.Model))
+        {
+            ErrorMessage = "Modelo vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjPeripheral.SerialNumber))
+        {
+            ErrorMessage = "Serie vacía";
+            return false;
+        }
+        if ( ObjPeripheral.Cost == 0 || ObjPeripheral.Cost == null)
+        {
+            ErrorMessage = "Costo no indicado (si no posee el dato, digite 1)";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjPeripheral.Type))
+        {
+            ErrorMessage = "Tipo vacío";
+            return false;
+        }
+        if (string.IsNullOrEmpty(ObjPeripheral.Description))
+        {
+            ErrorMessage = "Descripción vacío";
+            return false;
+        }
+        if (ObjPeripheral.BrandId == 0 || ObjPeripheral.BrandId == null)
+        {
+            ErrorMessage = "Marca no seleccionada";
+            return false;
+        }
+        return true;
+    }
+
+
 }
