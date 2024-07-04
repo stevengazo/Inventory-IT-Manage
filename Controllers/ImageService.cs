@@ -1,6 +1,7 @@
 ﻿using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {
@@ -18,22 +19,25 @@ namespace InventoryIT.Controllers
             throw new NotImplementedException();
         }
 
-        public Task<List<ImageModel>> GetAllFilesComputerAsync(int id)
+        public List<ImageModel> GetAllFilesComputer(int id)
+        {
+           
+            return  inventoryDb.Image
+                .Where(i => i.ComputerModelID == id)
+                .ToList();
+        }
+
+        public List<ImageModel> GetAllFilesSmartPhoneAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ImageModel>> GetAllFilesSmartPhoneAsync(int id)
+        public List<ImageModel> GetAllPeripheralsAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ImageModel>> GetAllPeripheralsAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<ImageModel>> GetAllPhoneAsync(int id)
+        public List<ImageModel> GetAllPhoneAsync(int id)
         {
             throw new NotImplementedException();
         }

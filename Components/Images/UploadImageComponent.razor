@@ -1,9 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
-@inject FileService FService
+@inject ImageService ImgService
 
 
 
-<div class="shadow my-2 p-2 align-middle rounded rounded-1 border border-1 ">
+<div class="align-middle rounded rounded-1  ">
 
 
     <!-- Sección de carga de archivos -->
@@ -11,7 +11,7 @@
         <div class="d-flex flex-row gap-2 align-middle justify-content-center">
             <span class=" bg-info h-100 h-100 p-2 rounded rounded-1 oi oi-data-transfer-upload text-white" aria-hidden="true"></span>
             <!-- Encabezado del componente -->
-            <h4 class="text-start h-100 align-content-center">Cargar Nuevo Archivo</h4>
+            <h4 class="text-start h-100 align-content-center">Imagenes</h4>
         </div>
 
         <div class="d-flex flex-row gap-2 w-50">
@@ -65,7 +65,7 @@
             try
             {
                 // Crear modelo de archivo para enviar al servicio
-                var fileModel = new FileModel
+                var img = new ImageModel
                     {
                         FileName = _File.Name,           // Nombre del archivo
                         FileSize = _File.Size,           // Tamaño del archivo en bytes
@@ -76,13 +76,13 @@
                 switch (TypeModel)
                 {
                     case nameof(SmartPhoneModel):
-                        fileModel.SmartPhoneModelId = id;
+                        img.SmartPhoneModelId = id;
                         break;
                     case nameof(ComputerModel):
-                        fileModel.ComputerModelID = id;
+                        img.ComputerModelID = id;
                         break;
                     case nameof(PeripheralModel):
-                        fileModel.PeripheralModelId = id;
+                        img.PeripheralModelId = id;
                         break;
                     default:
                         break;
@@ -91,12 +91,11 @@
                 isLoading = true;  // Inicia el indicador de carga
 
 
-
                 // Llamar al servicio para guardar el archivo
-                await FService.SaveFileAsync(fileModel);
+                await ImgService.SaveFileAsync(img);
 
                 // Actualizar mensaje de estado
-                uploadMessage = $"Archivo '{fileModel.FileName}' Cargado!";
+                uploadMessage = $"Archivo '{img.FileName}' Cargado!";
 
                 // Limpiar variables después de la carga
                 _File = null;
@@ -127,7 +126,7 @@
         _File = e.File; // Obtener el archivo seleccionado por el usuario
 
         // Verificar si el archivo es un PDF y si su tamaño es válido
-        if (_File.ContentType == "application/pdf" && _File.Size <= MaxSize)
+        if (_File.Size <= MaxSize)
         {
             try
             {

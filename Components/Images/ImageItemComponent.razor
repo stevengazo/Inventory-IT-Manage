@@ -1,0 +1,27 @@
+﻿
+<div class="card">
+    @if (Image != null && Image.Content != null)
+    {
+        string imageBase64 = Convert.ToBase64String(Image.Content);
+        string imageSrc = $"data:{Image.ContentType};base64,{imageBase64}";
+
+        <img class="card-img-top img-fluid" src="@imageSrc" alt="@Image.FileName" style="object-fit: cover; height: 300px;" />
+        <div class="card-body">
+            <h5 class="card-title">@Image.FileName</h5>
+            <p class="card-text">Fecha de creación: @Image.CreationDate.ToShortDateString()</p>
+        </div>
+    }
+    else
+    {
+        <div class="card-body">
+            <p class="card-text">No hay imagen disponible</p>
+        </div>
+    }
+</div>
+
+
+
+@code {
+    [Parameter]
+    public ImageModel Image { get; set; }
+}

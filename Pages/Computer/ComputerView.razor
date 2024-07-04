@@ -11,7 +11,11 @@
     <Authorized>
         @if (flag)
         {
-            <DetailsComputerComponent ComputerModel="@Computer" />
+            <div class="d-flex flex-row gap-2 w-100">
+                <DetailsComputerComponent ComputerModel="@Computer" />
+                <ImageContainerComponent id="_id" TypeModel="@nameof(ComputerModel)" />
+            </div>
+            
             <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
             <AddHistoryComponent id="_id" OnUpdated="@UpdateComputerList" TypeModel="@nameof(ComputerModel)" />
             <TableHistoryByDeviceComponent Histories="@Histories" />

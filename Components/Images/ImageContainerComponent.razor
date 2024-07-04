@@ -1,10 +1,26 @@
-﻿
+﻿@inject ImageService ImgService
 
-<div class="my-3 shadow rounded rounded-1 border border-1 w-50 d-flex flex-column">
-
+<div class="my-3 w-50 shadow rounded rounded-1 border border-1 d-flex flex-column">
     <UploadImageComponent id="id" TypeModel="@TypeModel" />
+    <div class="carousel slide" id="carouselExample" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @foreach (var item in images)
+            {
+                <div class="carousel-item @(item == images.First() ? "active" : "")">
+                    <ImageItemComponent Image="@item" />
+                </div>
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 </div>
-
 
 @code {
     [Parameter]
@@ -12,4 +28,22 @@
 
     [Parameter]
     public string TypeModel { get; set; }
+
+    private List<ImageModel> images = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(TypeModel))
+        {
+            switch (TypeModel)
+            {
+                case nameof(ComputerModel):
+                    images =  ImgService.GetAllFilesComputer(id);
+                    break;
+                default:
+                    // Manejo para cualquier otro caso que pueda surgir
+                    break;
+            }
+        }
+    }
 }
