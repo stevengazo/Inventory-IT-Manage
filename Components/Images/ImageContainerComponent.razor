@@ -2,20 +2,20 @@
 
 <div class="my-3 w-50 shadow rounded rounded-1 border border-1 d-flex flex-column">
     <UploadImageComponent id="id" TypeModel="@TypeModel" />
-    <div class="carousel slide" id="carouselExample" data-bs-ride="carousel">
+    <div class="carousel slide" id="carouselExample" data-ride="carousel">
         <div class="carousel-inner">
             @foreach (var item in images)
             {
-                <div class="carousel-item @(item == images.First() ? "active" : "")">
+                <div class="carousel-item @(item == images[currentIndex] ? "active" : "")">
                     <ImageItemComponent Image="@item" />
                 </div>
             }
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" @onclick="PreviousSlide">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" @onclick="NextSlide">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
@@ -29,7 +29,8 @@
     [Parameter]
     public string TypeModel { get; set; }
 
-    private List<ImageModel> images = new();
+    private List<ImageModel> images = new List<ImageModel>();
+    private int currentIndex = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,12 +39,36 @@
             switch (TypeModel)
             {
                 case nameof(ComputerModel):
-                    images =  ImgService.GetAllFilesComputer(id);
+                    images = ImgService.GetAllFilesComputer(id);
                     break;
                 default:
                     // Manejo para cualquier otro caso que pueda surgir
                     break;
             }
+        }
+    }
+
+    private void PreviousSlide()
+    {
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+        }
+        else
+        {
+            currentIndex = images.Count - 1;
+        }
+    }
+
+    private void NextSlide()
+    {
+        if (currentIndex < images.Count - 1)
+        {
+            currentIndex++;
+        }
+        else
+        {
+            currentIndex = 0;
         }
     }
 }
