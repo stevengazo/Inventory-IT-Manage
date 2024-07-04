@@ -1,0 +1,91 @@
+﻿@inject NavigationManager Nav;
+@inject IControllerServices<PhoneNumber> _PhoneNumberService;
+
+
+
+<div class="border m-2 p-3 rounded rounded-1 shadow">
+<EditForm Model="phoneNumber">
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            Numero Telefono
+        </label>
+        <InputNumber @bind-Value="phoneNumber.Number" class="form-control  w-75"></InputNumber>
+    </div>
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            @nameof(phoneNumber.Operator)
+        </label>
+        <InputText @bind-Value="phoneNumber.Operator" class="form-control  w-75"></InputText>
+    </div>
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            @nameof(phoneNumber.Type)
+        </label>
+        <InputSelect @bind-Value="phoneNumber.Type" class="form-control  w-75">
+            <option value="Prepago">Prepago</option>
+            <option value="Postpago">Postpago</option>
+        </InputSelect>
+    </div>
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            @nameof(phoneNumber.Description)
+        </label>
+        <InputTextArea @bind-Value="phoneNumber.Description" class="form-control  w-75"></InputTextArea>
+    </div>
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            @nameof(phoneNumber.Cost)
+        </label>
+        <InputNumber @bind-Value="phoneNumber.Cost" class="form-control  w-75"></InputNumber>
+    </div>
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            @nameof(phoneNumber.StartDate)
+        </label>
+        <InputDate @bind-Value="phoneNumber.StartDate" class="form-control  w-75"></InputDate>
+    </div>
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            @nameof(phoneNumber.ExpireDate)
+        </label>
+        <InputDate @bind-Value="phoneNumber.ExpireDate" class="form-control  w-75"></InputDate>
+    </div>
+    <div class="form-group d-flex flex-row justify-content-sm-between px-5 my-2">
+        <label class="w-25">
+            @nameof(phoneNumber.IsActive)
+        </label>
+        <InputCheckbox @bind-Value="phoneNumber.IsActive" class="w-100"></InputCheckbox>
+    </div>
+</EditForm>
+<button @onclick="Update" class="btn btn-outline-info">
+    Agregar
+</button>
+<button @onclick="Cancel" class="btn btn-outline-warning">
+    Cancelar
+</button>
+</div>
+@code {
+    private string errormessage = "";
+    [Parameter]
+    public PhoneNumber phoneNumber { get; set; }
+
+    private void Update()
+    {
+        try
+        {
+            _PhoneNumberService.Update(phoneNumber);
+            Nav.NavigateTo($"computers");
+        }
+        catch (Exception e)
+        {
+
+            errormessage = $"{e.Message}. {e.InnerException}";
+        }
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo($"computers");
+    }
+
+}

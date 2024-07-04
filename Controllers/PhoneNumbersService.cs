@@ -31,7 +31,7 @@ namespace InventoryIT.Controllers
 
         public PhoneNumber GetById(int id)
         {
-            throw new NotImplementedException();
+            return _inventoryDb.PhoneNumber.FirstOrDefault(i => i.PhoneNumberId == id);
         }
 
         public List<PhoneNumber> Search(string value)
@@ -41,7 +41,8 @@ namespace InventoryIT.Controllers
 
         public void Update(PhoneNumber entity)
         {
-            throw new NotImplementedException();
+            _inventoryDb.PhoneNumber.Update(entity);
+            _inventoryDb.SaveChanges();
         }
     }
 }

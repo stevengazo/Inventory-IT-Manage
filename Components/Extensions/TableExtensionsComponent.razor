@@ -10,9 +10,11 @@
     <p>
         Esta tabla muestra la información sobre la asignación, la extension y el pbx utilizado.
     </p>
-    <div class="d-flex flex-row justify-content-start gap-2">
-        <input type="text" placeholder="Búsqueda (PBX,Usuario o Extension)" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
+    <div class="d-flex flex-row justify-content-between gap-2">
+
         <button @onclick="DownloadPDF" class="btn btn-outline-warning btn-sm">Descargar</button>
+        <input type="text" placeholder="Búsqueda (PBX,Usuario o Extension)" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
+    
     </div>
     
 </div>

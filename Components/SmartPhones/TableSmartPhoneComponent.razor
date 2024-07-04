@@ -126,7 +126,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SmartPhonestemp = SmartPhones;   
+        SmartPhonestemp = SmartPhones?.OrderBy(e=>e.Brand.Name).ThenBy(e=>e.PhoneModel).ToList();   
         base.OnInitializedAsync();   
     }
 

@@ -1,8 +1,22 @@
-﻿@page "/phones-numbers/{id}"
+﻿@inject IControllerServices<PhoneNumber> _PhoneNumberService;
+
+@page "/phones-numbers/{id}"
 
 <h3>Editar Información Linea Telefonica</h3>
+
+<UpdatePhoneNumberComponent phoneNumber="e"/>
 
 @code {
     [Parameter]
     public string id { get; set; }
+    PhoneNumber e = new();
+
+    int _id = 0;
+    protected override async Task OnInitializedAsync()
+    {
+        _id = Convert.ToInt32(id);
+        e = _PhoneNumberService.GetById(_id);
+
+        base.OnInitializedAsync();   
+    }
 }

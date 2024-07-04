@@ -114,6 +114,7 @@
         {
             if (IsValid())
             {
+                ObjSmartPhone.PhoneNumber = string.Empty;
                 _SmartPhoneService.Add(ObjSmartPhone);
                 // Dispara el evento para indicar que se agregó una nueva computadora
                 ObjSmartPhone = new();
