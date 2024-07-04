@@ -1,4 +1,4 @@
-﻿
+﻿@inject IJSRuntime JS
 <div class="card">
     @if (Image != null && Image.Content != null)
     {
@@ -8,7 +8,8 @@
         <img class="card-img-top img-fluid" src="@imageSrc" alt="@Image.FileName" style="object-fit: cover; height: 300px;" />
         <div class="card-body">
             <h5 class="card-title">@Image.FileName</h5>
-            <p class="card-text">Fecha de creación: @Image.CreationDate.ToShortDateString()</p>
+            <p class="card-text">Fecha de Subida: @Image.CreationDate.ToShortDateString()</p>
+            
         </div>
     }
     else
@@ -24,4 +25,17 @@
 @code {
     [Parameter]
     public ImageModel Image { get; set; }
+
+    private async Task DownloadPDF(ImageModel e)
+    {
+        try
+        {
+            string pdfBase64 = Convert.ToBase64String(e.Content);
+            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, e.FileName);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }
