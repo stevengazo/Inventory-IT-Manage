@@ -21,6 +21,7 @@ namespace InventoryIT.Model
         public bool IsActive { get; set; }
         public ICollection<HistoryModel>? Histories { get; set; }
         public ICollection<FileModel>? Files { get; set; }
+        public ICollection<ImageModel>? Image { get; set; }
         public int? BrandId { get; set; }
         public Brand? Brand { get; set; }
 

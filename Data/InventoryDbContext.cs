@@ -10,6 +10,7 @@ namespace InventoryIT.Data
         public DbSet<Departament> Departament { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<FileModel> File { get; set; }
+        public DbSet<ImageModel> Image { get; set; }
         public DbSet<HistoryModel> History { get; set; }
         public DbSet<Phone_Number_User_Model> Phone_Number_User { get; set; }
         public DbSet<PhoneNumber> PhoneNumber { get; set; }

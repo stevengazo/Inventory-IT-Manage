@@ -41,6 +41,7 @@ builder.Services.AddScoped<IControllerServices<PhoneExtension>, PhoneExtensionSe
 builder.Services.AddScoped<IControllerServices<PhoneNumber>, PhoneNumbersService>();
 builder.Services.AddScoped<IControllerServices<Phone_Number_User_Model>, Phone_Number_UserService>();
 builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<ImageService>();
 
 
 

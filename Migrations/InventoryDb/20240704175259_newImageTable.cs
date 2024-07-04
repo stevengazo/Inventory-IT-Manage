@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace InventoryIT.Migrations.InventoryDb
 {
-    public partial class inventorydb : Migration
+    public partial class newImageTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -304,6 +305,41 @@ namespace InventoryIT.Migrations.InventoryDb
                         principalColumn: "SmartPhoneModelId");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Image",
+                columns: table => new
+                {
+                    ImageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ComputerModelID = table.Column<int>(type: "int", nullable: true),
+                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: true),
+                    PeripheralModelId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Image", x => x.ImageId);
+                    table.ForeignKey(
+                        name: "FK_Image_Computer_ComputerModelID",
+                        column: x => x.ComputerModelID,
+                        principalTable: "Computer",
+                        principalColumn: "ComputerModelID");
+                    table.ForeignKey(
+                        name: "FK_Image_Peripheral_PeripheralModelId",
+                        column: x => x.PeripheralModelId,
+                        principalTable: "Peripheral",
+                        principalColumn: "PeripheralModelId");
+                    table.ForeignKey(
+                        name: "FK_Image_SmartPhone_SmartPhoneModelId",
+                        column: x => x.SmartPhoneModelId,
+                        principalTable: "SmartPhone",
+                        principalColumn: "SmartPhoneModelId");
+                });
+
             migrationBuilder.InsertData(
                 table: "Brand",
                 columns: new[] { "BrandId", "Name" },
@@ -382,6 +418,21 @@ namespace InventoryIT.Migrations.InventoryDb
                 column: "SmartPhoneModelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Image_ComputerModelID",
+                table: "Image",
+                column: "ComputerModelID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Image_PeripheralModelId",
+                table: "Image",
+                column: "PeripheralModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Image_SmartPhoneModelId",
+                table: "Image",
+                column: "SmartPhoneModelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Peripheral_BrandId",
                 table: "Peripheral",
                 column: "BrandId");
@@ -424,6 +475,9 @@ namespace InventoryIT.Migrations.InventoryDb
 
             migrationBuilder.DropTable(
                 name: "History");
+
+            migrationBuilder.DropTable(
+                name: "Image");
 
             migrationBuilder.DropTable(
                 name: "Phone_Number_User");

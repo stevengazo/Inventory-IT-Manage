@@ -1,0 +1,158 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inject FileService FService
+
+
+
+<div class="shadow my-2 p-2 align-middle rounded rounded-1 border border-1 ">
+
+
+    <!-- Sección de carga de archivos -->
+    <div class="d-flex flex-row justify-content-between ">
+        <div class="d-flex flex-row gap-2 align-middle justify-content-center">
+            <span class=" bg-info h-100 h-100 p-2 rounded rounded-1 oi oi-data-transfer-upload text-white" aria-hidden="true"></span>
+            <!-- Encabezado del componente -->
+            <h4 class="text-start h-100 align-content-center">Cargar Nuevo Archivo</h4>
+        </div>
+
+        <div class="d-flex flex-row gap-2 w-50">
+            <InputFile OnChange="LoadFile" accept="image/jpeg,image/png" class="form-control w-100 " />
+            <!-- Botón de carga de archivos -->
+            <button @onclick="AddFile" class="btn btn-outline-info" disabled="@(!canUpload || isLoading)">
+                @if (isLoading)
+                {
+                    <!-- Indicador de carga -->
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span>Loading...</span>
+                }
+                else
+                {
+                    <!-- Texto del botón -->
+                    <span>Subir</span>
+                }
+            </button>
+        </div>
+    </div>
+    <!-- Mensaje de estado de la carga -->
+
+</div>
+<label class="text-info p-1 text-end">@uploadMessage</label>
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    // Variables de estado del componente
+    private IBrowserFile _File;             // Archivo seleccionado por el usuario
+    private byte[] fileContent;             // Contenido del archivo en bytes
+    private string uploadMessage;           // Mensaje de estado de la carga
+    private bool canUpload = false;         // Indica si se puede cargar el archivo
+    private bool isLoading = false;         // Indica si se está procesando la carga
+    int MaxSize = (13 * 1024 * 1024);       // Tamaño máximo permitido para el archivo (13MB)
+
+    [Parameter]
+    public EventCallback OnUpdated { get; set; }
+
+
+    [Parameter]
+    public string TypeModel { get; set; }
+
+    // Método para manejar la carga del archivo
+    private async Task AddFile()
+    {
+        if (canUpload && _File != null)
+        {
+            try
+            {
+                // Crear modelo de archivo para enviar al servicio
+                var fileModel = new FileModel
+                    {
+                        FileName = _File.Name,           // Nombre del archivo
+                        FileSize = _File.Size,           // Tamaño del archivo en bytes
+                        ContentType = _File.ContentType, // Tipo MIME del archivo
+                        Content = fileContent,           // Contenido del archivo en bytes
+                        CreationDate = DateTime.Now
+                    };
+                switch (TypeModel)
+                {
+                    case nameof(SmartPhoneModel):
+                        fileModel.SmartPhoneModelId = id;
+                        break;
+                    case nameof(ComputerModel):
+                        fileModel.ComputerModelID = id;
+                        break;
+                    case nameof(PeripheralModel):
+                        fileModel.PeripheralModelId = id;
+                        break;
+                    default:
+                        break;
+                }
+
+                isLoading = true;  // Inicia el indicador de carga
+
+
+
+                // Llamar al servicio para guardar el archivo
+                await FService.SaveFileAsync(fileModel);
+
+                // Actualizar mensaje de estado
+                uploadMessage = $"Archivo '{fileModel.FileName}' Cargado!";
+
+                // Limpiar variables después de la carga
+                _File = null;
+                fileContent = null;
+                canUpload = false;
+                OnUpdated.InvokeAsync();
+            }
+            catch (Exception ex)
+            {
+                // Manejar errores durante la carga del archivo
+                uploadMessage = $"Error uploading file: {ex.Message}";
+            }
+            finally
+            {
+                isLoading = false; // Finaliza el indicador de carga
+            }
+        }
+        else
+        {
+            // Mensaje cuando no se ha seleccionado ningún archivo válido
+            uploadMessage = "No file selected or file is invalid.";
+        }
+    }
+
+    // Método para manejar el cambio de archivo seleccionado
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        _File = e.File; // Obtener el archivo seleccionado por el usuario
+
+        // Verificar si el archivo es un PDF y si su tamaño es válido
+        if (_File.ContentType == "application/pdf" && _File.Size <= MaxSize)
+        {
+            try
+            {
+                // Leer el contenido del archivo en un MemoryStream
+                var ms = new MemoryStream();
+                await _File.OpenReadStream(MaxSize).CopyToAsync(ms);
+                fileContent = ms.ToArray(); // Convertir el contenido a bytes
+            }
+            catch (Exception)
+            {
+                // Manejar errores al cargar el archivo
+                uploadMessage = "Error loading file.";
+                canUpload = false;
+                return;
+            }
+
+            // Actualizar estado para permitir la carga del archivo
+            canUpload = true;
+            uploadMessage = $"File Name: {_File.Name}, File Size: {_File.Size} bytes, File Type: {_File.ContentType}";
+        }
+        else
+        {
+            // Mensaje cuando se selecciona un archivo no válido
+            uploadMessage = "Invalid file. Please upload a PDF file smaller than 13MB.";
+            canUpload = false;
+        }
+    }
+}

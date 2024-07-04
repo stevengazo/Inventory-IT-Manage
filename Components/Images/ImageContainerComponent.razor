@@ -1,0 +1,15 @@
+﻿
+
+<div class="my-3 shadow rounded rounded-1 border border-1 w-50 d-flex flex-column">
+
+    <UploadImageComponent id="id" TypeModel="@TypeModel" />
+</div>
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    [Parameter]
+    public string TypeModel { get; set; }
+}
