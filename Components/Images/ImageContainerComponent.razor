@@ -2,24 +2,36 @@
 
 <div class="my-3 w-50 shadow rounded rounded-1 border border-1 d-flex flex-column">
     <UploadImageComponent id="id" TypeModel="@TypeModel" />
-    <div class="carousel slide" id="carouselExample" data-ride="carousel">
-        <div class="carousel-inner">
-            @foreach (var item in images)
-            {
-                <div class="carousel-item @(item == images[currentIndex] ? "active" : "")">
-                    <ImageItemComponent Image="@item" />
-                </div>
-            }
+
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center my-3">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
-        <button class="carousel-control-prev" type="button" @onclick="PreviousSlide">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" @onclick="NextSlide">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
+    }
+    else
+    {
+        <div class="carousel slide" id="carouselExample" data-ride="carousel">
+            <div class="carousel-inner">
+                @foreach (var item in images)
+                {
+                    <div class="carousel-item @(item == images[currentIndex] ? "active" : "")">
+                        <ImageItemComponent Image="@item" />
+                    </div>
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" @onclick="PreviousSlide">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" @onclick="NextSlide">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    }
 </div>
 
 @code {
@@ -31,6 +43,7 @@
 
     private List<ImageModel> images = new List<ImageModel>();
     private int currentIndex = 0;
+    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,13 +52,14 @@
             switch (TypeModel)
             {
                 case nameof(ComputerModel):
-                    images = ImgService.GetAllFilesComputer(id);
+                    images = await ImgService.GetAllFilesComputer(id);
                     break;
                 default:
                     // Manejo para cualquier otro caso que pueda surgir
                     break;
             }
         }
+        isLoading = false;
     }
 
     private void PreviousSlide()

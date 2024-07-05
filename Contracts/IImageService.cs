@@ -6,7 +6,7 @@ namespace InventoryIT.Contracts
     {
         Task SaveFileAsync(ImageModel file);
         Task<ImageModel> GetFileByIdAsync(int id);
-        List<ImageModel> GetAllFilesComputer(int id);
+        Task<List<ImageModel>> GetAllFilesComputer(int id);
         List<ImageModel> GetAllFilesSmartPhoneAsync(int id);
         List<ImageModel> GetAllPhoneAsync(int id);
        List<ImageModel> GetAllPeripheralsAsync(int id);

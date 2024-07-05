@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var InventoryconnectionString = builder.Configuration.GetConnectionString("Inventory");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<InventoryDbContext>(options => options.UseSqlServer(InventoryconnectionString));
+builder.Services.AddDbContextFactory<InventoryDbContext>(options => options.UseSqlServer(InventoryconnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
      .AddRoles<IdentityRole>()

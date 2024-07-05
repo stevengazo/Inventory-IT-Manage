@@ -8,10 +8,14 @@ namespace InventoryIT.Controllers
     public class ImageService : IImageService
     {
         private readonly InventoryDbContext inventoryDb;
+        private readonly IDbContextFactory<InventoryDbContext> _contextFactory;
 
-        public ImageService(InventoryDbContext inventoryDb)
+        // El constructor acepta una fábrica de contextos (IDbContextFactory) para crear instancias de InventoryDbContext
+        public ImageService(IDbContextFactory<InventoryDbContext> contextFactory)
         {
-            this.inventoryDb = inventoryDb;
+            _contextFactory = contextFactory;
+            // Se crea una instancia de InventoryDbContext usando la fábrica de contextos
+            inventoryDb = _contextFactory.CreateDbContext();
         }
 
         public Task Delete(ImageModel e)
@@ -19,12 +23,13 @@ namespace InventoryIT.Controllers
             throw new NotImplementedException();
         }
 
-        public List<ImageModel> GetAllFilesComputer(int id)
+        // Método para obtener todos los archivos relacionados con un modelo de computadora específico
+        public Task<List<ImageModel>> GetAllFilesComputer(int id)
         {
-           
-            return  inventoryDb.Image
+            // Devuelve una lista de imágenes que tienen el mismo ComputerModelID que el ID proporcionado
+            return inventoryDb.Image
                 .Where(i => i.ComputerModelID == id)
-                .ToList();
+                .ToListAsync();
         }
 
         public List<ImageModel> GetAllFilesSmartPhoneAsync(int id)
@@ -47,11 +52,14 @@ namespace InventoryIT.Controllers
             throw new NotImplementedException();
         }
 
+        // Método para guardar un archivo de imagen en la base de datos
         public Task SaveFileAsync(ImageModel file)
         {
+            // Agrega el archivo a la colección de imágenes
             inventoryDb.Image.Add(file);
+            // Guarda los cambios en la base de datos
             inventoryDb.SaveChanges();
-                return Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

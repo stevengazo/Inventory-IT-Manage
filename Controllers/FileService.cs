@@ -8,11 +8,13 @@ namespace InventoryIT.Controllers
     public class FileService : IFilesService
     {
         private readonly InventoryDbContext dbContext;
+        private readonly IDbContextFactory<InventoryDbContext> _contextFactory;
 
-        public FileService(InventoryDbContext dbContext)
+        public FileService( IDbContextFactory<InventoryDbContext> contextFactory)
         {
-            this.dbContext = dbContext;
-        }
+            _contextFactory = contextFactory;
+            dbContext= contextFactory.CreateDbContext();
+                }
 
         public Task Delete(FileModel file)
         {
