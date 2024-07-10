@@ -69,8 +69,8 @@ namespace InventoryIT.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Cambio de Contraseña",
+                    $"<p>Estimado {user.UserName}</p><p>Se proceso una solicitud de cambio de contraseña. Favor haga click en el siguiente enlace para cambiar la contraseña:</p> <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Cambio de contraseña</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
