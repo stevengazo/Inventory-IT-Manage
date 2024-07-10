@@ -4,12 +4,28 @@
 
 <h3>Información del Teléfono</h3>
 
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <DetailsSmartPhoneComponent smartPhone="@smartPhone" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
 
-<DetailsSmartPhoneComponent smartPhone="@smartPhone"/>
-<AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(SmartPhoneModel)" />
-<TableHistoryByDeviceComponent Histories="@Histories"  />
-<UploadFileComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" OnUpdated="@Update" />
-<TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(SmartPhoneModel)" />
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(SmartPhoneModel)" />
+        <TableHistoryByDeviceComponent Histories="@Histories" />
+        <UploadFileComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" OnUpdated="@Update" />
+        <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(SmartPhoneModel)" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+
 
 @code {
     [Parameter]

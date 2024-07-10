@@ -6,7 +6,9 @@ using InventoryIT.Model;
 using InventoryIT.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using PdfSharp.Charting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +44,8 @@ builder.Services.AddScoped<IControllerServices<PhoneNumber>, PhoneNumbersService
 builder.Services.AddScoped<IControllerServices<Phone_Number_User_Model>, Phone_Number_UserService>();
 builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<ImageService>();
+builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+
 
 
 

@@ -4,7 +4,15 @@
 
 <h3>Editar Información Linea Telefonica</h3>
 
-<UpdatePhoneNumberComponent phoneNumber="e"/>
+
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <UpdatePhoneNumberComponent phoneNumber="e" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
     [Parameter]

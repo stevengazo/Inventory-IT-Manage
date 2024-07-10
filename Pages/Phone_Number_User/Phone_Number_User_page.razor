@@ -4,16 +4,22 @@
 <h3>
     Lista de Asignaciones de Celulares y Líneas Telefónicas
 </h3>
-<AuthorizeView Roles="Administrador,Lector">
+<AuthorizeView Roles="Administrador">
     <Authorized>
         <AddPhone_Number_UserComponent eventCallback="UpdateList" phone_Number_s="@phone_Numbers" />
     </Authorized>
     <NotAuthorized>
-
     </NotAuthorized>
 </AuthorizeView>
 
-<TablePhone_Number_UserComponent phone_Number_User_Models="@phone_Numbers"  />
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        
+        <TablePhone_Number_UserComponent phone_Number_User_Models="@phone_Numbers" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 

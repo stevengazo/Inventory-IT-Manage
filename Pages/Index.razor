@@ -1,6 +1,16 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
 
-<AvariableComputersComponent/>
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <AvariableComputersComponent />
+    </Authorized>
+    <NotAuthorized>
+        <h3>
+            No posee Permisos para ver la información
+        </h3>
+    </NotAuthorized>
+</AuthorizeView>
+

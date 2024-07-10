@@ -15,7 +15,14 @@
     </NotAuthorized>
 </AuthorizeView>
 
-<TablePhoneNumbersComponent PhoneNumbers="@Phones" />
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <TablePhoneNumbersComponent PhoneNumbers="@Phones" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 
 

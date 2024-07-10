@@ -1,8 +1,14 @@
 ﻿@page "/smartphone/edit/{id}"
 @inject IControllerServices<SmartPhoneModel> _SmartPhoneService;
 
-
-    <UpdateSmartPhoneComponent ObjSmartPhone="@smartphone" />
+<AuthorizeView Roles="Administrador">
+    <Authorized>
+        <UpdateSmartPhoneComponent ObjSmartPhone="@smartphone" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+    
 
 @code{
 
