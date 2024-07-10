@@ -14,9 +14,20 @@
     </NotAuthorized>
 </AuthorizeView>
 
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <TableComputers Computers="@Computers" />
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
 
 
-<TableComputers Computers="@Computers" />
+
+
+
+
 
 
 @code {
