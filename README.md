@@ -146,6 +146,8 @@ Contributions are welcome. If you would like to contribute to this project, plea
 3. **Make your changes** and write descriptive commits.
 4. **Submit a pull request** for review and integration into the main project.
 
+If you appreciate the project and want to support its development, consider buying me a coffee: [Buy Me a Coffee](https://www.buymeacoffee.com/stevengazo).
+
 ## License
 
 This project is licensed under the MIT License. You can review the full terms in the [LICENSE](notion://www.notion.so/LICENSE) file.
