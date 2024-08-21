@@ -4,14 +4,14 @@
 
 ## Table of Contents
 
-- [Features](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#features)
-- [Requirements](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#requirements)
+- [Features](##features)
+- [Requirements](##Requirements)
 - [Installation](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#installation)
-    - [Manual Installation](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#manual-installation)
-    - [Installation with Docker](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#installation-with-docker)
-- [Usage](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#usage)
-- [Contributions](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#contributions)
-- [License](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#license)
+    - [Manual Installation]()
+    - [Installation with Docker]()
+- [Usage](##Usage)
+- [Contributions](##Contributions)
+- [License](#license)
 
 ## Features
 
