@@ -5,7 +5,6 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,6 +17,10 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
+    - name: Set up timestamp
+      id: ts
+      run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+
     - name: Restore dependencies
       run: dotnet restore
 
@@ -25,7 +28,7 @@ jobs:
       run: dotnet build --no-restore --configuration Release
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file Dockerfile --tag inventoryit:${{ env.TIMESTAMP }}
 
     # Opcional: Login to Docker Hub
     - name: Log in to Docker Hub
@@ -38,4 +41,4 @@ jobs:
     # Opcional: Push the Docker image to Docker Hub
     - name: Push Docker image to Docker Hub
       if: success()
-      run: docker push inventoryit:$(date +%s)
+      run: docker push inventoryit:${{ env.TIMESTAMP }}
