@@ -29,7 +29,7 @@ jobs:
       run: dotnet build --no-restore --configuration Release
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/inventoryit:$latest
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/inventoryit:latest
 
     - name: Log in to Docker Hub
       if: success()
@@ -40,4 +40,4 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       if: success()
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/inventoryit:$latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/inventoryit:latest
