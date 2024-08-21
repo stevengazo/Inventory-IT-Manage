@@ -4,13 +4,13 @@
 
 ## Table of Contents
 
-- [Features](##features)
-- [Requirements](##Requirements)
-- [Installation](notion://www.notion.so/2673b766a7914d97b83fc1ef809e97a2#installation)
-    - [Manual Installation]()
-    - [Installation with Docker]()
-- [Usage](##Usage)
-- [Contributions](##Contributions)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+  - [Manual Installation](#manual-installation)
+  - [Installation with Docker](#installation-with-docker)
+- [Usage](#usage)
+- [Contributions](#contributions)
 - [License](#license)
 
 ## Features
