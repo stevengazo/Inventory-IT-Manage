@@ -101,7 +101,7 @@ services:
       - blazor_network
 
   app:
-    image: your_blazor_app_image_name:latest
+    image: stevengazo/inventoryit:latest
     container_name: blazor_app
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
