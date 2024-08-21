@@ -42,4 +42,4 @@ jobs:
     # Opcional: Push the Docker image to Docker Hub
     - name: Push Docker image to Docker Hub
       if: success()
-      run: docker push inventoryit:${{ env.TIMESTAMP }}
+      run: docker push stevengazo/inventoryit:${{ env.TIMESTAMP }}
