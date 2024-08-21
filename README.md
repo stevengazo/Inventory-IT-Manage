@@ -35,7 +35,7 @@
 1. **Clone this repository**:
     
     ```bash
-    bashCopiar código
+    
     git clone https://github.com/yourusername/InventoryIt.git
     
     ```
@@ -44,7 +44,7 @@
 3. **Run migrations** to create the database:
     
     ```bash
-    bashCopiar código
+   
     dotnet ef database update
     
     ```
@@ -52,7 +52,7 @@
 4. **Run the application**:
     
     ```bash
-    bashCopiar código
+    
     dotnet run
     
     ```
@@ -64,7 +64,7 @@
 1. **Clone this repository**:
     
     ```bash
-    bashCopiar código
+    
     git clone https://github.com/yourusername/InventoryIt.git
     
     ```
@@ -85,7 +85,7 @@
 ### Example of `docker-compose.yml`
 
 ```yaml
-yamlCopiar código
+
 version: '3.8'
 
 services:
@@ -138,7 +138,7 @@ Contributions are welcome. If you would like to contribute to this project, plea
 2. **Create a branch** for your new feature or bug fix:
     
     ```bash
-    bashCopiar código
+    
     git checkout -b feature/new-feature
     
     ```
