@@ -8,12 +8,13 @@
     <div>
         <label>Empleado</label>
         <InputSelect @bind-Value="ObjPNU.EmployeeId" class="form-select">
+            <option value="">Seleccione Empleado</option>
             @{
                 if (employees != null)
                 {
                     foreach (var i in employees)
                     {
-                        if(!i.Fired)
+                        if (!i.Fired)
                         {
                             <option value="@i.EmployeeId">@i.Name @i.LastName</option>
                         }
@@ -25,6 +26,7 @@
     <div>
         <label>Numero</label>
         <InputSelect @bind-Value="ObjPNU.PhoneNumberId" class="form-select">
+            <option value="">Seleccione Número</option>
             @{
                 if (lines != null)
                 {
@@ -42,15 +44,17 @@
     <div>
         <label>Telefono</label>
         <InputSelect @bind-Value="ObjPNU.SmartPhoneModelId" class="form-select">
+            <option value="">Seleccione Teléfono</option>
             @{
                 if (smartPhones != null)
                 {
                     foreach (var i in smartPhones)
                     {
-                        if(i.isActive){
+                        if (i.isActive)
+                        {
                             <option value="@i.SmartPhoneModelId">@i.Brand.Name @i.PhoneModel | @i.PhoneSerial </option>
                         }
-                        
+
                     }
                 }
             }
@@ -110,7 +114,6 @@
         var registeredLineIds = phone_Number_s.Where(i => i.IsActive).Select(register => register.PhoneNumberId).ToList();
         lines = lines.Where(line => !registeredLineIds.Contains(line.PhoneNumberId)).ToList();
     }
-
     async void Save()
     {
         var employee = employees.FirstOrDefault(i => i.EmployeeId == ObjPNU.EmployeeId);
@@ -139,11 +142,19 @@
             // Refrescar las listas de teléfonos y líneas disponibles
             FilterAvailableSmartphones();
             FilterAvailableLines();
+
+            // Resetear las selecciones del formulario
+            ObjPNU = new Phone_Number_User_Model();
+
+            // Opcionalmente, puedes también restablecer el valor de los selects a valores vacíos
             InitializeDropdownValues();
 
             StateHasChanged();
             await eventCallback.InvokeAsync();
         }
+
+        // Limpiar el modelo después del guardado exitoso
+        ObjPNU = new Phone_Number_User_Model();
     }
 
     async Task<bool> IsValid(int PhoneNumberId, int SmartPhoneId)

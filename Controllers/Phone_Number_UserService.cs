@@ -33,7 +33,7 @@ namespace InventoryIT.Controllers
                 .ThenInclude(e => e.Departament)
                 .Include(i => i.PhoneNumberModel)
                 .ThenInclude(PNM => PNM.Brand)
-                .OrderBy(i => i.PhoneNumberId)
+                .OrderBy(i => i.Employee.LastName)
                 .ToList();
             return D;
         }

@@ -8,6 +8,8 @@
 @inject IHttpContextAccessor httpContextAccessor
 
 
+
+
 <div class="shadow p-2 rounded">
     <table class="table">
         <thead>
@@ -33,7 +35,7 @@
                 <th>
                     Serie
                 </th>
-                <th>
+                <th colspan="2">
                     Encargado
                 </th>
                 <th>
@@ -71,7 +73,10 @@
                                 @item.PhoneNumberModel.PhoneSerial
                             </td>
                             <td>
-                                @item.Employee.Name @item.Employee.LastName
+                                @item.Employee.LastName
+                            </td>
+                            <td>
+                                @item.Employee.Name
                             </td>
                             
                             <button @onclick="()=>DownloadPDF(item)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2 mx-1">
@@ -113,6 +118,12 @@
     [Parameter]
     public List<Phone_Number_User_Model> phone_Number_User_Models { get; set; }
 
+
+    protected override async Task OnInitializedAsync()
+    {
+    
+        base.OnInitializedAsync();   
+    }
 
     private async Task DownloadPDF(Phone_Number_User_Model e)
     {
