@@ -4,9 +4,12 @@
 <h3>
     Lista de Asignaciones de Celulares y Líneas Telefónicas
 </h3>
+
+
+
 <AuthorizeView Roles="Administrador">
     <Authorized>
-        <AddPhone_Number_UserComponent eventCallback="UpdateList" phone_Number_s="@phone_Numbers" />
+                <AddPhone_Number_UserComponent eventCallback="UpdateList" phone_Number_s="@phone_Numbers" />
     </Authorized>
     <NotAuthorized>
     </NotAuthorized>
@@ -14,7 +17,7 @@
 
 <AuthorizeView Roles="Administrador,Lector">
     <Authorized>
-        
+
         <TablePhone_Number_UserComponent phone_Number_User_Models="@phone_Numbers" />
     </Authorized>
     <NotAuthorized>
@@ -23,15 +26,18 @@
 
 
 
-@code{
+@code {
 
     List<Phone_Number_User_Model> phone_Numbers { get; set; }
 
+
+ 
     protected override async Task OnInitializedAsync()
     {
         phone_Numbers = _Phone_Number_UserService.GetAll();
-        base.OnInitializedAsync();   
+        base.OnInitializedAsync();
     }
+
 
     private async Task UpdateList()
     {

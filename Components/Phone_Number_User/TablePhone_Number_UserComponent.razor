@@ -9,6 +9,28 @@
 
 
 
+<!-- Formulario de búsqueda -->
+<div class="shadow p-2 rounded my-2 ">
+    <label> Busqueda</label>
+    <form @onsubmit="SearchPhones">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <input type="number" class="form-control" placeholder="Buscar por número de teléfono" @bind="searchPhoneNumber" />
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Buscar por modelo" @bind="searchModel" />
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Buscar por número de serie" @bind="searchSerial" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <button type="button" class="btn btn-secondary" @onclick="ClearSearch">Limpiar</button>
+    </form>
+</div>
+
+
+
 
 <div class="shadow p-2 rounded">
     <table class="table">
@@ -44,9 +66,9 @@
             </tr>
         </thead>
         <tbody>
-            @if (phone_Number_User_Models != null)
+            @if (filteredPhoneModels != null)
             {
-                foreach (var item in phone_Number_User_Models)
+                foreach (var item in filteredPhoneModels)
                 {
                     if (item.IsActive)
                     {
@@ -108,33 +130,69 @@
 
 
 
-
-
-
-
-
-
 @code {
     [Parameter]
     public List<Phone_Number_User_Model> phone_Number_User_Models { get; set; }
 
+    // Variables para capturar los valores de búsqueda
+    private int searchPhoneNumber { get; set; } = 0;
+    private string searchModel { get; set; } = string.Empty;
+    private string searchSerial { get; set; } = string.Empty;
+
+    // Lista filtrada que se usa para mostrar los resultados de búsqueda
+    private List<Phone_Number_User_Model> filteredPhoneModels;
 
     protected override async Task OnInitializedAsync()
     {
-    
+        filteredPhoneModels = phone_Number_User_Models;
         base.OnInitializedAsync();   
     }
+
+
+    // Método para limpiar los campos de búsqueda y restaurar la lista original
+    private void ClearSearch()
+    {
+        searchPhoneNumber = 0;
+        searchModel = string.Empty;
+        searchSerial = string.Empty;
+        filteredPhoneModels = phone_Number_User_Models;
+    }
+
+    private void SearchPhones()
+    {
+        // Inicializamos la consulta base sobre la lista de modelos de teléfono
+        var query = phone_Number_User_Models.AsQueryable();
+
+        // Filtrar por número de teléfono si se proporciona uno distinto de 0
+        if (searchPhoneNumber != 0)
+        {
+            query = query.Where(item => item.PhoneNumber.Number == searchPhoneNumber);
+        }
+
+        // Filtrar por modelo de teléfono si se proporciona uno
+        if (!string.IsNullOrEmpty(searchModel))
+        {
+            query = query.Where(item => item.PhoneNumberModel.PhoneModel.ToUpper().Contains(searchModel.ToUpper()));
+        }
+
+        // Filtrar por número de serie si se proporciona uno
+        if (!string.IsNullOrEmpty(searchSerial))
+        {
+            query = query.Where(item => item.PhoneNumberModel.PhoneSerial.ToUpper().Contains(searchSerial.ToUpper()));
+        }
+
+        // Convertir el resultado filtrado a una lista
+        filteredPhoneModels = query.ToList();
+    }
+
 
     private async Task DownloadPDF(Phone_Number_User_Model e)
     {
         try
         {
             byte[] pdfBytes = await pdfService.GeneratePDFPhone(e);
-
-
             // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
             string pdfBase64 = Convert.ToBase64String(pdfBytes);
-
             // Invocar una función JavaScript para iniciar la descarga del PDF
             await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Entrega Telefono {e.Employee.Name} {e.Employee.LastName} {DateTime.Now.ToShortTimeString()}.pdf");
         }
