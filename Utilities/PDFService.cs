@@ -16,6 +16,8 @@ namespace InventoryIT.Utilities
         XFont fuentePequena = new XFont("Verdana", 8);
         XFont fuenteBold = new XFont("Verdana", 10);
         XFont fuenteGeneral = new XFont("Verdana", 10);
+        // Definir el margen de 1 cm (en puntos)
+        double margen = 28.35; // 1 cm en puntos
 
         int numberPage = 1;
 
@@ -453,7 +455,7 @@ namespace InventoryIT.Utilities
                 var portadaPage = document.AddPage();
                 var portadaGfx = XGraphics.FromPdfPage(portadaPage);
 
-                LayoutPage(portadaGfx,portadaPage);
+                LayoutPage(portadaGfx, portadaPage);
 
                 // Llamar la función que genera la portada
                 GenerarPortada(portadaGfx, portadaPage);
@@ -461,11 +463,12 @@ namespace InventoryIT.Utilities
                 // Crear una segunda página para el contenido.
                 var contentPage = document.AddPage();
                 var contentGfx = XGraphics.FromPdfPage(contentPage);
+                LayoutPage(contentGfx, contentPage);
 
                 // Llamar la función que genera el contenido
                 var page2 = document.AddPage();
                 var page2Gfx = XGraphics.FromPdfPage(page2);
-                LayoutPage(page2Gfx, page2 );
+                LayoutPage(page2Gfx, page2);
 
 
 
@@ -478,6 +481,10 @@ namespace InventoryIT.Utilities
         }
 
         // Función para generar la portada del PDF
+
+
+        #region Layout
+
         private void GenerarPortada(XGraphics gfx, PdfPage pagina)
         {
 
@@ -531,17 +538,13 @@ namespace InventoryIT.Utilities
             gfx.DrawRectangle(XPens.Black, margenIzquierdo + 350, yOffset, 165, 20);
             gfx.DrawString("09/2024", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 355, yOffset + 2, 160, 20), XStringFormats.TopLeft);
 
-            // Footer
-            gfx.DrawString("©Copyright 2024, Empresa. Documento confidencial para uso interno.",
-                fuentePequena, XBrushes.Black, new XRect(margenIzquierdo, pagina.Height - 40, pagina.Width - 80, 20), XStringFormats.Center);
+  
         }
 
         private void LayoutPage(XGraphics gfx, PdfPage page)
         {
 
-            // Definir el margen de 1 cm (en puntos)
-            double margen = 28.35; // 1 cm en puntos
-
+     
             // Definir el ancho y alto de la página descontando los márgenes
             double anchoPagina = page.Width - 2 * margen;
             double altoPagina = page.Height - 2 * margen;
@@ -549,7 +552,7 @@ namespace InventoryIT.Utilities
             // Dibujar el área de contenido dentro del margen (opcional, para visualizar los márgenes)
             gfx.DrawRectangle(XPens.DarkGray, margen, margen, anchoPagina, altoPagina);
 
-            
+
             // Llamar al método que dibuja el encabezado, pasando el gráfico y la página
             HeaderPage(gfx, page);
             Footer(gfx, page);
@@ -574,12 +577,12 @@ namespace InventoryIT.Utilities
 
             // Texto del encabezado
             // Ajustar el tamaño del área del texto según sea necesario
-            XRect retangule = new XRect();  
+            XRect retangule = new XRect();
             retangule = new XRect(margenIzquierdo + 10, yOffset + 10, 133, 104);
             gfx.DrawString("GRUPO Mecsa", fuenteTitulo, XBrushes.Black, retangule, XStringFormats.Center);
             gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
 
-             retangule = new XRect(margenIzquierdo + 133+10, yOffset + 10, 215, 104);
+            retangule = new XRect(margenIzquierdo + 133 + 10, yOffset + 10, 215, 104);
             gfx.DrawString("ACTA DE ENTREGA DE ACTIVO", fuenteTitulo, XBrushes.Black, retangule, XStringFormats.Center);
             gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
 
@@ -592,7 +595,7 @@ namespace InventoryIT.Utilities
             gfx.DrawString("Version: 1\n9-24", fuentePequena, XBrushes.Black, retangule, XStringFormats.Center);
             gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
 
-            retangule = new XRect(margenIzquierdo + 215 + 133 + 10, yOffset + 10 + 40 , (70+56) , (133 - 70));
+            retangule = new XRect(margenIzquierdo + 215 + 133 + 10, yOffset + 10 + 40, (70 + 56), (133 - 70));
             gfx.DrawString($"Pagina n°", fuenteTitulo, XBrushes.Black, retangule, XStringFormats.Center);
             gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
             return yOffset;
@@ -617,8 +620,9 @@ namespace InventoryIT.Utilities
             double xPos = (anchoPagina - textoSize.Width) / 2;
 
             // Dibujar el texto centrado y a la distancia del margen inferior
-            g.DrawString(texto, fuenteBold, XBrushes.Black, new XRect(xPos, yPos, textoSize.Width, textoSize.Height), XStringFormats.TopLeft);
+            g.DrawString(texto, fuentePequena, XBrushes.Black, new XRect(xPos, yPos, textoSize.Width, textoSize.Height), XStringFormats.TopLeft);
         }
 
+        #endregion
     }
 }
