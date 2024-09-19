@@ -1,5 +1,7 @@
 ﻿using InventoryIT.Data;
 using InventoryIT.Model;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using PdfSharp.Drawing;
 using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
@@ -9,6 +11,8 @@ namespace InventoryIT.Utilities
 {
     public class PDFService
     {
+
+        #region Properties
         private readonly InventoryDbContext inventoryDbContext;
 
         // Crear fuentes
@@ -18,8 +22,11 @@ namespace InventoryIT.Utilities
         XFont fuenteGeneral = new XFont("Verdana", 10);
         // Definir el margen de 1 cm (en puntos)
         double margen = 28.35; // 1 cm en puntos
+        int yoffetHeader = 0;
+        double margenInferior = 0; // 0.8 cm en puntos
+        double margenSuperior = 0; // 1 cm en puntos (margen superior)
 
-        int numberPage = 1;
+        #endregion
 
         public PDFService(InventoryDbContext inventoryDbContext)
         {
@@ -138,7 +145,7 @@ namespace InventoryIT.Utilities
 
                 // Posicionar imeitext
                 var imeitext = $"El IMEI del teléfono corresponde a: {i.PhoneNumberModel.IMEIs}, con la serie {i.PhoneNumberModel.PhoneSerial}.";
-                tf.DrawString(imeitext, paragraphFont, XBrushes.Red, new XRect(50, y + 180, page.Width.Point - 100, 40));
+                tf.DrawString(imeitext, paragraphFont, XBrushes.Black, new XRect(50, y + 180, page.Width.Point - 100, 40));
 
                 // Espacio para las firmas
                 short _y = 280;
@@ -438,40 +445,81 @@ namespace InventoryIT.Utilities
 
 
 
+
         public async Task<byte[]> GeneratePDFComputer(ComputerModel i)
         {
             using (var memoryStream = new MemoryStream())
             {
                 // Crear un nuevo documento PDF.
-                var document = new PdfDocument();
+                var document = new PdfDocument
+                {
+                    PageLayout = PdfPageLayout.SinglePage,
+                    Info = { Title = "Reporte de Entrega de Activos" }
+                };
 
-                // Mostrar una sola página.
-                document.PageLayout = PdfPageLayout.SinglePage;
-
-                // Establecer el título del documento.
-                document.Info.Title = "Reporte de Entrega de Activos";
+                // Diccionario para almacenar las páginas y sus gráficos.
+                var pages = new Dictionary<string, (PdfPage Page, XGraphics Gfx)>();
 
                 // Crear la primera página para la portada.
-                var portadaPage = document.AddPage();
-                var portadaGfx = XGraphics.FromPdfPage(portadaPage);
+                var portada = CrearNuevaPagina(pages, "Portada", document, true);
+                GenerarPortada(portada.Gfx, portada.Page);
 
-                LayoutPage(portadaGfx, portadaPage);
+                // Crear la segunda página.
+                var page2 = CrearNuevaPagina(pages, "Page2", document, true);
 
-                // Llamar la función que genera la portada
-                GenerarPortada(portadaGfx, portadaPage);
-
-                // Crear una segunda página para el contenido.
-                var contentPage = document.AddPage();
-                var contentGfx = XGraphics.FromPdfPage(contentPage);
-                LayoutPage(contentGfx, contentPage);
-
-                // Llamar la función que genera el contenido
-                var page2 = document.AddPage();
-                var page2Gfx = XGraphics.FromPdfPage(page2);
-                LayoutPage(page2Gfx, page2);
+                string parrafo = "El colaborador que reciba este activo será responsable de su correcto uso y mantenimiento. " +
+                                 "Es imperativo utilizar el dispositivo exclusivamente para actividades relacionadas con el trabajo, " +
+                                 "asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. " +
+                                 "Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. " +
+                                 "Asimismo, se recuerda que es responsabilidad del colaborador devolver el equipo en buen estado " +
+                                 "al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices " +
+                                 "son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización.";
 
 
+                AddParrafo(page2.Gfx, parrafo, fuenteGeneral, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(page2.Gfx, "Por lo tanto, la presente acta, hace constar la entrega del siguiente equipo y accesorios:", fuenteGeneral, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
 
+
+                #region page 3
+                var page3 = CrearNuevaPagina(pages, "Page2", document, true);
+
+                string parrafo2 = "El Colaborador manifiesta que el equipo que aquí se entrega es y será de la empresa en todo momento, y procederá en caso de";
+
+                AddParrafo(page3.Gfx, parrafo2, fuenteGeneral, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(page3.Gfx, "Pérdida del Equipo:", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(page3.Gfx, "Él colaborador deberá notificar de forma inmediata a su jefe, coordinador, para que se tomen las medidas de seguridad necesarias para el respectivo control administrativo.", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(page3.Gfx, "Robo de Equipo:", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(page3.Gfx, "Él colaborador deberá acudir de manera inmediata al ente Público para su denuncia y notificar (presentar recibo de la denuncia) de forma inmediata a su jefe, coordinador o supervisor, para que se tomen las medidas de seguridad necesaria. A su vez el supervisor) deberá de notificar vía correo a Área de Tecnología y Recursos Humanos, para el respectivo control administrativo.", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(page3.Gfx, "En caso de robo o extravió de equipos y accesorios usados:  ", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(page3.Gfx, "Se calculará el costo según la condición del equipo o depreciación desde el momento de la entrega (detalle escrito en el formato de entrega de equipo Grupo Mecsa S.A.). ", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(page3.Gfx, "Pérdida o robo del Equipo o de Teléfono Celular será descontado el costo del nuevo equipo al colaborador ya sea:", fuenteBold, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                List<string> lista = new List<string>(){
+                "Vía nomina: el Ejecutivo (a) y la Unidad de Recursos determinara la forma y plazo para la cancelación del equipo celular",
+                "Deposito: el colaborador podrá ejecutar un depósito correspondiente al costo del equipo celular en las cuentas de la empresa, (la Unidad de recursos Humanos suministrará la información al colaborador. ",
+                "Reponer físicamente el equipo, el cual deberá de tener las especificaciones y características iguales o superiores al equipo anterior, aclarando que este equipo y sus accesorios se consideraran como reemplazo del anterior para uso de la empresa."};
+                // Llamar al método para agregar la lista numerada
+                AgregarLista(page3.Gfx, lista, fuenteGeneral, ref yoffetHeader, numerada: true);
+                AddParrafo(page3.Gfx, "En caso de cualquier reposición física del equipo esta deberá hacerse y coordinarse con el Área de Tecnología en un tiempo no mayor a 15 días hábiles a partir del momento de la notificación por robo o extravió. ", fuenteBold, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                #endregion
+
+                #region page 4
+                var page4 = CrearNuevaPagina(pages, "Page3", document, true);
+                AddParrafo(page4.Gfx, "Cambios y Devoluciones", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(page4.Gfx, "Los equipos y accesorios de la empresa pasan por un proceso minucioso de revisión, en los casos que el equipo haya presentado fallas mínimas o notables, el usuario podrá solicitar el cambio del equipo por otro en perfecto funcionamiento, para poder tramitar la devolución del producto, se debe cumplir con los siguientes requerimientos", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(page4.Gfx, "Deberá notificar a su jefatura inmediata, para que este notifique vía correo al Área de Tecnología correspondiente; quien se encargara de gestionar su reparación, a través de los diferentes proveedores de servicios de reparación telefónica o según el caso de la garantía del equipo.\r\nEn caso de que el colaborador por mal uso dañe cualquier parte del equipo o accesorio, asumirá el costo de la reparación y repuestos necesarios para el buen uso del teléfono o equipos.\r\n", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(page4.Gfx, "El teléfono celular o equipo debe ser devuelto en las mismas condiciones que fue entregado, debe venir con la caja y los accesorios (en caso que se hayan entregado), así mismo debe ser formateado con los datos de fábrica y desligado de cualquier cuenta en la nube este proceso deberá realizar con el encargado del área de Tecnología completando el respectivo formulario de Entrega de Equipos.\r\n\r\nEl colaborador autoriza expresamente a la empresa Grupo Mecsa S.A. mediante este documento a descontar del salario los valores de la dotación cuando en cualquiera de los casos anteriores no los devuelve al empleador.\r\n", fuenteGeneral, ref yoffetHeader);
+
+                yoffetHeader = yoffetHeader + 15;
+                List<(string nombre, string titulo)> firmantes = new List<(string, string)>
+                {
+                    ("Norwin Ortega", "Encargado de Recursos Humanos"),
+                    ("Anthony Fallas Ureña", "Gerente General"),
+                };
+
+                // Llamar al método para agregar las líneas de firmas
+                AgregarLineaDeFirmas(page4.Gfx, firmantes, ref yoffetHeader);
+
+                #endregion
                 // Guardar el documento en el memoryStream
                 document.Save(memoryStream, false);
 
@@ -480,10 +528,135 @@ namespace InventoryIT.Utilities
             }
         }
 
-        // Función para generar la portada del PDF
+
+        private void AgregarLineaDeFirmas(XGraphics gfx, List<(string nombre, string titulo)> firmantes, ref int yOffset)
+        {
+            // Espacio entre cada firma
+            int espacioEntreFirmas = 60;
+
+            // Establecer el margen izquierdo
+            double margenIzquierdo = 40;
+            double anchoLinea = gfx.PageSize.Width - 80; // Ancho total menos márgenes
+
+            foreach (var firmante in firmantes)
+            {
+                // Dibuja la línea para la firma
+                gfx.DrawLine(XPens.Black, margenIzquierdo, yOffset, margenIzquierdo + anchoLinea, yOffset);
+
+                // Dibuja el nombre del firmante
+                gfx.DrawString(firmante.nombre, fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo, yOffset + 4, anchoLinea, 20), XStringFormats.TopLeft);
+
+                // Dibuja el título del firmante
+                gfx.DrawString(firmante.titulo, fuentePequena, XBrushes.Black, new XRect(margenIzquierdo, yOffset + 15, anchoLinea, 20), XStringFormats.TopLeft);
+
+                // Actualiza el offset para la siguiente línea de firmas
+                yOffset += espacioEntreFirmas;
+            }
+        }
+
+
+        private void AgregarLista(XGraphics gfx, List<string> items, XFont fuente, ref int yOffset, bool numerada = false)
+        {
+            // Establecer el ancho máximo para el texto
+            double anchoMaximo = gfx.PageSize.Width - 80; // Margenes izquierdo y derecho
+
+            foreach (var item in items)
+            {
+                // Preparar el texto para el elemento de la lista
+                string prefijo = numerada ? $"{items.IndexOf(item) + 1}. " : "• ";
+                string textoCompleto = prefijo + item;
+
+                // Dividir el contenido en líneas según el ancho máximo
+                string lineaActual = string.Empty;
+                var palabras = textoCompleto.Split(' ');
+
+                foreach (var palabra in palabras)
+                {
+                    string nuevaLinea = string.IsNullOrEmpty(lineaActual) ? palabra : lineaActual + " " + palabra;
+                    XSize size = gfx.MeasureString(nuevaLinea, fuente);
+
+                    if (size.Width > anchoMaximo)
+                    {
+                        // Dibujar la línea actual y reiniciar
+                        gfx.DrawString(lineaActual, fuente, XBrushes.Black, new XRect(50, yOffset, anchoMaximo, 20), XStringFormats.TopLeft);
+                        yOffset += 20; // Ajustar el offset para la siguiente línea
+                        lineaActual = palabra; // Iniciar una nueva línea
+                    }
+                    else
+                    {
+                        lineaActual = nuevaLinea; // Continuar construyendo la línea
+                    }
+                }
+
+                // Dibujar cualquier contenido restante en lineaActual
+                if (!string.IsNullOrEmpty(lineaActual))
+                {
+                    gfx.DrawString(lineaActual, fuente, XBrushes.Black, new XRect(40, yOffset, anchoMaximo, 20), XStringFormats.TopLeft);
+                    yOffset += 20; // Ajustar el offset para la siguiente línea
+                }
+            }
+        }
+
+
+
+
+
+
+        private void AddParrafo(XGraphics gfx, string contenido, XFont fuente, ref int yOffset)
+        {
+            // Establecer el ancho máximo para el texto
+            double anchoMaximo = gfx.PageSize.Width - 80; // Margenes izquierdo y derecho
+
+            // Dividir el contenido en líneas según el ancho máximo
+            var palabras = contenido.Split(' ');
+
+            string lineaActual = string.Empty;
+
+            foreach (var palabra in palabras)
+            {
+                // Verificar si agregar la palabra excede el ancho
+                string nuevaLinea = string.IsNullOrEmpty(lineaActual) ? palabra : lineaActual + " " + palabra;
+                XSize size = gfx.MeasureString(nuevaLinea, fuente);
+
+                if (size.Width > anchoMaximo)
+                {
+                    // Dibujar la línea actual y reiniciar
+                    gfx.DrawString(lineaActual, fuente, XBrushes.Black, new XRect(40, yOffset, anchoMaximo, 20), XStringFormats.TopLeft);
+                    yOffset += 25; // Ajustar el offset para la siguiente línea
+                    lineaActual = palabra; // Iniciar una nueva línea
+                }
+                else
+                {
+                    lineaActual = nuevaLinea; // Continuar construyendo la línea
+                }
+            }
+
+            // Dibujar cualquier contenido restante en líneaActual
+            if (!string.IsNullOrEmpty(lineaActual))
+            {
+                gfx.DrawString(lineaActual, fuente, XBrushes.Black, new XRect(40, yOffset, anchoMaximo, 20), XStringFormats.TopLeft);
+                yOffset += 25; // Ajustar el offset para la siguiente línea
+            }
+        }
+
+
+
 
 
         #region Layout
+
+        private (PdfPage Page, XGraphics Gfx) CrearNuevaPagina(Dictionary<string, (PdfPage Page, XGraphics Gfx)> pages, string key, PdfDocument document, bool applyLayout)
+        {
+            var nuevaPagina = document.AddPage();
+            var nuevoGfx = XGraphics.FromPdfPage(nuevaPagina);
+            if (applyLayout)
+            {
+                LayoutPage(nuevoGfx, nuevaPagina);
+            }
+            pages[key] = (nuevaPagina, nuevoGfx);
+            return pages[key];
+        }
+
 
         private void GenerarPortada(XGraphics gfx, PdfPage pagina)
         {
@@ -497,68 +670,58 @@ namespace InventoryIT.Utilities
 
             // Tabla de versión y justificación
             gfx.DrawRectangle(XPens.Black, XBrushes.SkyBlue, margenIzquierdo, yOffset, anchoPagina, 20);
-            gfx.DrawString("VERSIÓN", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 80, 20), XStringFormats.TopLeft);
-            gfx.DrawString("JUSTIFICACIÓN DE LA CREACIÓN DEL DOCUMENTO", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 90, yOffset + 2, 400, 20), XStringFormats.TopLeft);
+            gfx.DrawString("VERSIÓN", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 80, 20), XStringFormats.Center);
+            gfx.DrawString("JUSTIFICACIÓN DE LA CREACIÓN DEL DOCUMENTO", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 90, yOffset + 2, 400, 20), XStringFormats.Center);
 
             yOffset += 20;
-            gfx.DrawRectangle(XPens.Black, margenIzquierdo, yOffset, 80, 20);
-            gfx.DrawString("01", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 30, yOffset + 2, 40, 20), XStringFormats.TopLeft);
+            gfx.DrawRectangle(XPens.Black, margenIzquierdo, yOffset, 80, 40);
+            gfx.DrawString("01", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 30, yOffset + 2, 40, 20), XStringFormats.Center);
 
             gfx.DrawRectangle(XPens.Black, margenIzquierdo + 80, yOffset, anchoPagina - 80, 40);
-            gfx.DrawString("La creación de este documento se manifiesta por la necesidad en el diseño de un Sistema de Gestión de Calidad.",
-                fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 85, yOffset + 5, anchoPagina - 90, 30), XStringFormats.TopLeft);
+            gfx.DrawString("La creación de este documento se manifiesta por la necesidad ", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 85, yOffset, anchoPagina - 80, 30), XStringFormats.Center);
+            gfx.DrawString("en el diseño de un Sistema de Gestión de Calidad.", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 85, yOffset + 10, anchoPagina - 80, 30), XStringFormats.Center);
 
             yOffset += 40;
 
             // Autor
             gfx.DrawRectangle(XPens.Black, margenIzquierdo, yOffset, 80, 20);
-            gfx.DrawString("AUTOR", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 80, 20), XStringFormats.TopLeft);
+            gfx.DrawString("AUTOR", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 80, 20), XStringFormats.Center);
             gfx.DrawRectangle(XPens.Black, margenIzquierdo + 80, yOffset, anchoPagina - 80, 20);
-            gfx.DrawString("Norwin Ortega – Encargado de Recursos Humanos", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 85, yOffset + 2, anchoPagina - 90, 20), XStringFormats.TopLeft);
+            gfx.DrawString("Norwin Ortega – Encargado de Recursos Humanos", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 85, yOffset + 2, anchoPagina - 90, 20), XStringFormats.Center);
 
-            yOffset += 40;
+            yOffset += 50;
 
             // Revisado y aprobado por
             gfx.DrawRectangle(XPens.Black, XBrushes.SkyBlue, margenIzquierdo, yOffset, anchoPagina, 20);
-            gfx.DrawString("REVISADO POR", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 200, 20), XStringFormats.TopLeft);
+            gfx.DrawString("REVISADO POR", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 200, 20), XStringFormats.Center);
 
             yOffset += 20;
             gfx.DrawRectangle(XPens.Black, margenIzquierdo, yOffset, 350, 20);
-            gfx.DrawString("Norwin Ortega Lazo – Encargado de Recursos Humanos", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 340, 20), XStringFormats.TopLeft);
+            gfx.DrawString("Norwin Ortega Lazo – Encargado de Recursos Humanos", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 340, 20), XStringFormats.Center);
             gfx.DrawRectangle(XPens.Black, margenIzquierdo + 350, yOffset, 165, 20);
-            gfx.DrawString("09/2024", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 355, yOffset + 2, 160, 20), XStringFormats.TopLeft);
+            gfx.DrawString("09/2024", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 355, yOffset + 2, 160, 20), XStringFormats.Center);
 
-            yOffset += 40;
+            yOffset += 50;
             gfx.DrawRectangle(XPens.Black, XBrushes.SkyBlue, margenIzquierdo, yOffset, anchoPagina, 20);
-            gfx.DrawString("APROBADO POR", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 200, 20), XStringFormats.TopLeft);
+            gfx.DrawString("APROBADO POR", fuenteBold, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 200, 20), XStringFormats.Center);
 
             yOffset += 20;
             gfx.DrawRectangle(XPens.Black, margenIzquierdo, yOffset, 350, 20);
-            gfx.DrawString("Anthony Fallas Ureña – Gerente General", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 340, 20), XStringFormats.TopLeft);
+            gfx.DrawString("Anthony Fallas Ureña – Gerente General", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 5, yOffset + 2, 340, 20), XStringFormats.Center);
             gfx.DrawRectangle(XPens.Black, margenIzquierdo + 350, yOffset, 165, 20);
-            gfx.DrawString("09/2024", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 355, yOffset + 2, 160, 20), XStringFormats.TopLeft);
-
-  
+            gfx.DrawString("09/2024", fuenteGeneral, XBrushes.Black, new XRect(margenIzquierdo + 355, yOffset + 2, 160, 20), XStringFormats.Center);
         }
-
         private void LayoutPage(XGraphics gfx, PdfPage page)
         {
-
-     
             // Definir el ancho y alto de la página descontando los márgenes
             double anchoPagina = page.Width - 2 * margen;
             double altoPagina = page.Height - 2 * margen;
-
             // Dibujar el área de contenido dentro del margen (opcional, para visualizar los márgenes)
             gfx.DrawRectangle(XPens.DarkGray, margen, margen, anchoPagina, altoPagina);
-
-
             // Llamar al método que dibuja el encabezado, pasando el gráfico y la página
-            HeaderPage(gfx, page);
+            yoffetHeader = HeaderPage(gfx, page);
             Footer(gfx, page);
-            numberPage++;
         }
-
         private int HeaderPage(XGraphics gfx, PdfPage page)
         {
             // Definir el margen izquierdo
@@ -580,25 +743,26 @@ namespace InventoryIT.Utilities
             XRect retangule = new XRect();
             retangule = new XRect(margenIzquierdo + 10, yOffset + 10, 133, 104);
             gfx.DrawString("GRUPO Mecsa", fuenteTitulo, XBrushes.Black, retangule, XStringFormats.Center);
-            gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
+            gfx.DrawRectangle(XPens.Black, retangule);    // Dibuja el borde del rectángulo con un color
 
             retangule = new XRect(margenIzquierdo + 133 + 10, yOffset + 10, 215, 104);
             gfx.DrawString("ACTA DE ENTREGA DE ACTIVO", fuenteTitulo, XBrushes.Black, retangule, XStringFormats.Center);
-            gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
+            gfx.DrawRectangle(XPens.Black, retangule);    // Dibuja el borde del rectángulo con un color
 
 
-            retangule = new XRect(margenIzquierdo + 215 + 133 + 10, yOffset + 10, 70, 40);
+            retangule = new XRect(margenIzquierdo + 215 + 133 + 10, yOffset + 10, 80, 40);
             gfx.DrawString("FO-GRH-AE-01", fuentePequena, XBrushes.Black, retangule, XStringFormats.Center);
-            gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
+            gfx.DrawRectangle(XPens.Black, retangule);    // Dibuja el borde del rectángulo con un color
 
-            retangule = new XRect(margenIzquierdo + +70 + 215 + 133 + 10, yOffset + 10, 56, 40);
+            retangule = new XRect(margenIzquierdo + +80 + 215 + 133 + 10, yOffset + 10, 70, 40);
             gfx.DrawString("Version: 1\n9-24", fuentePequena, XBrushes.Black, retangule, XStringFormats.Center);
-            gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
+            gfx.DrawRectangle(XPens.Black, retangule);    // Dibuja el borde del rectángulo con un color
 
-            retangule = new XRect(margenIzquierdo + 215 + 133 + 10, yOffset + 10 + 40, (70 + 56), (133 - 70));
+            retangule = new XRect(margenIzquierdo + 215 + 133 + 10, yOffset + 10 + 40, (80 + 70), (133 - 70));
             gfx.DrawString($"Pagina n°", fuenteTitulo, XBrushes.Black, retangule, XStringFormats.Center);
-            gfx.DrawRectangle(XPens.Red, retangule);    // Dibuja el borde del rectángulo con un color
-            return yOffset;
+            gfx.DrawRectangle(XPens.Black, retangule);    // Dibuja el borde del rectángulo con un color
+
+            return yOffset + 10 + 10 + 10 + 10 + 10 + 40 + (133 - 70);
         }
         private void Footer(XGraphics g, PdfPage page)
         {
