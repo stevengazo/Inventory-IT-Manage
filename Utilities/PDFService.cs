@@ -314,128 +314,118 @@ namespace InventoryIT.Utilities
                 // Crear un nuevo documento PDF.
                 var document = new PdfDocument();
 
-                // Mostrar una sola página.
-                document.PageLayout = PdfPageLayout.SinglePage;
-
-                // Permitir que la aplicación del visor ajuste la página en la ventana.
-                document.ViewerPreferences.FitWindow = true;
-
                 // Establecer el título del documento.
                 document.Info.Title = "Reporte de Entrega de Activos";
 
-                // Crear una página vacía.
-                var page = document.AddPage();
+                // Diccionario para almacenar las páginas y sus gráficos.
+                var pages = new Dictionary<string, (PdfPage Page, XGraphics Gfx)>();
 
-                // Obtener un objeto XGraphics para dibujar.
-                var gfx = XGraphics.FromPdfPage(page);
 
-                // Crear una fuente.
-                var font = new XFont("Times New Roman", 12, XFontStyleEx.Regular);
-                var titleFont = new XFont("Times New Roman", 20, XFontStyleEx.Bold);
-                var paragraphFont = new XFont("Times New Roman", 12, XFontStyleEx.Italic);
+                #region Portada
 
-                // Crear un objeto XTextFormatter
-                var tf = new XTextFormatter(gfx);
+                // Crear la primera página para la portada.
+                var portada = CrearNuevaPagina(pages, "Portada", document, true);
+                GenerarPortada(portada.Gfx, portada.Page);
 
-                // Título del documento
-                gfx.DrawString("Reporte de Entrega de Activos", titleFont, XBrushes.Black,
-                    new XRect(0, 40, page.Width.Point, 40), XStringFormats.Center);
+                #endregion
+                #region Pagina 2
 
-                // Párrafo antes de la tabla
-                var beforeTableParagraph = "A continuación se presenta la información correspondiente al activo entregado";
-                tf.DrawString(beforeTableParagraph, paragraphFont, XBrushes.Black,
-                    new XRect(50, 80, page.Width.Point - 100, 40));
+                // Crear la segunda página.
+                CrearNuevaPagina(pages, "Page2", document, true);
 
-                // Definir el tamaño y posición de la tabla.
-                double cellHeight = 15;
-                double y = 150; // Ajustar la posición Y para que haya espacio para el párrafo
+                string parrafo = "El colaborador que reciba este activo será responsable de su correcto uso y mantenimiento. " +
+                                 "Es imperativo utilizar el dispositivo exclusivamente para actividades relacionadas con el trabajo, " +
+                                 "asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. " +
+                                 "Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. " +
+                                 "Asimismo, se recuerda que es responsabilidad del colaborador devolver el equipo en buen estado " +
+                                 "al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices " +
+                                 "son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización.";
+
+                AddParrafo(pages["Page2"].Gfx, parrafo, fuenteGeneral, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(pages["Page2"].Gfx, "Por lo tanto, la presente acta, hace constar la entrega del siguiente equipo y accesorios:", fuenteGeneral, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+
+                // Definir altura de celda
+                int cellHeight = 20;
 
                 // Datos de ejemplo para la tabla.
                 string[,] data = new string[,]
                 {
-            { "Información", "Datos" },
-            { "Marca", i.Brand.Name},
-            { "Número de Serie", i.SerialNumber.ToString() },
-            { "Modelo", i.Model },
-            { "Tipo", i.Type },
-            { "Adquisición", i.AdquisitionDate.ToShortDateString() },
-            { "Costo", "$ " + i.Cost.ToString() },
-            { "Cédula", i.Employee.DNI.ToString()},
-            { "Nombre", i.Employee.Name },
-            { "Apellido", i.Employee.LastName.ToString() },
-            { "Teléfono", i.Employee.PhoneNumber.ToString() },
+                    { "Información", "Datos" },
+                    { "Marca", i.Brand.Name},
+                    { "Número de Serie", i.SerialNumber.ToString() },
+                    { "Modelo", i.Model },
+                    { "Tipo", i.Type },
+                    { "Adquisición", i.AdquisitionDate.ToShortDateString() },
+                    { "Costo", "$ " + i.Cost.ToString() },
+                    { "Cédula", i.Employee.DNI.ToString()},
+                    { "Nombre", i.Employee.Name },
+                    { "Apellido", i.Employee.LastName.ToString() },
+                    { "Teléfono", i.Employee.PhoneNumber.ToString() },
                 };
 
-                // Calcular el ancho de cada columna basándose en el tamaño del texto.
-                double[] columnWidths = new double[data.GetLength(1)];
-                for (int col = 0; col < data.GetLength(1); col++)
+
+                // Llamar al método para agregar la tabla
+                AgregarTabla(pages["Page2"].Gfx, data, fuenteGeneral, ref yoffetHeader, cellHeight);
+
+                #endregion
+
+                #region page 3
+                CrearNuevaPagina(pages, "Page3", document, true);
+
+                string parrafo2 = "El Colaborador manifiesta que el equipo que aquí se entrega es y será de la empresa en todo momento, y procederá en caso de";
+
+                AddParrafo(pages["Page3"].Gfx, parrafo2, fuenteGeneral, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(pages["Page3"].Gfx, "Pérdida del Equipo:", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(pages["Page3"].Gfx, "Él colaborador deberá notificar de forma inmediata a su jefe, coordinador, para que se tomen las medidas de seguridad necesarias para el respectivo control administrativo.", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(pages["Page3"].Gfx, "Robo de Equipo:", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(pages["Page3"].Gfx, "Él colaborador deberá acudir de manera inmediata al ente Público para su denuncia y notificar (presentar recibo de la denuncia) de forma inmediata a su jefe, coordinador o supervisor, para que se tomen las medidas de seguridad necesaria. A su vez el supervisor) deberá de notificar vía correo a Área de Tecnología y Recursos Humanos, para el respectivo control administrativo.", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(pages["Page3"].Gfx, "En caso de robo o extravió de equipos y accesorios usados:  ", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(pages["Page3"].Gfx, "Se calculará el costo según la condición del equipo o depreciación desde el momento de la entrega (detalle escrito en el formato de entrega de equipo Grupo Mecsa S.A.). ", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(pages["Page3"].Gfx, "Pérdida o robo del Equipo o de Teléfono Celular será descontado el costo del nuevo equipo al colaborador ya sea:", fuenteBold, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                List<string> lista = new List<string>(){
+                "Vía nomina: el Ejecutivo (a) y la Unidad de Recursos determinara la forma y plazo para la cancelación del equipo celular",
+                "Deposito: el colaborador podrá ejecutar un depósito correspondiente al costo del equipo celular en las cuentas de la empresa, (la Unidad de recursos Humanos suministrará la información al colaborador. ",
+                "Reponer físicamente el equipo, el cual deberá de tener las especificaciones y características iguales o superiores al equipo anterior, aclarando que este equipo y sus accesorios se consideraran como reemplazo del anterior para uso de la empresa."};
+                // Llamar al método para agregar la lista numerada
+                AgregarLista(pages["Page3"].Gfx, lista, fuenteGeneral, ref yoffetHeader, numerada: true);
+                AddParrafo(pages["Page3"].Gfx, "En caso de cualquier reposición física del equipo esta deberá hacerse y coordinarse con el Área de Tecnología en un tiempo no mayor a 15 días hábiles a partir del momento de la notificación por robo o extravió. ", fuenteBold, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                #endregion
+
+                #region page 4
+                CrearNuevaPagina(pages, "Page4", document, true);
+                AddParrafo(pages["Page4"].Gfx, "Cambios y Devoluciones", fuenteTitulo, ref yoffetHeader); // Ajusta la fuente y el offset según necesites
+                AddParrafo(pages["Page4"].Gfx, "Los equipos y accesorios de la empresa pasan por un proceso minucioso de revisión, en los casos que el equipo haya presentado fallas mínimas o notables, el usuario podrá solicitar el cambio del equipo por otro en perfecto funcionamiento, para poder tramitar la devolución del producto, se debe cumplir con los siguientes requerimientos", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(pages["Page4"].Gfx, "Deberá notificar a su jefatura inmediata, para que este notifique vía correo al Área de Tecnología correspondiente; quien se encargara de gestionar su reparación, a través de los diferentes proveedores de servicios de reparación telefónica o según el caso de la garantía del equipo.\r\nEn caso de que el colaborador por mal uso dañe cualquier parte del equipo o accesorio, asumirá el costo de la reparación y repuestos necesarios para el buen uso del teléfono o equipos.\r\n", fuenteGeneral, ref yoffetHeader);
+                AddParrafo(pages["Page4"].Gfx, "El teléfono celular o equipo debe ser devuelto en las mismas condiciones que fue entregado, debe venir con la caja y los accesorios (en caso que se hayan entregado), así mismo debe ser formateado con los datos de fábrica y desligado de cualquier cuenta en la nube este proceso deberá realizar con el encargado del área de Tecnología completando el respectivo formulario de Entrega de Equipos.\r\n\r\nEl colaborador autoriza expresamente a la empresa Grupo Mecsa S.A. mediante este documento a descontar del salario los valores de la dotación cuando en cualquiera de los casos anteriores no los devuelve al empleador.\r\n", fuenteGeneral, ref yoffetHeader);
+
+                yoffetHeader = yoffetHeader + 15;
+                List<(string nombre, string titulo)> firmantes = new List<(string, string)>
                 {
-                    double maxWidth = 0;
-                    for (int row = 0; row < data.GetLength(0); row++)
-                    {
-                        var size = gfx.MeasureString(data[row, col], font);
-                        if (size.Width > maxWidth)
-                        {
-                            maxWidth = size.Width;
-                        }
-                    }
-                    columnWidths[col] = maxWidth + 10; // Agregar un pequeño margen
-                }
+                    (i.Employee.Name + " " + i.Employee.LastName, i.Employee.DNI.ToString() ),
+                     ("Nombre y Firma Jefatura", "Jefe Inmediato"),
+                    ("Nombre y Firma", "Encargado de Tecnologia"),
+                };
 
-                // Calcular el ancho total de la tabla.
-                double tableWidth = 0;
-                foreach (double width in columnWidths)
+                // Llamar al método para agregar las líneas de firmas
+                AgregarLineaDeFirmas(pages["Page4"].Gfx, firmantes, ref yoffetHeader);
+
+                #endregion
+
+                #region Numbers
+
+                int totalPages = pages.Count;
+                int pageIndex = 1;
+                foreach (var page in pages)
                 {
-                    tableWidth += width;
+                    HeaderPageNumber(page.Value.Gfx, page.Value.Page, pageIndex, totalPages);
+                    pageIndex++;
                 }
+                #endregion
 
-                // Calcular la posición X inicial para centrar la tabla.
-                double x = (page.Width.Point - tableWidth) / 2;
 
-                // Dibujar la tabla.
-                for (int row = 0; row < data.GetLength(0); row++)
-                {
-                    double cellX = x;
-                    for (int col = 0; col < data.GetLength(1); col++)
-                    {
-                        double cellWidth = columnWidths[col];
 
-                        // Dibujar el borde de la celda.
-                        gfx.DrawRectangle(XPens.Black, cellX, y, cellWidth, cellHeight);
 
-                        // Dibujar el texto dentro de la celda.
-                        gfx.DrawString(data[row, col], font, XBrushes.Black,
-                            new XRect(cellX, y, cellWidth, cellHeight),
-                            XStringFormats.Center);
 
-                        cellX += cellWidth;
-                    }
-                    y += cellHeight;
-                }
-
-                // Párrafo después de la tabla
-                var afterTableParagraph = $"Se informa a {i.Employee.Name} {i.Employee.LastName}, cédula {i.Employee.DNI}, que se llevará a cabo la entrega de un activo asignada para el uso corporativo, con la serie {i.SerialNumber}. El empleado que reciba este activo será responsable de su correcto uso y mantenimiento. Es imperativo utilizar el dispositivo exclusivamente para actividades relacionadas con el trabajo, asegurando que se cumplan las políticas de seguridad y confidencialidad de la empresa. Cualquier daño o pérdida debe ser reportado de inmediato al departamento de TI. Asimismo, se recuerda que es responsabilidad del empleado devolver el equipo en buen estado al finalizar su relación laboral con la empresa. Su cooperación y cumplimiento con estas directrices son esenciales para garantizar una comunicación eficiente y segura dentro de nuestra organización";
-                tf.DrawString(afterTableParagraph, paragraphFont, XBrushes.Black,
-                    new XRect(50, y + 20, page.Width.Point - 100, 200));
-
-                // Espacio para las firmas
-                short _y = 200;
-                gfx.DrawLine(XPens.Black, 50, y + _y, page.Width.Point - 80, y + _y);
-                gfx.DrawString("Firma de quien entrega", font, XBrushes.Black,
-                    new XRect(50, y + _y, page.Width.Point - 50, 0),
-                    XStringFormats.TopLeft);
-
-                // Incrementar la coordenada y para crear separación
-                gfx.DrawLine(XPens.Black, 50, y + 270, page.Width.Point - 80, y + 270);
-                gfx.DrawString($"Firma de quien recibe: {i.Employee.Name} {i.Employee.LastName} {i.Employee.SecondLastName}", font, XBrushes.Black,
-                    new XRect(50, y + 280, page.Width.Point - 50, 0),
-                    XStringFormats.TopLeft);
-
-                // Agregar pie de página
-                var footerText = $"Documento generado el {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - Reporte Generado por el Sistema InventoryIT";
-                gfx.DrawString(footerText, font, XBrushes.Black,
-                    new XRect(50, page.Height.Point - 50, page.Width.Point - 100, 20),
-                    XStringFormats.Center);
 
                 // Guardar el documento en el memoryStream en lugar de en un archivo
                 document.Save(memoryStream, false);
@@ -458,10 +448,13 @@ namespace InventoryIT.Utilities
                 // Diccionario para almacenar las páginas y sus gráficos.
                 var pages = new Dictionary<string, (PdfPage Page, XGraphics Gfx)>();
 
+                #region Portada
+
                 // Crear la primera página para la portada.
                 var portada = CrearNuevaPagina(pages, "Portada", document, true);
                 GenerarPortada(portada.Gfx, portada.Page);
 
+                #endregion
                 #region Pagina 2
 
                 // Crear la segunda página.
@@ -547,6 +540,8 @@ namespace InventoryIT.Utilities
                 AgregarLineaDeFirmas(pages["Page4"].Gfx, firmantes, ref yoffetHeader);
 
                 #endregion
+               
+                #region Numbers
 
                 int totalPages = pages.Count;
                 int pageIndex = 1;
@@ -555,7 +550,7 @@ namespace InventoryIT.Utilities
                     HeaderPageNumber(page.Value.Gfx, page.Value.Page, pageIndex, totalPages);
                     pageIndex++;
                 }
-
+                #endregion
                 // Guardar el documento en el memoryStream
                 document.Save(memoryStream, false);
 
@@ -723,6 +718,7 @@ namespace InventoryIT.Utilities
         private (PdfPage Page, XGraphics Gfx) CrearNuevaPagina(Dictionary<string, (PdfPage Page, XGraphics Gfx)> pages, string key, PdfDocument document, bool applyLayout)
         {
             var nuevaPagina = document.AddPage();
+            nuevaPagina.Size = PdfSharp.PageSize.A4;
             var nuevoGfx = XGraphics.FromPdfPage(nuevaPagina);
             if (applyLayout)
             {
@@ -833,7 +829,6 @@ namespace InventoryIT.Utilities
             gfx.DrawRectangle(XPens.Black, retangule);    // Dibuja el borde del rectángulo con un color
             return yOffset + 10 + 10 + 10 + 10 + 10 + 40 + (133 - 70);
         }
-
         private int HeaderPageNumber(XGraphics gfx, PdfPage page, int Number= 1, int totalPages = 0)
         {
             // Definir el margen izquierdo
