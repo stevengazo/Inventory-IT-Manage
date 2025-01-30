@@ -21,31 +21,35 @@
 
     @if (!HiddeTable)
     {
-        <table class="table ">
-            <thead>
-                <tr>
-                    <th>
-                        Fecha
-                    </th>
-                    <th>
-                        Comentario
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (HistoryModel item in Histories)
-                {
+        <div class="table-responsive">
+
+            <table class="table ">
+                <thead>
                     <tr>
-                        <td>
-                            @item.CreationDate.ToLongDateString()
-                        </td>
-                        <td>
-                            @item.Description
-                        </td>
+                        <th>
+                            Fecha
+                        </th>
+                        <th>
+                            Comentario
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (HistoryModel item in Histories)
+                    {
+                        <tr>
+                            <td>
+                                @item.CreationDate.ToLongDateString()
+                            </td>
+                            <td>
+                                @item.Description
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+
     }
 </div>
 

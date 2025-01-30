@@ -11,7 +11,7 @@
     <Authorized>
         @if (flag)
         {
-            <div class="d-flex flex-row gap-2 w-100">
+            <div class="d-flex flex-column-reverse flex-md-row p-2 w-100">
                 <DetailsComputerComponent ComputerModel="@Computer" />
                 <ImageContainerComponent id="_id" TypeModel="@nameof(ComputerModel)" />
             </div>

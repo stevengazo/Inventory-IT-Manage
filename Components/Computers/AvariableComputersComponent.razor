@@ -1,56 +1,80 @@
 ﻿@inject IControllerServices<ComputerModel> _ComputerService;
 
-<h4>Computadoras Disponibles</h4>
+<div>
+    <h4 class="text-center">Computadoras Disponibles</h4>
 
-
-
-
-<div class="d-flex flex-wrap gap-2">
-    @foreach(var i in computerModels)
-    {
-        <div class="border rounded rounded-1 d-flex gap-3 p-2 flex-col">
-            <div class="d-flex flex-row gap-1 justify-content-center align-middle">
-            <label class="fw-bold">
-                Modelo
-            </label>
-                <h6>
-                    @i.ModelName
-                </h6>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+        @foreach (var i in computerModels)
+        {
+            <div class="border rounded p-3 d-flex flex-column flex-md-row w-100 bg-light align-items-center gap-3">
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <label class="fw-bold">Modelo:</label>
+                    <h6 class="mb-0">@i.ModelName</h6>
+                </div>
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <label class="fw-bold">Procesador:</label>
+                    <label class="mb-0">@i.Processor</label>
+                </div>
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <label class="fw-bold">RAM:</label>
+                    <label class="mb-0">@i.SizeRAM.ToString()</label>
+                </div>
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <a href="/computers/@i.ComputerModelID" class="bg-secondary rounded p-2 text-white d-inline-block">
+                        <span class="oi oi-eye" aria-hidden="true"></span> Ver más
+                    </a>
+                </div>
             </div>
-            <div class="d-flex flex-row gap-1 justify-content-center align-middle">
-                <label class="fw-bold">
-                    Procesador
-                </label>
-                <label>
-                    @i.Processor
-                </label>
-            </div>
-            <div class="d-flex flex-row gap-1 justify-content-center align-middle">
-                <label class="fw-bold">
-                    RAM
-                </label>
-                <label>
-                    @i.SizeRAM.ToString()
-                </label>
-            </div>
-            <a href="/computers/@i.ComputerModelID" class="bg-info h-100 h-100 rounded rounded-1 p-2">
-                <span class="oi oi-eye text-white" aria-hidden="true"></span>
-            </a>
-        </div>
-    }
-    
 
+        }
+    </div>
 </div>
 
+<div class="mt-4">
+    <h4 class="text-center text-danger">Computadoras Desactivadas</h4>
+
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+        @foreach (var i in computersDisable)
+        {
+            <div class="border rounded p-3 d-flex flex-column flex-md-row w-100 bg-light align-items-center gap-3">
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <label class="fw-bold">Modelo:</label>
+                    <h6 class="mb-0">@i.ModelName</h6>
+                </div>
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <label class="fw-bold">Procesador:</label>
+                    <label class="mb-0">@i.Processor</label>
+                </div>
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <label class="fw-bold">RAM:</label>
+                    <label class="mb-0">@i.SizeRAM.ToString()</label>
+                </div>
+                <div class="d-flex flex-column flex-md-row gap-2 gap-md-1 w-100 align-items-center  ">
+                    <a href="/computers/@i.ComputerModelID" class="bg-secondary rounded p-2 text-white d-inline-block">
+                        <span class="oi oi-eye" aria-hidden="true"></span> Ver más
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 
 @code {
     List<ComputerModel> computerModels = new();
+    List<ComputerModel> computersDisable = new();
 
     protected override async Task OnInitializedAsync()
     {
+        computerModels = _ComputerService.GetAll()
+            .Where(i => i.EmployeeId == null && i.IsActive)
+            .OrderBy(i => i.ModelName)
+            .ToList();
 
-        computerModels = _ComputerService.GetAll().Where(i=>i.EmployeeId == null).ToList();
+        computersDisable = _ComputerService.GetAll()
+            .Where(i => i.EmployeeId == null && !i.IsActive)
+            .OrderBy( i=>i.ModelName)
+            .ToList();
 
-        base.OnInitializedAsync();   
+        await base.OnInitializedAsync();
     }
 }

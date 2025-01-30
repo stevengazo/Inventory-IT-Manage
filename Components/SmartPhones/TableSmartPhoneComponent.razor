@@ -7,80 +7,80 @@
     <input type="text" placeholder="Busqueda" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
 </div>
 
+<div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Phone Number
+                    </th>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Phone Number
-            </th>
-      
-            <th>
-                Fecha de Adquisicion
-            </th>
-   
-            <th>
-                Marca
-            </th>
-      
-            <th>
-                Modelo
-            </th>
-        
-            <th>
-                N Serie
-            </th>
-       
-            <th>
-                Costo
-            </th>
-     
-            <th>
-                Estado
-            </th>
-     
-            <th>
-                Responsable
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(SmartPhoneModel i in SmartPhonestemp)
-        {
-           
-            _style=(i.isActive)? "":"text-danger italic";
+                    <th>
+                        Fecha de Adquisicion
+                    </th>
 
-                <tr class="@_style">
-                    <td>
-                        @i.PhoneNumber
-                    </td>
-                    <td>
-                        @i.AdquisitionDate.ToLongDateString()
-                    </td>
-                    <td>
-                        @i.Brand.Name
-                    </td>
-                    <td>
-                        @i.PhoneModel
-                    </td>
-                    <td>
-                        @i.PhoneSerial
-                    </td>
-                    <td>
-                        @i.Cost
-                    </td>
-                    @if (i.isActive)
-                    {
+                    <th>
+                        Marca
+                    </th>
+
+                    <th>
+                        Modelo
+                    </th>
+
+                    <th>
+                        N Serie
+                    </th>
+
+                    <th>
+                        Costo
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                    <th>
+                        Responsable
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (SmartPhoneModel i in SmartPhonestemp)
+                {
+
+                    _style = (i.isActive) ? "" : "text-danger italic";
+
+                    <tr class="@_style">
                         <td>
-                            Teléfono Activo
+                            @i.PhoneNumber
                         </td>
-                    }
-                    else
-                    {
                         <td>
-                            Inactivo
+                            @i.AdquisitionDate.ToLongDateString()
                         </td>
-                    }
+                        <td>
+                            @i.Brand.Name
+                        </td>
+                        <td>
+                            @i.PhoneModel
+                        </td>
+                        <td>
+                            @i.PhoneSerial
+                        </td>
+                        <td>
+                            @i.Cost
+                        </td>
+                        @if (i.isActive)
+                        {
+                            <td>
+                                Teléfono Activo
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                Inactivo
+                            </td>
+                        }
 
                         <AuthorizeView Roles="Administrador">
                             <Authorized>
@@ -100,12 +100,11 @@
                             <NotAuthorized>
                             </NotAuthorized>
                         </AuthorizeView>
-                </tr>
-
-        }
-    </tbody>
-</table>
-
+                    </tr>
+                }
+            </tbody>
+        </table>
+</div>
 </div>
 
 

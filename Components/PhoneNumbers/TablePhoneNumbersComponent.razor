@@ -1,89 +1,92 @@
 ﻿
 
 
+<div class="table-responsive">
 
-
-
-
-<table class="table table-sm table-hover">
-    <thead>
-        <tr>
-            <th>
-                Número
-            </th>
-            <th>
-                Operador
-            </th>
-            <th>
-                Tipo
-            </th>
-            <th>
-                Costo
-            </th>
-            <th>
-                Fecha Vencimiento
-            </th>
-            <th>
-                Estado
-            </th>
-            <th>
-                Acciones
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (PhoneNumbers != null)
-        {
-            foreach (PhoneNumber i in PhoneNumbers)
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Número
+                </th>
+                <th>
+                    Operador
+                </th>
+                <th>
+                    Tipo
+                </th>
+                <th>
+                    Costo
+                </th>
+                <th>
+                    Fecha Vencimiento
+                </th>
+                <th>
+                    Estado
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (PhoneNumbers != null)
             {
-                <tr>
-                    <td>
-                        @i.Number
-                    </td>
-                    <td>
-                        @i.Operator
-                    </td>
-                    <td>
-                        @i.Type
-                    </td>
-                    <td>
-                        @i.Cost
-                    </td>
-                    <td>
-                        @i.ExpireDate.ToLongDateString()
-                    </td>
-                    @{
-                        if(i.IsActive)
+                foreach (PhoneNumber i in PhoneNumbers)
                 {
-                            <td>
-                                Linea activa
-                            </td>
-                        }else
-                        {
-                            <td>
-                                Linea Inactiva
-                            </td>
+                    <tr>
+                        <td>
+                            @i.Number
+                        </td>
+                        <td>
+                            @i.Operator
+                        </td>
+                        <td>
+                            @i.Type
+                        </td>
+                        <td>
+                            @i.Cost
+                        </td>
+                        <td>
+                            @i.ExpireDate.ToLongDateString()
+                        </td>
+                        @{
+                            if (i.IsActive)
+                            {
+                                <td>
+                                    Linea activa
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    Linea Inactiva
+                                </td>
+                            }
                         }
-                    }
 
-                    <AuthorizeView Roles="Administrador">
-                        <Authorized>
-                            <td>
-                                <a href="/phones-numbers/@i.PhoneNumberId" class="btn btn-outline-info">Editar</a>
-                            </td>
+                        <AuthorizeView Roles="Administrador">
+                            <Authorized>
+                                <td>
+                                    <a href="/phones-numbers/@i.PhoneNumberId" class="btn btn-outline-info">Editar</a>
+                                </td>
 
-                        </Authorized>
-                        <NotAuthorized>
+                            </Authorized>
+                            <NotAuthorized>
 
-                        </NotAuthorized>
-                    </AuthorizeView>
+                            </NotAuthorized>
+                        </AuthorizeView>
 
 
-                </tr>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
+
+
+
 
 
 

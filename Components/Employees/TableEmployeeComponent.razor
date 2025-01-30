@@ -1,93 +1,93 @@
 ﻿<h3>Empleados Registrados</h3>
 
 
-<table class="table table-sm table-hover">
-    <thead>
-        <tr>
-            <th>
-                Cédula
-            </th>
-            <th>
-                Nombre
-            </th>
-            <th>
-                Departamento
-            </th>
-            <th>
-                Correo
-            </th>
-            <th>
-                Telefono
-            </th>
-            <th>
-                Acciones
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (Employee item in Employees)
-        {
-            @if (item.Fired)
+<div class="table-responsive">
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Cédula
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Departamento
+                </th>
+                <th>
+                    Correo
+                </th>
+                <th>
+                    Telefono
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Employee item in Employees)
             {
-                <tr class="text-danger">
-                    <td>
-                        @item.DNI
-                    </td>
-                    <td>
-                        @item.Name @item.LastName @item.SecondLastName
-                    </td>
-                    <td>
-                        @item.Departament.Name
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @item.PhoneNumber
-                    </td>
-                    <td>
-                        <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
-                    </td>
-                </tr>
-            }
-            else
-            {
-               
-                        <tr class="">
-                            <td>
-                                @item.EmployeeId
-                            </td>
-                            <td>
-                                @item.Name @item.LastName @item.SecondLastName
-                            </td>
-                    <td>
-                        @item.Departament.Name
-                    </td>
-                            <td>
-                                @item.Email
-                            </td>
-                            <td>
-                                @item.PhoneNumber
-                            </td>
-                <AuthorizeView Roles="Administrador,lector">
-                    <Authorized>
-                            <td>
-                                <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
-                            </td>
-                        </Authorized>
-                        <NotAuthorized>
+                @if (item.Fired)
+                {
+                    <tr class="text-danger">
+                        <td>
+                            @item.DNI
+                        </td>
+                        <td>
+                            @item.Name @item.LastName @item.SecondLastName
+                        </td>
+                        <td>
+                            @item.Departament.Name
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        <td>
+                            @item.PhoneNumber
+                        </td>
+                        <td>
+                            <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
 
-                        </NotAuthorized>
-                    </AuthorizeView>
-                        </tr>
-                
+                    <tr class="">
+                        <td>
+                            @item.EmployeeId
+                        </td>
+                        <td>
+                            @item.Name @item.LastName @item.SecondLastName
+                        </td>
+                        <td>
+                            @item.Departament.Name
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        <td>
+                            @item.PhoneNumber
+                        </td>
+                        <AuthorizeView Roles="Administrador,lector">
+                            <Authorized>
+                                <td>
+                                    <a href="/employee/edit/@item.EmployeeId" class="btn btn-outline-info">Editar</a>
+                                </td>
+                            </Authorized>
+                            <NotAuthorized>
 
- 
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </tr>
+                }
+
             }
- 
-        }
-    </tbody>
+        </tbody>
     </table>
+
+</div>
 
 
 @code {
