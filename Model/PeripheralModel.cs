@@ -14,14 +14,15 @@ namespace InventoryIT.Model
         public float Cost { get; set; }
         public bool IsActive { get; set; }
         public string Description { get; set; }
-
         public int? BrandId { get; set; }
         public Brand? Brand { get; set; }
+
 
         public int? EmployeeId { get; set; }
         public Employee? Employee { get; set; }
         public ICollection<ImageModel>? Image { get; set; }
         public ICollection<HistoryModel>? History { get; set; }
         public ICollection<FileModel>? Files { get; set; }
+        public ICollection<Maintenance>? Maintenances { get; set; }  
     }
 }

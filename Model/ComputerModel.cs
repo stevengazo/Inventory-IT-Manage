@@ -22,6 +22,8 @@ namespace InventoryIT.Model
         public ICollection<HistoryModel>? Histories { get; set; }
         public ICollection<FileModel>? Files { get; set; }
         public ICollection<ImageModel>? Image { get; set; }
+        public ICollection<Maintenance>? Maintenances { get; set; } 
+        public ICollection<Audit>? Audits { get; set; } 
         public int? BrandId { get; set; }
         public Brand? Brand { get; set; }
 

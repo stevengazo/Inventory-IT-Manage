@@ -17,6 +17,11 @@ namespace InventoryIT.Data
         public DbSet<PeripheralModel> Peripheral { get; set; }
         public DbSet<SmartPhoneModel> SmartPhone { get; set; }
         public DbSet<PhoneExtension> PhoneExtension { get; set; }
+        public DbSet<Maintenance> Maintenance { get; set; }
+        public DbSet<MaintenanceImage> MaintenanceImage { get; set; }
+        public DbSet<Audit> Audit { get; set; }
+        public DbSet<AuditImage> AuditImage { get; set; }
+
         public InventoryDbContext(DbContextOptions<InventoryDbContext> options) : base(options)
         {
 
@@ -25,6 +30,31 @@ namespace InventoryIT.Data
         {
             base.OnModelCreating(modelBuilder);
 
+
+            #region Model Creation Maintenance
+            modelBuilder.Entity<Maintenance>()
+               .HasMany(m => m.Images)
+               .WithOne(mi => mi.Maintenance)
+               .HasForeignKey(mi => mi.MaintenanceId);
+
+            modelBuilder.Entity<Maintenance>()
+                .HasOne(m => m.Computer)
+                .WithMany()
+                .HasForeignKey(m => m.ComputerModelID);
+
+            modelBuilder.Entity<Maintenance>()
+                .HasOne(m => m.SmartPhone)
+                .WithMany()
+                .HasForeignKey(m => m.SmartPhoneModelId);
+
+            modelBuilder.Entity<Maintenance>()
+                .HasOne(m => m.Peripheral)
+                .WithMany()
+                .HasForeignKey(m => m.PeripheralModelId);
+
+            #endregion
+
+            #region Objects Creation
             List<Departament> departaments = new List<Departament>()
             {
                 new()
@@ -123,6 +153,9 @@ namespace InventoryIT.Data
                 },
             };
             modelBuilder.Entity<Brand>().HasData(brands);
+            #endregion
+
+
 
         }
     }

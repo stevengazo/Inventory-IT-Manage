@@ -22,5 +22,4 @@ namespace InventoryIT.Model
         public Departament? Departament { get; set; }
         public int? DepartamentID { get; set; }
 
-    }
-}
+    }}
