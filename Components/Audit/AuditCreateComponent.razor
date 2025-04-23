@@ -98,6 +98,8 @@ else
 
 @code {
 	[Parameter]
+	public string SerialNumber { get; set; } = string.Empty;
+	[Parameter]
 	public string DeviceId { get; set; } = string.Empty;
 	[Parameter]
 	public DeviceType Type { get; set; }
@@ -135,7 +137,22 @@ else
 		try
 		{
 			IsLoading = true;
+			switch (Type)
+			{
+				case DeviceType.Computer:
+					audit.ComputerModelID = int.Parse(DeviceId);
+					break;
+				case DeviceType.Peripheric:
+					audit.PeripheralModelId = int.Parse(DeviceId);
+					break;
+				case DeviceType.Phone:
+					audit.SmartPhoneModelId = int.Parse(DeviceId);
+					break;
+				default:
+					break;
+			}
 			_auditService.Add(audit);
+
 			await UploadFiles();
 			await Clean();
 		}
@@ -153,7 +170,7 @@ else
 	{
 		try
 		{
-			await _fileStorage.GenerateDirectoryAsync(DeviceId);
+			await _fileStorage.GenerateDirectoryAsync(SerialNumber);
 			foreach (var i in files)
 			{
 				AuditImage auditImage = new AuditImage();
@@ -163,16 +180,16 @@ else
 				switch (Type)
 				{
 					case DeviceType.Computer:
-						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Computer}-{DeviceId}");
-						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Computer}-{DeviceId}", i);
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Computer}-{SerialNumber}");
+						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Computer}-{SerialNumber}", i);
 						break;
 					case DeviceType.Peripheric:
-						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Peripheric}-{DeviceId}");
-						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Peripheric}-{DeviceId}", i);
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Peripheric}-{SerialNumber}");
+						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Peripheric}-{SerialNumber}", i);
 						break;
 					case DeviceType.Phone:
-						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Phone}-{DeviceId}");
-						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Phone}-{DeviceId}", i);
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Phone}-{SerialNumber}");
+						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Phone}-{SerialNumber}", i);
 						break;
 					default:
 						break;

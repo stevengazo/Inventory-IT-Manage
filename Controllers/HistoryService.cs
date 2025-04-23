@@ -1,4 +1,5 @@
-﻿using InventoryIT.Contracts;
+﻿using System.Linq.Expressions;
+using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
 
@@ -65,6 +66,11 @@ namespace InventoryIT.Controllers
         }
 
         public void Update(HistoryModel entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<HistoryModel> Search(Expression<Func<HistoryModel, bool>> predicate)
         {
             throw new NotImplementedException();
         }

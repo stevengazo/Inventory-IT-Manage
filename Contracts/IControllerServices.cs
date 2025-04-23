@@ -1,4 +1,7 @@
-﻿namespace InventoryIT.Contracts
+﻿using InventoryIT.Model;
+using System.Linq.Expressions;
+
+namespace InventoryIT.Contracts
 {
     public interface IControllerServices<T> where T : class
     {
@@ -12,6 +15,7 @@
         T GetById(int id);
 
         List<T> Search(string value);
+        List<T> Search(Expression<Func<T, bool>> predicate);
 
     }
 }

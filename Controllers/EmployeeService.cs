@@ -1,4 +1,5 @@
-﻿using InventoryIT.Contracts;
+﻿using System.Linq.Expressions;
+using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,11 @@ namespace InventoryIT.Controllers
         }
 
         public List<Employee> Search(string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Employee> Search(Expression<Func<Employee, bool>> predicate)
         {
             throw new NotImplementedException();
         }

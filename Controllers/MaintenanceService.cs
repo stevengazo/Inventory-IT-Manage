@@ -1,4 +1,6 @@
-﻿using InventoryIT.Contracts;
+﻿using System.Linq;
+using System.Linq.Expressions;
+using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
 
@@ -15,22 +17,24 @@ namespace InventoryIT.Controllers
 
         public void Add(Maintenance entity)
         {
-            throw new NotImplementedException();
+            _inventoryDb.Maintenance.Add(entity);
+            _inventoryDb.SaveChanges();
         }
 
         public void Delete(Maintenance entity)
         {
-            throw new NotImplementedException();
+_inventoryDb.Maintenance.Remove(entity);
+            _inventoryDb.SaveChanges();
         }
 
         public List<Maintenance> GetAll()
         {
-            throw new NotImplementedException();
+            return _inventoryDb.Maintenance.ToList();
         }
 
         public Maintenance GetById(int id)
         {
-            throw new NotImplementedException();
+        return _inventoryDb.Maintenance.Find(id);
         }
 
         public List<Maintenance> Search(string value)
@@ -38,9 +42,15 @@ namespace InventoryIT.Controllers
             throw new NotImplementedException();
         }
 
+        public List<Maintenance> Search(Expression<Func<Maintenance, bool>> predicate)
+        {
+            return _inventoryDb.Maintenance.Where(predicate).ToList();
+        }
+
         public void Update(Maintenance entity)
         {
-            throw new NotImplementedException();
+          _inventoryDb.Maintenance.Update(entity);
+            _inventoryDb.SaveChanges(); 
         }
     }
 }

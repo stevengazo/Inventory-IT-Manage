@@ -3,6 +3,7 @@ using InventoryIT.Contracts;
 using InventoryIT.Controllers;
 using InventoryIT.Data;
 using InventoryIT.Model;
+using InventoryIT.Services;
 using InventoryIT.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,9 +31,15 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 builder.Services.AddScoped<PDFService>();
 builder.Services.AddHttpContextAccessor(); // Agregar el IHttpContextAccessor para acceder al contexto HTTP
 
+// File storage Service
+builder.Services.AddSingleton<FileStorageService>();
 
 #region Contracts to CRUD DB
 builder.Services.AddScoped<IControllerServices<Brand>, BrandService>();
+builder.Services.AddScoped<IControllerServices<Audit>, AuditService>();
+builder.Services.AddScoped<IControllerServices<AuditImage>, AuditImageService>();
+builder.Services.AddScoped<IControllerServices<Maintenance>, MaintenanceService>();
+builder.Services.AddScoped<IControllerServices<MaintenanceImage>, MaintenanceImageService>();
 builder.Services.AddScoped<IControllerServices<ComputerModel>, ComputerService>();
 builder.Services.AddScoped<IControllerServices<Employee>, EmployeeService>();
 builder.Services.AddScoped<IControllerServices<Departament>, DepartamentService>();
@@ -46,14 +53,10 @@ builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 
-
-
-
 #endregion
-//builder.Services.AddSingleton<WeatherForecastService>();
+
 
 var app = builder.Build();
-
 
 #region Create The Database
 
@@ -120,6 +123,21 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+#region Create the files directory
+var path = Path.Combine(Directory.GetCurrentDirectory(), "filesData");
+if (!Directory.Exists(path))
+{
+    Directory.CreateDirectory(path);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(path),
+    RequestPath = "/drive-data"
+});
+#endregion
+
 
 app.UseHttpsRedirection();
 

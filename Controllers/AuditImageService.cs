@@ -1,4 +1,5 @@
-﻿using InventoryIT.Contracts;
+﻿using System.Linq.Expressions;
+using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
 
@@ -40,6 +41,11 @@ namespace InventoryIT.Controllers
             return  _inventoryDb.AuditImage
                 .Where(x => x.AuditId.ToString().Contains(value) || x.AuditId.ToString().Contains(value))
                 .ToList();
+        }
+
+        public List<AuditImage> Search(Expression<Func<AuditImage, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(AuditImage entity)

@@ -1,0 +1,215 @@
+﻿@inject IControllerServices<Maintenance> _maintenanceService
+@inject FileStorageService _fileStorage;
+@inject IControllerServices<MaintenanceImage> _maintenanceImageService;
+
+
+@if (ShowForm)
+{
+
+	<div class="container mt-4">
+		<div class="card shadow-sm">
+			<div class="card-header bg-primary text-white">
+				<h5 class="mb-0">Registro de Mantenimiento</h5>
+			</div>
+			<div class="card-body">
+				<EditForm Model="maintenance">
+					<DataAnnotationsValidator />
+
+					<div class="mb-3">
+						<label class="form-label">@nameof(maintenance.MaintenanceDate)</label>
+						<InputDate @bind-Value="maintenance.MaintenanceDate" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">@nameof(maintenance.TechnicianName)</label>
+						<InputText @bind-Value="maintenance.TechnicianName" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">@nameof(maintenance.Description)</label>
+						<InputText @bind-Value="maintenance.Description" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">@nameof(maintenance.MaintenanceType)</label>
+						<InputSelect @bind-Value="maintenance.MaintenanceType" class="form-select">
+							@foreach (MaintenanceType i in Enum.GetValues(typeof(MaintenanceType)))
+							{
+								<option value="@i.ToString()">@i.ToString()</option>
+							}
+						</InputSelect>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">@nameof(maintenance.Cost)</label>
+						<InputNumber @bind-Value="maintenance.Cost" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">@nameof(maintenance.Observations)</label>
+						<InputText @bind-Value="maintenance.Observations" class="form-control" />
+					</div>
+
+					<div>
+						<label class="w-25">Files</label>
+						<InputFile multiple OnChange="@OnChange" />
+					</div>
+					<!-- File List-->
+					<div class="border shadow-sm rounded p-2 m-1">
+						<h6 class="fw-bold mb-2">Archivos por Subir</h6>
+						<label></label>
+						<ul class="list-unstyled">
+							@foreach (var file in files)
+							{
+								<li class="d-flex align-items-center justify-content-between p-1 border-bottom">
+									<span>@file.Name</span>
+									<button class="btn btn-danger btn-sm" @onclick="() => DeleteFile(file)">X</button>
+								</li>
+							}
+						</ul>
+					</div>
+
+
+					<div class="d-flex justify-content-center align-items-center">
+						<button @onclick="Add" class="btn btn-success me-2">Guardar</button>
+						<button class="btn btn-sm btn-outline-danger" @onclick="ChangeStateForm">Cerrar</button>
+
+						@if (IsLoading)
+						{
+							<span class="ms-2">Guardando...</span>
+						}
+					</div>
+				</EditForm>
+			</div>
+		</div>
+	</div>
+}
+else
+{
+	<div class="d-flex flex-row border justify-content-between rounded p-1 shadow">
+		<h3>Reporte de Mantenimiento</h3>
+		<button class="btn btn-sm btn-outline-info" @onclick="ChangeStateForm">Agregar Registro</button>
+	</div>
+
+}
+
+
+
+
+
+
+
+@code {
+	[Parameter]
+	public DeviceType Type { get; set; }
+	[Parameter]
+	public int DeviceId { get; set; }
+	[Parameter]
+	public string SerialNumber { get; set; } = string.Empty;
+
+	private string ErrorMessage = string.Empty;
+
+	private bool ShowForm = false;
+
+	Maintenance maintenance = new Maintenance();
+	bool IsLoading = false;
+
+	private List<IBrowserFile> files = new();
+
+	async Task Add()
+	{
+		try
+		{
+			IsLoading = true;
+			switch (Type)
+			{
+				case DeviceType.Computer:
+					maintenance.ComputerModelID = (DeviceId);
+					break;
+				case DeviceType.Peripheric:
+					maintenance.PeripheralModelId = (DeviceId);
+					break;
+				case DeviceType.Phone:
+					maintenance.SmartPhoneModelId = (DeviceId);
+					break;
+				default:
+					break;
+			}
+			_maintenanceService.Add(maintenance);
+			await UploadFiles();
+		}
+		catch (Exception w)
+		{
+			throw w;
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+
+	async Task UploadFiles()
+	{
+		try
+		{
+			await _fileStorage.GenerateDirectoryAsync(SerialNumber);
+			foreach (var i in files)
+			{
+				MaintenanceImage ImageObj = new();
+				ImageObj.FileName = i.Name;
+				ImageObj.MaintenanceId = maintenance.MaintenanceId;
+				ImageObj.ContentType = i.ContentType;
+				switch (Type)
+				{
+					case DeviceType.Computer:
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Computer}-{SerialNumber}");
+						ImageObj.FilePath = await _fileStorage.UploadFilesAsync($"{DeviceType.Computer}-{SerialNumber}", i);
+						break;
+					case DeviceType.Peripheric:
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Peripheric}-{SerialNumber}");
+						ImageObj.FilePath = await _fileStorage.UploadFilesAsync($"{DeviceType.Peripheric}-{SerialNumber}", i);
+						break;
+					case DeviceType.Phone:
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Phone}-{SerialNumber}");
+						ImageObj.FilePath = await _fileStorage.UploadFilesAsync($"{DeviceType.Phone}-{SerialNumber}", i);
+						break;
+					default:
+						break;
+				}
+	_maintenanceImageService.Add(ImageObj);
+			}
+			files.Clear();
+		}
+		catch (Exception re)
+		{
+
+			throw re;
+		}
+	}
+
+	private void DeleteFile(IBrowserFile file)
+	{
+		files.Remove(file);
+	}
+
+	async Task OnChange(InputFileChangeEventArgs e)
+	{
+		foreach (var file in e.GetMultipleFiles())
+		{
+			if (file.Size > 20971520)
+			{
+				ErrorMessage = $"El archivo {file.Name} excede el tamaño máximo permitido de 10MB.\nEl archivo no será cargado.";
+				continue;
+			}
+			else
+			{
+				files.Add(file);
+			}
+		}
+	}
+
+	async Task ChangeStateForm()
+	{
+		ShowForm = !ShowForm;
+	}
+}

@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Components
+
+<CascadingValue Value="this">
+    <h3>@Title</h3>
+
+    @ChildContent  @* Aquí se renderizan los componentes hijos *@
+
+    <div class="tabs">
+        @foreach (var tab in _Tabs)
+        {
+            <button class="btn @(tab == SelectedTab ? "btn-primary m-1" : "btn-outline-primary m-1")"
+                    @onclick="() => SelectTab(tab)">
+                @tab.Title
+            </button>
+
+        }
+    </div>
+
+    <div class="tab-content p-1">
+        @SelectedTab?.ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = "Tabs";
+
+    [Parameter]  // <-- Esto faltaba
+    public RenderFragment? ChildContent { get; set; }
+
+    internal List<Tab> _Tabs { get; set; } = new();
+    internal Tab? SelectedTab { get; set; }
+
+    internal void AddTab(Tab tab)
+    {
+        _Tabs.Add(tab);
+        if (SelectedTab == null)
+        {
+            SelectedTab = tab;
+        }
+        StateHasChanged();
+    }
+
+    void SelectTab(Tab tab)
+    {
+        SelectedTab = tab;
+    }
+
+    string GetTabClass(Tab tab)
+        => SelectedTab == tab ? "tab-selected" : "";
+}

@@ -3,82 +3,84 @@
 @inject IHistoryServices<HistoryModel> _HistoryService;
 
 
-    <h4>
-        Información Periférico
-    </h4>
+<h4>
+	Información Periférico
+</h4>
 <AuthorizeView Roles="Administrador,Lector">
-    <Authorized>
-        <DetailsPeripheralComponent peripheral="@peripheral" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
+	<Authorized>
+		<DetailsPeripheralComponent peripheral="@peripheral" />
+	</Authorized>
 </AuthorizeView>
-<AuthorizeView Roles="Administrador">
-    <Authorized>
-        <AssignPeripheralComponent OnUpdated="@Update" Peripheral="@peripheral" />
-        <AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(PeripheralModel)" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
-<AuthorizeView Roles="Administrador,Lector">
-    <Authorized>
-        <TableHistoryByDeviceComponent Histories="@Histories" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
-<AuthorizeView Roles="Administrador">
-    <Authorized>
-        <UploadFileComponent id="_id" TypeModel="@nameof(PeripheralModel)" OnUpdated="@Update" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
-<AuthorizeView Roles="Administrador,Lector">
-    <Authorized>
-        <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(PeripheralModel)" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
+
+<Tabs>
+	<Tab Title="Asignacion">
+		<AuthorizeView Roles="Administrador">
+			<Authorized>
+				<AssignPeripheralComponent OnUpdated="@Update" Peripheral="@peripheral" />
+			</Authorized>
+		</AuthorizeView>
+	</Tab>
+	<Tab Title="Historia">
+		<AuthorizeView Roles="Administrador,Lector">
+			<Authorized>
+				<AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(PeripheralModel)" />
+				<TableHistoryByDeviceComponent Histories="@Histories" />
+			</Authorized>
+		</AuthorizeView>
+	</Tab>
+	<Tab Title="Archivos">
+		<div>
+			<AuthorizeView Roles="Administrador">
+				<Authorized>
+					<UploadFileComponent id="_id" TypeModel="@nameof(PeripheralModel)" OnUpdated="@Update" />
+				</Authorized>
+			</AuthorizeView>
+			<AuthorizeView Roles="Administrador,Lector">
+				<Authorized>
+					<TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(PeripheralModel)" />
+				</Authorized>
+			</AuthorizeView>
+		</div>
+	</Tab>
+
+</Tabs>
 
 
 @code {
-    [Parameter]
-    public string id { get; set; }
+	[Parameter]
+	public string id { get; set; }
 
-    private List<HistoryModel> Histories = new();
-    TablePDFComputerComponent tablePDFComponent;
-    int _id = 0;
-    PeripheralModel peripheral = new();
+	private List<HistoryModel> Histories = new();
+	TablePDFComputerComponent tablePDFComponent;
+	int _id = 0;
+	PeripheralModel peripheral = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        bool flag = int.TryParse(id, out _id);
-        if (flag)
-        {
-            peripheral = _PeripheralsService.GetById(_id);
-            Histories = _HistoryService.HistoriesOfPeripherals(_id);
-        }
-        base.OnInitializedAsync();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		bool flag = int.TryParse(id, out _id);
+		if (flag)
+		{
+			peripheral = _PeripheralsService.GetById(_id);
+			Histories = _HistoryService.HistoriesOfPeripherals(_id);
+		}
+		base.OnInitializedAsync();
+	}
 
-    private async Task Update()
-    {
-        // Actualizar la lista de computadoras después de agregar una nueva computadora
-        await InvokeAsync(() =>
-        {
-            bool flag = int.TryParse(id, out _id);
-            if (flag)
-            {
-                peripheral = _PeripheralsService.GetById(_id);
-                Histories = _HistoryService.HistoriesOfPeripherals(_id); 
-                tablePDFComponent?.RefreshTable(); // Llamar al método para actualizar la tabla PDF
+	private async Task Update()
+	{
+		// Actualizar la lista de computadoras después de agregar una nueva computadora
+		await InvokeAsync(() =>
+		{
+			bool flag = int.TryParse(id, out _id);
+			if (flag)
+			{
+				peripheral = _PeripheralsService.GetById(_id);
+				Histories = _HistoryService.HistoriesOfPeripherals(_id);
+				tablePDFComponent?.RefreshTable(); // Llamar al método para actualizar la tabla PDF
 
-            }
-            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
-        });
-    }
+			}
+			StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+		});
+	}
 
 }

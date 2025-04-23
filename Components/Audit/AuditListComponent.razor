@@ -1,0 +1,59 @@
+﻿@inject FileStorageService _fileStorage;
+@inject IControllerServices<Audit> _auditService;
+
+
+<div class="container my-4">
+    <h4 class="mb-3">Lista de Auditorías</h4>
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Fecha</th>
+                <th>Auditor</th>
+                <th>Condición General</th>
+                <th>Limpio</th>
+                <th>Operativo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in audits)
+            {
+                <tr>
+                    <td>@i.AuditDate.ToString("dd MMM yyyy")</td>
+                    <td>@i.AuditorName</td>
+                    <td>@i.GeneralCondition</td>
+                    <td>@(i.IsClean ? "Sí" : "No")</td>
+                    <td>@(i.IsOperational ? "Sí" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@code {
+	[Parameter]
+	public int DeviceId { get; set; } = 0;
+	[Parameter]
+	public DeviceType Type { get; set; }
+
+	List<Audit> audits = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		switch (Type)
+		{
+			case DeviceType.Computer:
+				audits = _auditService.Search(a => a.ComputerModelID == DeviceId);
+				break;
+			case DeviceType.Peripheric:
+				audits = _auditService.Search(a => a.PeripheralModelId == DeviceId);
+				break;
+			case DeviceType.Phone:
+				audits = _auditService.Search(a => a.SmartPhoneModelId == DeviceId);
+				break;
+			default:
+				break;
+		}
+	}
+}

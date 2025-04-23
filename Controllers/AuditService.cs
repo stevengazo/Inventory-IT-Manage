@@ -1,4 +1,5 @@
-﻿using InventoryIT.Contracts;
+﻿using System.Linq.Expressions;
+using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
 
@@ -36,11 +37,17 @@ namespace InventoryIT.Controllers
             return _inventoryDb.Audit.Find(id);
         }
 
-        public List<Audit> Search(string value)
+        public List<Audit> Search(Expression<Func<Audit, bool>> predicate)
         {
-            return _inventoryDb.Audit.Where(i => i.AuditorName == value).ToList();
+            return _inventoryDb.Audit.Where(predicate).ToList();
         }
 
+        public List<Audit> Search(string value)
+        {
+            return _inventoryDb.Audit
+                .Where(i => i.AuditorName.Contains(value) || i.Comments.Contains(value))
+                .ToList();
+        }
         public void Update(Audit entity)
         {
             _inventoryDb.Audit.Update(entity);

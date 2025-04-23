@@ -1,4 +1,5 @@
-﻿using InventoryIT.Contracts;
+﻿using System.Linq.Expressions;
+using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
 
@@ -43,6 +44,11 @@ namespace InventoryIT.Controllers
                 where i.Name == value
                 select i).ToList();
             return data;
+        }
+
+        public List<Brand> Search(Expression<Func<Brand, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(Brand entity)

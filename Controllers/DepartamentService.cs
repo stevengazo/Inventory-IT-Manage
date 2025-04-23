@@ -1,4 +1,5 @@
-﻿using InventoryIT.Contracts;
+﻿using System.Linq.Expressions;
+using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
 
@@ -35,6 +36,11 @@ namespace InventoryIT.Controllers
         }
 
         public List<Departament> Search(string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Departament> Search(Expression<Func<Departament, bool>> predicate)
         {
             throw new NotImplementedException();
         }
