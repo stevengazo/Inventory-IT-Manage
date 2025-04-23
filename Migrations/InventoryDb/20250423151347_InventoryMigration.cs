@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace InventoryIT.Migrations.InventoryDb
 {
-    public partial class newImageTable : Migration
+    public partial class InventoryMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -239,6 +239,44 @@ namespace InventoryIT.Migrations.InventoryDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "Audit",
+                columns: table => new
+                {
+                    AuditId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AuditDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AuditorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GeneralCondition = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsClean = table.Column<bool>(type: "bit", nullable: false),
+                    IsOperational = table.Column<bool>(type: "bit", nullable: false),
+                    MissingItems = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecommendedActions = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ComputerModelID = table.Column<int>(type: "int", nullable: true),
+                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: true),
+                    PeripheralModelId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Audit", x => x.AuditId);
+                    table.ForeignKey(
+                        name: "FK_Audit_Computer_ComputerModelID",
+                        column: x => x.ComputerModelID,
+                        principalTable: "Computer",
+                        principalColumn: "ComputerModelID");
+                    table.ForeignKey(
+                        name: "FK_Audit_Peripheral_PeripheralModelId",
+                        column: x => x.PeripheralModelId,
+                        principalTable: "Peripheral",
+                        principalColumn: "PeripheralModelId");
+                    table.ForeignKey(
+                        name: "FK_Audit_SmartPhone_SmartPhoneModelId",
+                        column: x => x.SmartPhoneModelId,
+                        principalTable: "SmartPhone",
+                        principalColumn: "SmartPhoneModelId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "File",
                 columns: table => new
                 {
@@ -340,6 +378,109 @@ namespace InventoryIT.Migrations.InventoryDb
                         principalColumn: "SmartPhoneModelId");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Maintenance",
+                columns: table => new
+                {
+                    MaintenanceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MaintenanceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TechnicianName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaintenanceType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Observations = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ComputerModelID = table.Column<int>(type: "int", nullable: false),
+                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: false),
+                    PeripheralModelId = table.Column<int>(type: "int", nullable: false),
+                    ComputerModelID1 = table.Column<int>(type: "int", nullable: true),
+                    PeripheralModelId1 = table.Column<int>(type: "int", nullable: true),
+                    SmartPhoneModelId1 = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Maintenance", x => x.MaintenanceId);
+                    table.ForeignKey(
+                        name: "FK_Maintenance_Computer_ComputerModelID",
+                        column: x => x.ComputerModelID,
+                        principalTable: "Computer",
+                        principalColumn: "ComputerModelID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Maintenance_Computer_ComputerModelID1",
+                        column: x => x.ComputerModelID1,
+                        principalTable: "Computer",
+                        principalColumn: "ComputerModelID");
+                    table.ForeignKey(
+                        name: "FK_Maintenance_Peripheral_PeripheralModelId",
+                        column: x => x.PeripheralModelId,
+                        principalTable: "Peripheral",
+                        principalColumn: "PeripheralModelId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Maintenance_Peripheral_PeripheralModelId1",
+                        column: x => x.PeripheralModelId1,
+                        principalTable: "Peripheral",
+                        principalColumn: "PeripheralModelId");
+                    table.ForeignKey(
+                        name: "FK_Maintenance_SmartPhone_SmartPhoneModelId",
+                        column: x => x.SmartPhoneModelId,
+                        principalTable: "SmartPhone",
+                        principalColumn: "SmartPhoneModelId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Maintenance_SmartPhone_SmartPhoneModelId1",
+                        column: x => x.SmartPhoneModelId1,
+                        principalTable: "SmartPhone",
+                        principalColumn: "SmartPhoneModelId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AuditImage",
+                columns: table => new
+                {
+                    AuditImageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PathFile = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuditId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditImage", x => x.AuditImageId);
+                    table.ForeignKey(
+                        name: "FK_AuditImage_Audit_AuditId",
+                        column: x => x.AuditId,
+                        principalTable: "Audit",
+                        principalColumn: "AuditId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MaintenanceImage",
+                columns: table => new
+                {
+                    MaintenanceImageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaintenanceId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MaintenanceImage", x => x.MaintenanceImageId);
+                    table.ForeignKey(
+                        name: "FK_MaintenanceImage_Maintenance_MaintenanceId",
+                        column: x => x.MaintenanceId,
+                        principalTable: "Maintenance",
+                        principalColumn: "MaintenanceId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Brand",
                 columns: new[] { "BrandId", "Name" },
@@ -371,6 +512,26 @@ namespace InventoryIT.Migrations.InventoryDb
                     { 7, "Ventas" },
                     { 8, "IT" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Audit_ComputerModelID",
+                table: "Audit",
+                column: "ComputerModelID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Audit_PeripheralModelId",
+                table: "Audit",
+                column: "PeripheralModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Audit_SmartPhoneModelId",
+                table: "Audit",
+                column: "SmartPhoneModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditImage_AuditId",
+                table: "AuditImage",
+                column: "AuditId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Computer_BrandId",
@@ -433,6 +594,41 @@ namespace InventoryIT.Migrations.InventoryDb
                 column: "SmartPhoneModelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Maintenance_ComputerModelID",
+                table: "Maintenance",
+                column: "ComputerModelID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Maintenance_ComputerModelID1",
+                table: "Maintenance",
+                column: "ComputerModelID1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Maintenance_PeripheralModelId",
+                table: "Maintenance",
+                column: "PeripheralModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Maintenance_PeripheralModelId1",
+                table: "Maintenance",
+                column: "PeripheralModelId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Maintenance_SmartPhoneModelId",
+                table: "Maintenance",
+                column: "SmartPhoneModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Maintenance_SmartPhoneModelId1",
+                table: "Maintenance",
+                column: "SmartPhoneModelId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MaintenanceImage_MaintenanceId",
+                table: "MaintenanceImage",
+                column: "MaintenanceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Peripheral_BrandId",
                 table: "Peripheral",
                 column: "BrandId");
@@ -471,6 +667,9 @@ namespace InventoryIT.Migrations.InventoryDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AuditImage");
+
+            migrationBuilder.DropTable(
                 name: "File");
 
             migrationBuilder.DropTable(
@@ -480,19 +679,28 @@ namespace InventoryIT.Migrations.InventoryDb
                 name: "Image");
 
             migrationBuilder.DropTable(
+                name: "MaintenanceImage");
+
+            migrationBuilder.DropTable(
                 name: "Phone_Number_User");
 
             migrationBuilder.DropTable(
                 name: "PhoneExtension");
 
             migrationBuilder.DropTable(
+                name: "Audit");
+
+            migrationBuilder.DropTable(
+                name: "Maintenance");
+
+            migrationBuilder.DropTable(
+                name: "PhoneNumber");
+
+            migrationBuilder.DropTable(
                 name: "Computer");
 
             migrationBuilder.DropTable(
                 name: "Peripheral");
-
-            migrationBuilder.DropTable(
-                name: "PhoneNumber");
 
             migrationBuilder.DropTable(
                 name: "SmartPhone");

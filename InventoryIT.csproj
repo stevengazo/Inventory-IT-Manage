@@ -24,4 +24,8 @@
     <PackageReference Include="PDFsharp" Version="6.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\InventoryDb\" />
+  </ItemGroup>
+
 </Project>

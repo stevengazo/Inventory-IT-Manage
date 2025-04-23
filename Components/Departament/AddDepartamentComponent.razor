@@ -14,7 +14,6 @@
                 Nombre del Departamento
             </label>
             <EditForm Model="ObjDepartament">
-         
                 <InputText @bind-Value="ObjDepartament.Name" class=" form-control border border-1 rounded mx-2 w-75"></InputText>
             </EditForm>
             <button @onclick="Save" class="btn btn-outline-success mx-2"> Agregar</button>
@@ -42,11 +41,7 @@
         }
         catch (Exception e)
         {
-
             throw;
         }
-
-
     }
-
 }

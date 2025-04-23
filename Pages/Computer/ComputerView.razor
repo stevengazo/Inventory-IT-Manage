@@ -16,11 +16,16 @@
                 <ImageContainerComponent id="_id" TypeModel="@nameof(ComputerModel)" />
             </div>
             
+
+
+
             <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
             <AddHistoryComponent id="_id" OnUpdated="@UpdateComputerList" TypeModel="@nameof(ComputerModel)" />
             <TableHistoryByDeviceComponent Histories="@Histories" />
             <UploadFileComponent id="_id" TypeModel="@nameof(ComputerModel)" OnUpdated="@UpdateComputerList" />
             <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(ComputerModel)" />
+            <AuditCreateComponent DeviceId="@Computer.SerialNumber" Type="DeviceType.Computer" />
+        
         }
         else
         {

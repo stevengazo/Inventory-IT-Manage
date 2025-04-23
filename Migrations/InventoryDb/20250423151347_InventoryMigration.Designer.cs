@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations.InventoryDb
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240704175259_newImageTable")]
-    partial class newImageTable
+    [Migration("20250423151347_InventoryMigration")]
+    partial class InventoryMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,96 @@ namespace InventoryIT.Migrations.InventoryDb
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("InventoryIT.Model.Audit", b =>
+                {
+                    b.Property<int>("AuditId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuditId"), 1L, 1);
+
+                    b.Property<DateTime>("AuditDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AuditorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ComputerModelID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GeneralCondition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsClean")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOperational")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MissingItems")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PeripheralModelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecommendedActions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SmartPhoneModelId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuditId");
+
+                    b.HasIndex("ComputerModelID");
+
+                    b.HasIndex("PeripheralModelId");
+
+                    b.HasIndex("SmartPhoneModelId");
+
+                    b.ToTable("Audit");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.AuditImage", b =>
+                {
+                    b.Property<int>("AuditImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuditImageId"), 1L, 1);
+
+                    b.Property<int>("AuditId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PathFile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("AuditImageId");
+
+                    b.HasIndex("AuditId");
+
+                    b.ToTable("AuditImage");
+                });
 
             modelBuilder.Entity("InventoryIT.Model.Brand", b =>
                 {
@@ -394,6 +484,107 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.ToTable("Image");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.Maintenance", b =>
+                {
+                    b.Property<int>("MaintenanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceId"), 1L, 1);
+
+                    b.Property<int?>("ComputerModelID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ComputerModelID1")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("MaintenanceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MaintenanceType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Observations")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PeripheralModelId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PeripheralModelId1")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SmartPhoneModelId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SmartPhoneModelId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TechnicianName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MaintenanceId");
+
+                    b.HasIndex("ComputerModelID");
+
+                    b.HasIndex("ComputerModelID1");
+
+                    b.HasIndex("PeripheralModelId");
+
+                    b.HasIndex("PeripheralModelId1");
+
+                    b.HasIndex("SmartPhoneModelId");
+
+                    b.HasIndex("SmartPhoneModelId1");
+
+                    b.ToTable("Maintenance");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.MaintenanceImage", b =>
+                {
+                    b.Property<int>("MaintenanceImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceImageId"), 1L, 1);
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaintenanceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("MaintenanceImageId");
+
+                    b.HasIndex("MaintenanceId");
+
+                    b.ToTable("MaintenanceImage");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.PeripheralModel", b =>
                 {
                     b.Property<int>("PeripheralModelId")
@@ -620,6 +811,38 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.ToTable("SmartPhone");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.Audit", b =>
+                {
+                    b.HasOne("InventoryIT.Model.ComputerModel", "Computer")
+                        .WithMany("Audits")
+                        .HasForeignKey("ComputerModelID");
+
+                    b.HasOne("InventoryIT.Model.PeripheralModel", "Peripheral")
+                        .WithMany()
+                        .HasForeignKey("PeripheralModelId");
+
+                    b.HasOne("InventoryIT.Model.SmartPhoneModel", "SmartPhone")
+                        .WithMany("Audits")
+                        .HasForeignKey("SmartPhoneModelId");
+
+                    b.Navigation("Computer");
+
+                    b.Navigation("Peripheral");
+
+                    b.Navigation("SmartPhone");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.AuditImage", b =>
+                {
+                    b.HasOne("InventoryIT.Model.Audit", "Audit")
+                        .WithMany("Images")
+                        .HasForeignKey("AuditId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Audit");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.ComputerModel", b =>
                 {
                     b.HasOne("InventoryIT.Model.Brand", "Brand")
@@ -707,6 +930,56 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Navigation("SmartPhoneModel");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.Maintenance", b =>
+                {
+                    b.HasOne("InventoryIT.Model.ComputerModel", "Computer")
+                        .WithMany()
+                        .HasForeignKey("ComputerModelID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InventoryIT.Model.ComputerModel", null)
+                        .WithMany("Maintenances")
+                        .HasForeignKey("ComputerModelID1");
+
+                    b.HasOne("InventoryIT.Model.PeripheralModel", "Peripheral")
+                        .WithMany()
+                        .HasForeignKey("PeripheralModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InventoryIT.Model.PeripheralModel", null)
+                        .WithMany("Maintenances")
+                        .HasForeignKey("PeripheralModelId1");
+
+                    b.HasOne("InventoryIT.Model.SmartPhoneModel", "SmartPhone")
+                        .WithMany()
+                        .HasForeignKey("SmartPhoneModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InventoryIT.Model.SmartPhoneModel", null)
+                        .WithMany("Maintenances")
+                        .HasForeignKey("SmartPhoneModelId1");
+
+                    b.Navigation("Computer");
+
+                    b.Navigation("Peripheral");
+
+                    b.Navigation("SmartPhone");
+                });
+
+            modelBuilder.Entity("InventoryIT.Model.MaintenanceImage", b =>
+                {
+                    b.HasOne("InventoryIT.Model.Maintenance", "Maintenance")
+                        .WithMany("Images")
+                        .HasForeignKey("MaintenanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Maintenance");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.PeripheralModel", b =>
                 {
                     b.HasOne("InventoryIT.Model.Brand", "Brand")
@@ -765,6 +1038,11 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.Audit", b =>
+                {
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.Brand", b =>
                 {
                     b.Navigation("Computers");
@@ -776,11 +1054,15 @@ namespace InventoryIT.Migrations.InventoryDb
 
             modelBuilder.Entity("InventoryIT.Model.ComputerModel", b =>
                 {
+                    b.Navigation("Audits");
+
                     b.Navigation("Files");
 
                     b.Navigation("Histories");
 
                     b.Navigation("Image");
+
+                    b.Navigation("Maintenances");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.Departament", b =>
@@ -799,6 +1081,11 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Navigation("phone_Number_User_Models");
                 });
 
+            modelBuilder.Entity("InventoryIT.Model.Maintenance", b =>
+                {
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("InventoryIT.Model.PeripheralModel", b =>
                 {
                     b.Navigation("Files");
@@ -806,6 +1093,8 @@ namespace InventoryIT.Migrations.InventoryDb
                     b.Navigation("History");
 
                     b.Navigation("Image");
+
+                    b.Navigation("Maintenances");
                 });
 
             modelBuilder.Entity("InventoryIT.Model.PhoneNumber", b =>
@@ -815,11 +1104,15 @@ namespace InventoryIT.Migrations.InventoryDb
 
             modelBuilder.Entity("InventoryIT.Model.SmartPhoneModel", b =>
                 {
+                    b.Navigation("Audits");
+
                     b.Navigation("Files");
 
                     b.Navigation("History");
 
                     b.Navigation("Image");
+
+                    b.Navigation("Maintenances");
 
                     b.Navigation("Phone_Number_User_s");
                 });

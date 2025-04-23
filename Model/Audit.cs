@@ -25,5 +25,4 @@
         // Colección de imágenes relacionadas con la auditoría
         public ICollection<AuditImage> Images { get; set; } = new List<AuditImage>();
     }
-
 }
