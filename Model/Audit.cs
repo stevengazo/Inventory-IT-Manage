@@ -3,7 +3,7 @@
     public class Audit
     {
         public int AuditId { get; set; }
-        public DateTime AuditDate { get; set; }
+        public DateTime AuditDate { get; set; } = DateTime.Now;
         public string AuditorName { get; set; }
         public string Comments { get; set; }
         public string GeneralCondition { get; set; } // Ejemplo: Bueno, Regular, Malo

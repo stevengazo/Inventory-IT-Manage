@@ -1,64 +1,128 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Registro";
 }
 
-<h1>@ViewData["Title"]</h1>
+<style>
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: 'Segoe UI', sans-serif;
+		background: linear-gradient(114deg, rgba(51, 182, 196, 1) 0%, rgba(15, 168, 38, 1) 100%);
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
 
-<div class="row">
-    <div class="col-md-4">
+	header {
+		display: none !important;
+		position: absolute !important;
+		top: 0 !important;
+		left: 0 !important;
+		width: 100% !important; /* Asegura que ocupe todo el ancho */
+		justify-content: space-between !important;
+		align-items: center !important;
+		padding: 0 2rem; /* Un poco de espacio a los lados */
+	}
+
+		header .nav-links a {
+			margin-left: 1.5rem;
+			color: #222;
+			text-decoration: none;
+			font-weight: 500;
+		}
+
+			header .nav-links a:hover {
+				color: #0fa826;
+			}
+
+	nav {
+		background: transparent !important;
+	}
+
+	.login-container {
+		flex-grow: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 2rem;
+	}
+
+	.login-card {
+		background: white;
+		border-radius: 20px;
+		padding: 2rem;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+		width: 100%;
+		max-width: 400px;
+	}
+
+	.form-floating label {
+		color: #555;
+	}
+
+	.btn-primary {
+		background-color: #33b6c4;
+		border: none;
+	}
+
+		.btn-primary:hover {
+			background-color: #1ea6b2;
+		}
+
+	.form-check-input {
+		margin-right: 0.5rem;
+	}
+
+	a {
+		color: #1ea6b2;
+		text-decoration: none;
+	}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+	footer {
+		display: none;
+		color: #f8f9fa;
+		position: absolute;
+		bottom: 0;
+	}
+
+</style>
+
+
+<div class="login-container">
+    <div class="login-card">
+        <h1 class="text-center">@ViewData["Title"]</h1>
+        <h2 class="text-center">Crea una nueva cuenta.</h2>
+        <hr />
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
+
+            <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
                 <label asp-for="Input.Email"></label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <div class="form-floating">
+
+            <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
                 <label asp-for="Input.Password"></label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
-            <div class="form-floating">
+
+            <div class="form-floating mb-3">
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
                 <label asp-for="Input.ConfirmPassword"></label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registrarse</button>
         </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
     </div>
 </div>
 

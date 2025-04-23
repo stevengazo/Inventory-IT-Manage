@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryIT.Migrations.InventoryDb
 {
     [DbContext(typeof(InventoryDbContext))]
-    [Migration("20250423151347_InventoryMigration")]
+    [Migration("20250423202609_InventoryMigration")]
     partial class InventoryMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -493,10 +493,6 @@ namespace InventoryIT.Migrations.InventoryDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaintenanceId"), 1L, 1);
 
                     b.Property<int?>("ComputerModelID")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ComputerModelID1")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Cost")
@@ -518,17 +514,9 @@ namespace InventoryIT.Migrations.InventoryDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PeripheralModelId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PeripheralModelId1")
                         .HasColumnType("int");
 
                     b.Property<int?>("SmartPhoneModelId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SmartPhoneModelId1")
                         .HasColumnType("int");
 
                     b.Property<string>("TechnicianName")
@@ -539,15 +527,9 @@ namespace InventoryIT.Migrations.InventoryDb
 
                     b.HasIndex("ComputerModelID");
 
-                    b.HasIndex("ComputerModelID1");
-
                     b.HasIndex("PeripheralModelId");
 
-                    b.HasIndex("PeripheralModelId1");
-
                     b.HasIndex("SmartPhoneModelId");
-
-                    b.HasIndex("SmartPhoneModelId1");
 
                     b.ToTable("Maintenance");
                 });
@@ -933,34 +915,16 @@ namespace InventoryIT.Migrations.InventoryDb
             modelBuilder.Entity("InventoryIT.Model.Maintenance", b =>
                 {
                     b.HasOne("InventoryIT.Model.ComputerModel", "Computer")
-                        .WithMany()
-                        .HasForeignKey("ComputerModelID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventoryIT.Model.ComputerModel", null)
                         .WithMany("Maintenances")
-                        .HasForeignKey("ComputerModelID1");
+                        .HasForeignKey("ComputerModelID");
 
                     b.HasOne("InventoryIT.Model.PeripheralModel", "Peripheral")
-                        .WithMany()
-                        .HasForeignKey("PeripheralModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventoryIT.Model.PeripheralModel", null)
                         .WithMany("Maintenances")
-                        .HasForeignKey("PeripheralModelId1");
+                        .HasForeignKey("PeripheralModelId");
 
                     b.HasOne("InventoryIT.Model.SmartPhoneModel", "SmartPhone")
-                        .WithMany()
-                        .HasForeignKey("SmartPhoneModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventoryIT.Model.SmartPhoneModel", null)
                         .WithMany("Maintenances")
-                        .HasForeignKey("SmartPhoneModelId1");
+                        .HasForeignKey("SmartPhoneModelId");
 
                     b.Navigation("Computer");
 

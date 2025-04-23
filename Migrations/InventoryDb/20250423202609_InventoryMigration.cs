@@ -390,12 +390,9 @@ namespace InventoryIT.Migrations.InventoryDb
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Observations = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ComputerModelID = table.Column<int>(type: "int", nullable: false),
-                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: false),
-                    PeripheralModelId = table.Column<int>(type: "int", nullable: false),
-                    ComputerModelID1 = table.Column<int>(type: "int", nullable: true),
-                    PeripheralModelId1 = table.Column<int>(type: "int", nullable: true),
-                    SmartPhoneModelId1 = table.Column<int>(type: "int", nullable: true)
+                    ComputerModelID = table.Column<int>(type: "int", nullable: true),
+                    SmartPhoneModelId = table.Column<int>(type: "int", nullable: true),
+                    PeripheralModelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -404,33 +401,15 @@ namespace InventoryIT.Migrations.InventoryDb
                         name: "FK_Maintenance_Computer_ComputerModelID",
                         column: x => x.ComputerModelID,
                         principalTable: "Computer",
-                        principalColumn: "ComputerModelID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Maintenance_Computer_ComputerModelID1",
-                        column: x => x.ComputerModelID1,
-                        principalTable: "Computer",
                         principalColumn: "ComputerModelID");
                     table.ForeignKey(
                         name: "FK_Maintenance_Peripheral_PeripheralModelId",
                         column: x => x.PeripheralModelId,
                         principalTable: "Peripheral",
-                        principalColumn: "PeripheralModelId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Maintenance_Peripheral_PeripheralModelId1",
-                        column: x => x.PeripheralModelId1,
-                        principalTable: "Peripheral",
                         principalColumn: "PeripheralModelId");
                     table.ForeignKey(
                         name: "FK_Maintenance_SmartPhone_SmartPhoneModelId",
                         column: x => x.SmartPhoneModelId,
-                        principalTable: "SmartPhone",
-                        principalColumn: "SmartPhoneModelId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Maintenance_SmartPhone_SmartPhoneModelId1",
-                        column: x => x.SmartPhoneModelId1,
                         principalTable: "SmartPhone",
                         principalColumn: "SmartPhoneModelId");
                 });
@@ -599,29 +578,14 @@ namespace InventoryIT.Migrations.InventoryDb
                 column: "ComputerModelID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Maintenance_ComputerModelID1",
-                table: "Maintenance",
-                column: "ComputerModelID1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Maintenance_PeripheralModelId",
                 table: "Maintenance",
                 column: "PeripheralModelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Maintenance_PeripheralModelId1",
-                table: "Maintenance",
-                column: "PeripheralModelId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Maintenance_SmartPhoneModelId",
                 table: "Maintenance",
                 column: "SmartPhoneModelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Maintenance_SmartPhoneModelId1",
-                table: "Maintenance",
-                column: "SmartPhoneModelId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MaintenanceImage_MaintenanceId",

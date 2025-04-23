@@ -8,7 +8,7 @@
 @if (ShowForm)
 {
 	<div class="border rounded p-1 shadow  mb-3 ">
-		<button class="btn btn-sm btn-outline-info" @onclick="ChangeStateForm">Cerrar</button>
+
 
 		<EditForm Model="audit">
 			<DataAnnotationsValidator />
@@ -71,7 +71,11 @@
 
 			<div class="d-flex flex-row justify-content-center align-items-center">
 				<!-- Submit Button-->
-				<button @onclick="Add" class="btn btn-outline-success justify-content-center m-1">Guardar</button>
+				<div class="d-flex flex-row">
+					<button @onclick="Add" class="btn btn-outline-success justify-content-center m-1">Guardar</button>
+					<button class="btn btn-sm btn-outline-danger" @onclick="ChangeStateForm">Cerrar</button>
+				</div>
+
 				@if (IsLoading)
 				{
 					<label>Guardando...</label>
@@ -207,6 +211,10 @@ else
 
 	async Task Clean()
 	{
+		audit = new Audit();	
+		files.Clear();
+		ChangeStateForm();
+		StateHasChanged();
 
 	}
 

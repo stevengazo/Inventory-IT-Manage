@@ -5,55 +5,74 @@
 <h3>Información del Teléfono</h3>
 
 <AuthorizeView Roles="Administrador,Lector">
-    <Authorized>
-        <DetailsSmartPhoneComponent smartPhone="@smartPhone" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
+	<Authorized>
+		<DetailsSmartPhoneComponent smartPhone="@smartPhone" />
+	</Authorized>
+	<NotAuthorized>
+	</NotAuthorized>
 </AuthorizeView>
 
 <AuthorizeView Roles="Administrador">
-    <Authorized>
-        <AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(SmartPhoneModel)" />
-        <TableHistoryByDeviceComponent Histories="@Histories" />
-        <UploadFileComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" OnUpdated="@Update" />
-        <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(SmartPhoneModel)" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
+	<Authorized>
+		<Tabs Title="Secciones">
+			<Tab Title="Historia">
+				<AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(SmartPhoneModel)" />
+				<TableHistoryByDeviceComponent Histories="@Histories" />
+			</Tab>
+
+			<Tab Title="Archivos">
+				<UploadFileComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" OnUpdated="@Update" />
+				<TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(SmartPhoneModel)" />
+			</Tab>
+
+			<Tab Title="Auditoria">
+				<AuditCreateComponent DeviceId="@smartPhone.SmartPhoneModelId.ToString()" SerialNumber="@smartPhone.PhoneSerial" Type="DeviceType.Phone"/>
+				<AuditListComponent DeviceId="@smartPhone.SmartPhoneModelId"  Type="DeviceType.Phone"/>
+			</Tab>
+
+			<Tab Title="Mantenimiento">
+				<MaintenanceCreateComponent DeviceId="@smartPhone.SmartPhoneModelId" SerialNumber="@smartPhone.PhoneSerial" Type="DeviceType.Phone" />
+			</Tab>
+
+		</Tabs>
+	</Authorized>
 </AuthorizeView>
+
+
+
 
 
 
 
 
 @code {
-    [Parameter]
-    public string id { get; set; }
+	[Parameter]
+	public string id { get; set; }
 
-    public SmartPhoneModel smartPhone = new();
-    List<HistoryModel> Histories = new();
-    private TablePDFComputerComponent tablePDFComponent;
+	public SmartPhoneModel smartPhone = new();
+	List<HistoryModel> Histories = new();
+	private TablePDFComputerComponent tablePDFComponent;
 
-    private int _id = 0;
+	private int _id = 0;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var flag = int.TryParse(id, out _id);
-        smartPhone = _SmartPhoneService.GetById(_id);
-        Histories = (flag) ? _HistoryService.HistoriesOfSmartphones(_id) : new();
-        base.OnInitializedAsync();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var flag = int.TryParse(id, out _id);
+		smartPhone = _SmartPhoneService.GetById(_id);
+		Histories = (flag) ? _HistoryService.HistoriesOfSmartphones(_id) : new();
+		base.OnInitializedAsync();
+	}
 
 
-    private async Task Update()
-    {
-        // Actualizar la lista de computadoras después de agregar una nueva computadora
-        await InvokeAsync(() =>
-        {
-            Histories = _HistoryService.HistoriesOfSmartphones(_id);
-            tablePDFComponent?.RefreshTable(); // Llamar al método para actualizar la tabla PDF
-            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
-        });
-    }
+	private async Task Update()
+	{
+		// Actualizar la lista de computadoras después de agregar una nueva computadora
+		await InvokeAsync(() =>
+		{
+			Histories = _HistoryService.HistoriesOfSmartphones(_id);
+			tablePDFComponent?.RefreshTable(); // Llamar al método para actualizar la tabla PDF
+			StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+		});
+	}
 }
+ 

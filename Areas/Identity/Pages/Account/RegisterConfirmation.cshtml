@@ -1,8 +1,9 @@
 ﻿@page
-@model ForgotPasswordModel
+@model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "¿Olvidó su contraseña?";
+    ViewData["Title"] = "Register confirmation";
 }
+
 
 <style>
 	body {
@@ -94,23 +95,24 @@
 
 </style>
 
-<div class="login-container">
-    <div class="login-card">
-        <h1 class="text-center">@ViewData["Title"]</h1>
-        <h2 class="text-center">Ingresa tu correo.</h2>
-        <hr />
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Restablecer contraseña</button>
-        </form>
-    </div>
-</div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+<div class="login-container">
+	<div class="login-card">
+		<h1 class="text-center">@ViewData["Title"]</h1>
+
+		@if (Model.DisplayConfirmAccountLink)
+		{
+			<p class="text-center">
+				Esta aplicación no tiene actualmente un servicio de envío de correos configurado. Consulta <a href="https://aka.ms/aspaccountconf" target="_blank">esta documentación</a> para saber cómo configurarlo.<br />
+				Normalmente este enlace se enviaría por correo: <br />
+				<a id="confirm-link" href="@Model.EmailConfirmationUrl">Haz clic aquí para confirmar tu cuenta</a>
+			</p>
+		}
+		else
+		{
+			<p class="text-center">
+				Por favor, revisa tu correo electrónico para confirmar tu cuenta.
+			</p>
+		}
+	</div>
+</div>
