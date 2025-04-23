@@ -1,0 +1,60 @@
+﻿@page "/Audit/{id}"
+
+@inject FileStorageService _fileStorage;
+@inject IControllerServices<Audit> _auditService;
+@inject IControllerServices<AuditImage> _auditImageService;
+
+<h3>Informacion de Auditoria</h3>
+
+
+<h3 class="mb-4">Información de Auditoría</h3>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>Fecha de Auditoría</th>
+            <td>@audit.AuditDate</td>
+        </tr>
+        <tr>
+            <th>Nombre del Auditor</th>
+            <td>@audit.AuditorName</td>
+        </tr>
+        <tr>
+            <th>Condición General</th>
+            <td>@audit.GeneralCondition</td>
+        </tr>
+        <tr>
+            <th>¿Está Limpio?</th>
+            <td>@audit.IsClean</td>
+        </tr>
+        <tr>
+            <th>¿Está Operativo?</th>
+            <td>@audit.IsOperational</td>
+        </tr>
+        <tr>
+            <th>Comentarios</th>
+            <td>@audit.Comments</td>
+        </tr>
+        <tr>
+            <th>Acciones Recomendadas</th>
+            <td>@audit.RecommendedActions</td>
+        </tr>
+    </tbody>
+</table>
+
+
+@code {
+	[Parameter]
+	public string id { get; set; }
+
+	Audit audit = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (!string.IsNullOrEmpty(id))
+		{
+			int idInt = int.Parse(id);
+			audit = _auditService.GetById(idInt);
+		}
+		await base.OnInitializedAsync();
+	}
+}

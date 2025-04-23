@@ -2,6 +2,7 @@
 using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {

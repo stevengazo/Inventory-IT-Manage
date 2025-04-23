@@ -1,0 +1,51 @@
+﻿@page "/Maintenance/{id}"
+
+@inject FileStorageService _fileStorage;
+@inject IControllerServices<Maintenance> _MaintenanceService;
+@inject IControllerServices<MaintenanceImage> _MaintenanceImageService;
+
+
+<h3>Informacion de Mantenimiento</h3>
+
+<table class="table table-bordered table-striped">
+	<tbody>
+		<tr>
+			<th>Technician Name</th>
+			<td>@objMaint.TechnicianName</td>
+		</tr>
+		<tr>
+			<th>Description</th>
+			<td>@objMaint.Description</td>
+		</tr>
+		<tr>
+			<th>Maintenance Date</th>
+			<td>@objMaint.MaintenanceDate</td>
+		</tr>
+		<tr>
+			<th>Maintenance Type</th>
+			<td>@objMaint.MaintenanceType</td>
+		</tr>
+		<tr>
+			<th>Cost</th>
+			<td>@objMaint.Cost</td>
+		</tr>
+	</tbody>
+</table>
+
+
+@code {
+	[Parameter]
+	public string id { get; set; }
+
+	Maintenance objMaint = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (!string.IsNullOrEmpty(id))
+		{
+			int idInt = int.Parse(id);
+			objMaint = _MaintenanceService.GetById(idInt);
+		}
+		await base.OnInitializedAsync();
+	}
+}

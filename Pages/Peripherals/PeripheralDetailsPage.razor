@@ -42,6 +42,14 @@
 			</AuthorizeView>
 		</div>
 	</Tab>
+	<Tab Title="Auditoria">
+		<AuditCreateComponent SerialNumber="@peripheral.SerialNumber" DeviceId="@peripheral.PeripheralModelId.ToString()" Type="DeviceType.Peripheric" />
+		<AuditListComponent DeviceId="@peripheral.PeripheralModelId" Type="DeviceType.Peripheric" />
+	</Tab>
+	<Tab Title="Mantenimiento">
+		<MaintenanceCreateComponent DeviceId="@peripheral.PeripheralModelId" SerialNumber="@peripheral.SerialNumber.ToString()" Type="@DeviceType.Peripheric" />
+		<MaintenanceListComponent DeviceId="@peripheral.PeripheralModelId" Type="DeviceType.Peripheric" />
+	</Tab>
 
 </Tabs>
 
