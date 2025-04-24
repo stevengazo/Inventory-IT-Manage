@@ -1,0 +1,84 @@
+﻿@if (!string.IsNullOrWhiteSpace(ImageUrl))
+{
+    <div class="card m-1 shadow rounded" style="width: 18rem;" @onclick="ShowImageModal">
+        <img src="@ImageUrl" class="card-img-top" alt="Audit Image">
+    </div>
+
+    @if (showModal)
+    {
+        <div class="image-modal" @onclick="CloseImageModal">
+            <img src="@ImageUrl" class="fullscreen-img" />
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        No image available.
+    </div>
+}
+
+
+<style>
+    .image-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        cursor: pointer;
+    }
+
+    .fullscreen-img {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+        transition: transform 0.3s ease;
+    }
+
+        .fullscreen-img:hover {
+            transform: scale(1.02);
+        }
+
+</style>
+@code {
+    [Parameter]
+    public MaintenanceImage item { get; set; } = new();
+
+    [Inject]
+    public IHttpContextAccessor HttpContextAccessor { get; set; }
+
+    private bool showModal = false;
+
+    public string ImageUrl => GetImageUrl();
+
+    private string GetImageUrl()
+    {
+        if (item == null || string.IsNullOrWhiteSpace(item.FilePath))
+            return string.Empty;
+
+        var httpContext = HttpContextAccessor.HttpContext;
+        if (httpContext == null)
+            return item.FilePath;
+
+        var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}".TrimEnd('/');
+        item.FilePath = item.FilePath.Replace("filesData", "drive-data");
+        return $"{baseUrl}/{item.FilePath.TrimStart('/')}";
+    }
+
+    private void ShowImageModal()
+    {
+        showModal = true;
+    }
+
+    private void CloseImageModal()
+    {
+        showModal = false;
+    }
+}

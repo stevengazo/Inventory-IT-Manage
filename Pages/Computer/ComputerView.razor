@@ -27,36 +27,56 @@
                 </div>
             </div>
 
-            
-            <Tabs Title="Secciones">
-                <Tab Title="Asignación">
-                    <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
-                </Tab>
-                <Tab Title="Historia">
-                   <div>
-                        <AddHistoryComponent id="_id" OnUpdated="@UpdateComputerList" TypeModel="@nameof(ComputerModel)" />
-                        <TableHistoryByDeviceComponent Histories="@Histories" />
-                   </div>
-                </Tab>
-                <Tab Title="Archivos">
-                    <div>
-                        <UploadFileComponent id="_id" TypeModel="@nameof(ComputerModel)" OnUpdated="@UpdateComputerList" />
-                        <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(ComputerModel)" />
+            <div class="container my-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">🧭 Secciones del Computador</h5>
                     </div>
-                </Tab>
-                <Tab Title="Auditoria">
-					<AuditCreateComponent SerialNumber="@Computer.SerialNumber" DeviceId="@Computer.ComputerModelID.ToString()" Type="DeviceType.Computer" />
-                    <AuditListComponent DeviceId="@Computer.ComputerModelID" Type="DeviceType.Computer" />
-				</Tab>
-                <Tab Title="Mantenimiento">
-                    <MaintenanceCreateComponent DeviceId="@Computer.ComputerModelID" SerialNumber="@Computer.SerialNumber" Type="@DeviceType.Computer" />
-                    <MaintenanceListComponent DeviceId="@Computer.ComputerModelID" Type="DeviceType.Computer" />
-                </Tab>
-            </Tabs>
 
+                    <div class="card-body px-4 py-3">
+                        <Tabs Title="Secciones">
+                            <Tab Title="💼 Asignación">
+                                <div class="p-3 border rounded bg-light">
+                                    <AssignComputerComponent OnComputerUpdated="@UpdateComputerList" ComputerModel="@Computer" />
+                                </div>
+                            </Tab>
 
-  
-        
+                            <Tab Title="📜 Historia">
+                                <div class="p-3 border rounded bg-light">
+                                    <AddHistoryComponent id="_id" OnUpdated="@UpdateComputerList" TypeModel="@nameof(ComputerModel)" />
+                                    <hr />
+                                    <TableHistoryByDeviceComponent Histories="@Histories" />
+                                </div>
+                            </Tab>
+
+                            <Tab Title="📁 Archivos">
+                                <div class="p-3 border rounded bg-light">
+                                    <UploadFileComponent id="_id" TypeModel="@nameof(ComputerModel)" OnUpdated="@UpdateComputerList" />
+                                    <hr />
+                                    <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(ComputerModel)" />
+                                </div>
+                            </Tab>
+
+                            <Tab Title="🕵️ Auditoría">
+                                <div class="p-3 border rounded bg-light">
+                                    <AuditCreateComponent SerialNumber="@Computer.SerialNumber" DeviceId="@Computer.ComputerModelID.ToString()" Type="DeviceType.Computer" />
+                                    <hr />
+                                    <AuditListComponent DeviceId="@Computer.ComputerModelID" Type="DeviceType.Computer" />
+                                </div>
+                            </Tab>
+
+                            <Tab Title="🔧 Mantenimiento">
+                                <div class="p-3 border rounded bg-light">
+                                    <MaintenanceCreateComponent DeviceId="@Computer.ComputerModelID" SerialNumber="@Computer.SerialNumber" Type="@DeviceType.Computer" />
+                                    <hr />
+                                    <MaintenanceListComponent DeviceId="@Computer.ComputerModelID" Type="DeviceType.Computer" />
+                                </div>
+                            </Tab>
+                        </Tabs>
+                    </div>
+                </div>
+            </div>
+
         }
         else
         {

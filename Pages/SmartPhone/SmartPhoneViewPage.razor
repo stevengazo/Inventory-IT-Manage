@@ -2,43 +2,64 @@
 @inject IHistoryServices<HistoryModel> _HistoryService
 @page "/smartphone/{id}"
 
-<h3>Información del Teléfono</h3>
+<div class="container my-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">📱 Información del Teléfono</h4>
+        </div>
 
-<AuthorizeView Roles="Administrador,Lector">
-	<Authorized>
-		<DetailsSmartPhoneComponent smartPhone="@smartPhone" />
-	</Authorized>
-	<NotAuthorized>
-	</NotAuthorized>
-</AuthorizeView>
+        <div class="card-body">
+            <AuthorizeView Roles="Administrador,Lector">
+                <Authorized>
+                    <div class="mb-4 p-3 border rounded bg-light">
+                        <DetailsSmartPhoneComponent smartPhone="@smartPhone" />
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="alert alert-warning">No tienes permisos para ver esta información.</div>
+                </NotAuthorized>
+            </AuthorizeView>
 
-<AuthorizeView Roles="Administrador">
-	<Authorized>
-		<Tabs Title="Secciones">
-			<Tab Title="Historia">
-				<AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(SmartPhoneModel)" />
-				<TableHistoryByDeviceComponent Histories="@Histories" />
-			</Tab>
+            <AuthorizeView Roles="Administrador">
+                <Authorized>
+                    <Tabs Title="Secciones">
+                        <Tab Title="📜 Historia">
+                            <div class="p-3 border rounded bg-light">
+                                <AddHistoryComponent id="_id" OnUpdated="@Update" TypeModel="@nameof(SmartPhoneModel)" />
+                                <hr />
+                                <TableHistoryByDeviceComponent Histories="@Histories" />
+                            </div>
+                        </Tab>
 
-			<Tab Title="Archivos">
-				<UploadFileComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" OnUpdated="@Update" />
-				<TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(SmartPhoneModel)" />
-			</Tab>
+                        <Tab Title="📁 Archivos">
+                            <div class="p-3 border rounded bg-light">
+                                <UploadFileComponent id="_id" TypeModel="@nameof(SmartPhoneModel)" OnUpdated="@Update" />
+                                <hr />
+                                <TablePDFComputerComponent @ref="tablePDFComponent" id="_id" TypeModel="@nameof(SmartPhoneModel)" />
+                            </div>
+                        </Tab>
 
-			<Tab Title="Auditoria">
-				<AuditCreateComponent DeviceId="@smartPhone.SmartPhoneModelId.ToString()" SerialNumber="@smartPhone.PhoneSerial" Type="DeviceType.Phone"/>
-				<AuditListComponent DeviceId="@smartPhone.SmartPhoneModelId"  Type="DeviceType.Phone"/>
-			</Tab>
+                        <Tab Title="🕵️ Auditoría">
+                            <div class="p-3 border rounded bg-light">
+                                <AuditCreateComponent DeviceId="@smartPhone.SmartPhoneModelId.ToString()" SerialNumber="@smartPhone.PhoneSerial" Type="DeviceType.Phone" />
+                                <hr />
+                                <AuditListComponent DeviceId="@smartPhone.SmartPhoneModelId" Type="DeviceType.Phone" />
+                            </div>
+                        </Tab>
 
-			<Tab Title="Mantenimiento">
-				<MaintenanceCreateComponent DeviceId="@smartPhone.SmartPhoneModelId" SerialNumber="@smartPhone.PhoneSerial" Type="DeviceType.Phone" />
-			</Tab>
-
-		</Tabs>
-	</Authorized>
-</AuthorizeView>
-
-
+                        <Tab Title="🔧 Mantenimiento">
+                            <div class="p-3 border rounded bg-light">
+                                <MaintenanceCreateComponent DeviceId="@smartPhone.SmartPhoneModelId" SerialNumber="@smartPhone.PhoneSerial" Type="DeviceType.Phone" />
+                                  <hr />
+								<MaintenanceListComponent DeviceId="@smartPhone.SmartPhoneModelId" Type="DeviceType.Phone" />
+                            </div>
+                        </Tab>
+                    </Tabs>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+    </div>
+</div>
 
 
 

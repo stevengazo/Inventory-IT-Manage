@@ -2,40 +2,43 @@
 @inject FileService FService
 
 
+<div class="card shadow-sm my-3 border-0">
+    <div class="card-header bg-info text-white d-flex align-items-center gap-3">
+        <span class="oi oi-data-transfer-upload fs-4"></span>
+        <h5 class="mb-0">📤 Cargar Nuevo Archivo</h5>
+    </div>
 
-<div class="shadow my-2 p-2 align-middle rounded rounded-1 border border-1 ">
-    
-
-    <!-- Sección de carga de archivos -->
-    <div class="d-flex flex-row justify-content-between ">
-        <div class="d-flex flex-row gap-2 align-middle justify-content-center">
-            <span class=" bg-info h-100 h-100 p-2 rounded rounded-1 oi oi-data-transfer-upload text-white" aria-hidden="true"></span>
-            <!-- Encabezado del componente -->
-            <h4 class="text-start h-100 align-content-center">Cargar Nuevo Archivo</h4>
-        </div>
-            
-        <div class="d-flex flex-row gap-2 w-50">
-            <InputFile OnChange="LoadFile" accept=".pdf" class="form-control w-100 " />
-            <!-- Botón de carga de archivos -->
-            <button @onclick="AddFile" class="btn btn-outline-info" disabled="@(!canUpload || isLoading)">
-                @if (isLoading)
-                {
-                    <!-- Indicador de carga -->
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    <span>Loading...</span>
-                }
-                else
-                {
-                    <!-- Texto del botón -->
-                    <span>Subir</span>
-                }
-            </button>
+    <div class="card-body">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <InputFile OnChange="LoadFile" accept=".pdf" class="form-control" />
+            </div>
+            <div class="col-md-4 text-md-end">
+                <button @onclick="AddFile"
+                        class="btn btn-outline-info w-100"
+                        disabled="@(!canUpload || isLoading)">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        
+                        }
+                    else
+                    {
+                        <span>Subir</span>
+                    }
+                </button>
+            </div>
         </div>
     </div>
-    <!-- Mensaje de estado de la carga -->
-    
 </div>
-<label class="text-info p-1 text-end">@uploadMessage</label>
+
+@if (!string.IsNullOrWhiteSpace(uploadMessage))
+{
+    <div class="text-end pe-2">
+        <span class="text-info fst-italic">@uploadMessage</span>
+    </div>
+}
+
 
 
 

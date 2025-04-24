@@ -1,32 +1,31 @@
 ﻿@inject IHistoryServices<HistoryModel> _HistoryService
 
 
-<div class="shadow my-2 p-2 rounded rounded-1 align-content-center border border-1 d-flex flex-col justify-content-between">
-	<div class="d-flex flex-row gap-2 align-middle  justify-content-center ">
-		<span class=" bg-warning h-100 h-25 p-2 rounded rounded-1 oi oi-person text-white" aria-hidden="true"></span>
-		<!-- Encabezado del componente -->
-		<h5 class="text-start h-100 align-content-center">Registro Historial</h5>
+<div class="card shadow-sm my-3 border-0">
+	<div class="card-header bg-warning text-white d-flex align-items-center gap-3">
+		<span class="oi oi-person fs-4"></span>
+		<h5 class="mb-0">📘 Registro Historial</h5>
 	</div>
-	<div class="d-flex flex-column gap-2 w-75  ">
+
+	<div class="card-body">
 		<EditForm Model="newHistory">
-			<div class="d-flex flex-column">
-				<label>
-					Descripción
-				</label>
-				<InputTextArea @bind-Value="newHistory.Description" class="form-text">
-				</InputTextArea>
+			<div class="mb-3">
+				<label class="form-label fw-semibold">📝 Descripción</label>
+				<InputTextArea @bind-Value="newHistory.Description" class="form-control" rows="3" />
+			</div>
+
+			<div class="d-flex gap-2">
+				<button type="button" class="btn btn-outline-info" @onclick="Save">
+					Agregar
+				</button>
+				<button type="button" class="btn btn-outline-danger" @onclick="Cancel">
+					Cancelar
+				</button>
 			</div>
 		</EditForm>
-		<div>
-			<button class="btn btn-outline-info " @onclick="Save">
-				Agregar
-			</button>
-			<button class="btn btn-outline-danger " @onclick="Cancel">
-				Cancelar
-			</button>
-		</div>
 	</div>
 </div>
+
 
 
 @code {

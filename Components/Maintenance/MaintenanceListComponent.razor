@@ -10,6 +10,7 @@
                 <th>Tecnico</th>
                 <th>Tipo</th>
                 <th>Costo</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -20,6 +21,11 @@
                     <td>@i.TechnicianName</td>
                     <td>@i.MaintenanceType</td>
                     <td>@i.Cost </td>
+                    <td>
+                        <a href="/Maintenance/@i.MaintenanceId" class="bg-info rounded p-2">
+                            <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>
