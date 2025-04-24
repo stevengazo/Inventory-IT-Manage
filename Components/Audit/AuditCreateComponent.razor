@@ -51,8 +51,8 @@
 				<InputText @bind-Value="audit.RecommendedActions" class="form-control w-75" />
 			</div>
 			<div>
-				<label class="w-25">Files</label>
-				<InputFile multiple OnChange="@OnChange" />
+				<label class="w-25">Carga de Archivos</label>
+				<InputFile multiple accept="image/x-png,image/jpeg" OnChange="@OnChange" />
 			</div>
 			<!-- File List-->
 			<div class="border shadow-sm rounded p-2 m-1">

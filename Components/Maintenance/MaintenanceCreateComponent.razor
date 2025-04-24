@@ -10,7 +10,7 @@
 			<div class="card-header bg-primary text-white">
 				<h5 class="mb-0">Registro de Mantenimiento</h5>
 			</div>
-			<div class="card-body">
+			<div cass="card-body">
 				<EditForm Model="maintenance">
 					<DataAnnotationsValidator />
 					<div class="mb-3">
@@ -49,8 +49,8 @@
 					</div>
 
 					<div>
-						<label class="w-25">Files</label>
-						<InputFile multiple OnChange="@OnChange" />
+						<label class="w-25">Carga de Archivos</label>
+						<InputFile multiple accept="image/x-png,image/jpeg" OnChange="@OnChange" />
 					</div>
 					<!-- File List-->
 					<div class="border shadow-sm rounded p-2 m-1">

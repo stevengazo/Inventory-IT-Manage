@@ -45,7 +45,9 @@ namespace InventoryIT.Controllers
 
         public List<AuditImage> Search(Expression<Func<AuditImage, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _inventoryDb.AuditImage
+                .Where(predicate)
+                .ToList();
         }
 
         public void Update(AuditImage entity)

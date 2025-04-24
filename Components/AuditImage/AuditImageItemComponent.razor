@@ -1,0 +1,36 @@
+﻿@if (!string.IsNullOrWhiteSpace(ImageUrl))
+{
+    <div class="card m-1 shadow rounded" style="width: 18rem;">
+        <img src="@ImageUrl" class="card-img-top" alt="Audit Image">
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        No image available.
+    </div>
+}
+
+@code {
+    [Parameter]
+    public AuditImage item { get; set; } = new();
+
+    [Inject]
+    public IHttpContextAccessor HttpContextAccessor { get; set; }
+
+    public string ImageUrl => GetImageUrl();
+
+    private string GetImageUrl()
+    {
+        if (item == null || string.IsNullOrWhiteSpace(item.PathFile))
+            return string.Empty;
+
+        var httpContext = HttpContextAccessor.HttpContext;
+        if (httpContext == null)
+            return item.PathFile; // fallback a ruta relativa
+
+        var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}".TrimEnd('/');
+       item.PathFile= item.PathFile.Replace("filesData", "drive-data");
+        return $"{baseUrl}/{item.PathFile.TrimStart('/')}";
+    }
+}

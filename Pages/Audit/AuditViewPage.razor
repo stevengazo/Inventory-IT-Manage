@@ -41,20 +41,34 @@
     </tbody>
 </table>
 
+<div>
+    @foreach (var i in auditImages)
+    {
+        <AuditImageItemComponent item="@i" />
+    }
+    )
+</div>
+
 
 @code {
-	[Parameter]
-	public string id { get; set; }
+    [Parameter]
+    public string id { get; set; }
 
-	Audit audit = new();
+    Audit audit = new();
 
-	protected override async Task OnInitializedAsync()
-	{
-		if (!string.IsNullOrEmpty(id))
-		{
-			int idInt = int.Parse(id);
-			audit = _auditService.GetById(idInt);
-		}
-		await base.OnInitializedAsync();
+    List<AuditImage> auditImages = new();   
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(id))
+        {
+            int idInt = int.Parse(id);
+            audit = _auditService.GetById(idInt);
+        }
+        await base.OnInitializedAsync();
+
+        auditImages =  _auditImageService.Search(e => e.AuditId == audit.AuditId);
+
 	}
 }
