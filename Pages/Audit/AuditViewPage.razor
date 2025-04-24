@@ -4,50 +4,58 @@
 @inject IControllerServices<Audit> _auditService;
 @inject IControllerServices<AuditImage> _auditImageService;
 
-<h3>Informacion de Auditoria</h3>
+<div class="container my-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">📝 Información de Auditoría</h4>
+        </div>
+        <div class="card-body p-4">
+            <table class="table table-bordered mb-0">
+                <tbody>
+                    <tr>
+                        <th class="bg-light w-25">Fecha de Auditoría</th>
+                        <td>@audit.AuditDate.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Nombre del Auditor</th>
+                        <td>@audit.AuditorName</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Condición General</th>
+                        <td>@audit.GeneralCondition</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">¿Está Limpio?</th>
+                        <td>@(audit.IsClean ? "✅ Sí" : "❌ No")</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">¿Está Operativo?</th>
+                        <td>@(audit.IsOperational ? "✅ Sí" : "❌ No")</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Comentarios</th>
+                        <td>@audit.Comments</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Acciones Recomendadas</th>
+                        <td>@audit.RecommendedActions</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-
-<h3 class="mb-4">Información de Auditoría</h3>
-<table class="table table-bordered">
-    <tbody>
-        <tr>
-            <th>Fecha de Auditoría</th>
-            <td>@audit.AuditDate</td>
-        </tr>
-        <tr>
-            <th>Nombre del Auditor</th>
-            <td>@audit.AuditorName</td>
-        </tr>
-        <tr>
-            <th>Condición General</th>
-            <td>@audit.GeneralCondition</td>
-        </tr>
-        <tr>
-            <th>¿Está Limpio?</th>
-            <td>@audit.IsClean</td>
-        </tr>
-        <tr>
-            <th>¿Está Operativo?</th>
-            <td>@audit.IsOperational</td>
-        </tr>
-        <tr>
-            <th>Comentarios</th>
-            <td>@audit.Comments</td>
-        </tr>
-        <tr>
-            <th>Acciones Recomendadas</th>
-            <td>@audit.RecommendedActions</td>
-        </tr>
-    </tbody>
-</table>
-
-<div>
-    @foreach (var i in auditImages)
-    {
-        <AuditImageItemComponent item="@i" />
-    }
-    )
+    <div class="mt-4">
+        <h5 class="text-secondary mb-3">📷 Imágenes de Auditoría</h5>
+        <div class="d-flex flex-wrap gap-3">
+            @foreach (var i in auditImages)
+            {
+                <AuditImageItemComponent item="@i" />
+            }
+        </div>
+    </div>
 </div>
+
 
 
 @code {

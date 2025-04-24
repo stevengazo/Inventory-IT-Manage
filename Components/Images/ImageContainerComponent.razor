@@ -1,20 +1,24 @@
 ﻿@inject ImageService ImgService
 
-<div class="my-3 w-100 shadow rounded rounded-1 border border-1 d-flex flex-column">
-    <UploadImageComponent id="id" TypeModel="@TypeModel" />
+<div class="my-3 w-100 shadow-sm rounded border p-3 bg-white">
+    <h6 class="mb-3 text-primary">📤 Subir y Visualizar Imágenes</h6>
+
+    <div class="mb-3">
+        <UploadImageComponent id="id" TypeModel="@TypeModel" />
+    </div>
 
     @if (isLoading)
     {
-        <div class="d-flex justify-content-center my-3">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
+        <div class="d-flex justify-content-center my-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
             </div>
         </div>
     }
-    else
+    else if (images != null && images.Any())
     {
-        <div class="carousel slide" id="carouselExample" data-ride="carousel">
-            <div class="carousel-inner">
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner rounded overflow-hidden shadow-sm">
                 @foreach (var item in images)
                 {
                     <div class="carousel-item @(item == images[currentIndex] ? "active" : "")">
@@ -22,17 +26,25 @@
                     </div>
                 }
             </div>
+
             <button class="carousel-control-prev" type="button" @onclick="PreviousSlide">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                <span class="visually-hidden">Anterior</span>
             </button>
             <button class="carousel-control-next" type="button" @onclick="NextSlide">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                <span class="visually-hidden">Siguiente</span>
             </button>
         </div>
     }
+    else
+    {
+        <div class="alert alert-warning text-center mt-3">
+            No hay imágenes disponibles.
+        </div>
+    }
 </div>
+
 
 @code {
     [Parameter]
