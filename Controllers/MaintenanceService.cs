@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using InventoryIT.Contracts;
 using InventoryIT.Data;
 using InventoryIT.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryIT.Controllers
 {
@@ -34,7 +35,12 @@ _inventoryDb.Maintenance.Remove(entity);
 
         public Maintenance GetById(int id)
         {
-        return _inventoryDb.Maintenance.Find(id);
+        return _inventoryDb.Maintenance
+                
+                .Include(e=>e.Computer)
+                .Include(e => e.Peripheral)
+                .Include(e => e.SmartPhone)
+                .FirstOrDefault(e=>e.MaintenanceId == id);
         }
 
         public List<Maintenance> Search(string value)

@@ -68,7 +68,7 @@ else
             return item.FilePath;
 
         var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}".TrimEnd('/');
-        item.FilePath = item.FilePath.Replace("filesData", "drive-data");
+      //  item.FilePath = item.FilePath.Replace("filesData", "drive-data");
         return $"{baseUrl}/{item.FilePath.TrimStart('/')}";
     }
 

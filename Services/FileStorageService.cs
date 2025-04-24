@@ -45,14 +45,18 @@ namespace InventoryIT.Services
             var fileName = Path.GetFileName(file.Name);
             var filePath = Path.Combine(billDirectory, fileName);
 
-            // Guardar el archivo en el directorio correspondiente
-            using (var stream = file.OpenReadStream(maxAllowedSize: 20 * 1024 * 1024))
+            if(!File.Exists(filePath))
             {
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                // Guardar el archivo en el directorio correspondiente
+                using (var stream = file.OpenReadStream(maxAllowedSize: 20 * 1024 * 1024))
                 {
-                    await stream.CopyToAsync(fileStream);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await stream.CopyToAsync(fileStream);
+                    }
                 }
             }
+
 
             // Agregar la ruta relativa del archivo
             var relativePath = Path.Combine("filesData", folderName, fileName);

@@ -1,0 +1,117 @@
+﻿@inject FileStorageService _fileStorage
+@inject IControllerServices<Audit> _auditService
+@inject IControllerServices<AuditImage> _auditImageService
+
+<div class="col-12 mb-3">
+	<label class="form-label fw-semibold">📎 Carga de Archivos</label>
+	<InputFile multiple
+			   accept="image/x-png,image/jpeg"
+			   OnChange="@OnChange"
+			   class="form-control" />
+	<button class="btn btn-primary mt-2" @onclick="UploadFiles">Agregar</button>
+	@if (IsLoading)
+	{
+		<span class="ms-3 text-muted">⏳ Guardando...</span>
+	}	
+</div>
+
+@if (files?.Any() == true)
+{
+	<div class="border shadow-sm rounded p-3 my-3 bg-light">
+		<h6 class="fw-bold mb-3">Archivos por Subir</h6>
+		<ul class="list-unstyled mb-0">
+			@foreach (var file in files)
+			{
+				<li class="d-flex align-items-center justify-content-between border-bottom py-2">
+					<span>@file.Name</span>
+					<button class="btn btn-sm btn-outline-danger"
+							@onclick="() => DeleteFile(file)">
+						Eliminar
+					</button>
+				</li>
+			}
+		</ul>
+	</div>
+}
+
+
+@code {
+	[Parameter]
+	public string AuditId { get; set; } = string.Empty;
+	[Parameter]
+	public string SerialNumber { get; set; } = string.Empty;
+	[Parameter]
+	public DeviceType Type { get; set; }
+
+	private List<IBrowserFile> files = new();
+
+	private bool IsLoading = false;
+	private string ErrorMessage = string.Empty;
+
+	private void DeleteFile(IBrowserFile file)
+	{
+		files.Remove(file);
+	}
+
+	async Task OnChange(InputFileChangeEventArgs e)
+	{
+		foreach (var file in e.GetMultipleFiles())
+		{
+			if (file.Size > 20971520)
+			{
+				ErrorMessage = $"El archivo {file.Name} excede el tamaño máximo permitido de 10MB.\nEl archivo no será cargado.";
+				continue;
+			}
+			else
+			{
+				files.Add(file);
+			}
+		}
+	}
+
+
+
+	async Task UploadFiles()
+	{
+		try
+		{
+			IsLoading = true;	
+			foreach (var i in files)
+			{
+				AuditImage auditImage = new AuditImage();
+				auditImage.FileName = i.Name;
+				auditImage.AuditId = int.Parse(AuditId);
+				auditImage.ContentType = i.ContentType;
+				switch (Type)
+				{
+					case DeviceType.Computer:
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Computer}-{SerialNumber}");
+						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Computer}-{SerialNumber}", i);
+						break;
+					case DeviceType.Peripheric:
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Peripheric}-{SerialNumber}");
+						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Peripheric}-{SerialNumber}", i);
+						break;
+					case DeviceType.Phone:
+						await _fileStorage.GenerateDirectoryAsync($"{DeviceType.Phone}-{SerialNumber}");
+						auditImage.PathFile = await _fileStorage.UploadFilesAsync($"{DeviceType.Phone}-{SerialNumber}", i);
+						break;
+					default:
+						break;
+				}
+				_auditImageService.Add(auditImage);
+			}
+		}
+		catch (Exception re)
+		{
+
+			throw re;
+		}
+		finally
+		{
+			IsLoading = false;	
+			files.Clear();
+			StateHasChanged();
+		}
+	}
+}

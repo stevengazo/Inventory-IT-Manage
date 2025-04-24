@@ -134,7 +134,7 @@ if (!Directory.Exists(path))
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(path),
-    RequestPath = "/drive-data"
+    RequestPath = "/filesData"
 });
 #endregion
 

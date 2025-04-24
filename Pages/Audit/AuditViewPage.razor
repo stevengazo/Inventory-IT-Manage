@@ -47,6 +47,7 @@
 
     <div class="mt-4">
         <h5 class="text-secondary mb-3">📷 Imágenes de Auditoría</h5>
+        <AuditImageUploadComponent AuditId="@audit.AuditId.ToString()" SerialNumber="serial" Type="deviceType"  />
         <div class="d-flex flex-wrap gap-3">
             @foreach (var i in auditImages)
             {
@@ -64,19 +65,36 @@
 
     Audit audit = new();
 
-    List<AuditImage> auditImages = new();   
+    List<AuditImage> auditImages = new();
 
+    string serial = "";
+    DeviceType deviceType;
 
     protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrEmpty(id))
+        if (!string.IsNullOrEmpty(id) && int.TryParse(id, out int idInt))
         {
-            int idInt = int.Parse(id);
             audit = _auditService.GetById(idInt);
+
+            if (audit.Computer != null)
+            {
+                deviceType = DeviceType.Computer;
+                serial = audit.Computer.SerialNumber;
+            }
+            else if (audit.Peripheral != null)
+            {
+                deviceType = DeviceType.Peripheric;
+                serial = audit.Peripheral.SerialNumber;
+            }
+            else if (audit.SmartPhone != null)
+            {
+                deviceType = DeviceType.Phone;
+                serial = audit.SmartPhone.PhoneSerial;
+            }
+
+            auditImages = _auditImageService.Search(e => e.AuditId == audit.AuditId);
         }
+
         await base.OnInitializedAsync();
-
-        auditImages =  _auditImageService.Search(e => e.AuditId == audit.AuditId);
-
-	}
+    }
 }

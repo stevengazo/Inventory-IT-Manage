@@ -35,7 +35,11 @@ namespace InventoryIT.Controllers
 
         public Audit GetById(int id)
         {
-            return _inventoryDb.Audit.Find(id);
+            return _inventoryDb.Audit
+                .Include(e => e.Computer)
+                .Include(e => e.Peripheral)
+                .Include(e => e.SmartPhone)
+                .FirstOrDefault(e => e.AuditId == id);
         }
 
         public List<Audit> Search(Expression<Func<Audit, bool>> predicate)

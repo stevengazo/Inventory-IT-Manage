@@ -5,48 +5,53 @@
 @inject IControllerServices<MaintenanceImage> _MaintenanceImageService;
 
 <div class="container my-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-info text-white">
-            <h4 class="mb-0">🛠️ Información de Mantenimiento</h4>
-        </div>
+	<div class="card shadow-sm border-0">
+		<div class="card-header bg-info text-white">
+			<h4 class="mb-0">🛠️ Información de Mantenimiento</h4>
+		</div>
 
-        <div class="card-body p-4">
-            <table class="table table-bordered table-striped align-middle mb-0">
-                <tbody>
-                    <tr>
-                        <th class="bg-light w-25">👨‍🔧 Nombre del Técnico</th>
-                        <td>@objMaint.TechnicianName</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">📝 Descripción</th>
-                        <td>@objMaint.Description</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">📅 Fecha de Mantenimiento</th>
-                        <td>@objMaint.MaintenanceDate.ToString("dd/MM/yyyy")</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">🔧 Tipo de Mantenimiento</th>
-                        <td>@objMaint.MaintenanceType</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">💲 Costo</th>
-                        <td>@objMaint.Cost.ToString("C")</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+		<div class="card-body p-4">
+			<table class="table table-bordered table-striped align-middle mb-0">
+				<tbody>
+					<tr>
+						<th class="bg-light w-25">👨‍🔧 Nombre del Técnico</th>
+						<td>@objMaint.TechnicianName</td>
+					</tr>
+					<tr>
+						<th class="bg-light">📝 Descripción</th>
+						<td>@objMaint.Description</td>
+					</tr>
+					<tr>
+						<th class="bg-light">🔧 Observaciones</th>
+						<td>@objMaint.Observations</td>
+					</tr>
+					<tr>
+						<th class="bg-light">📅 Fecha de Mantenimiento</th>
+						<td>@objMaint.MaintenanceDate.ToString("dd/MM/yyyy")</td>
+					</tr>
+					<tr>
+						<th class="bg-light">🔧 Tipo de Mantenimiento</th>
+						<td>@objMaint.MaintenanceType</td>
+					</tr>
+					<tr>
+						<th class="bg-light">💲 Costo</th>
+						<td>@objMaint.Cost.ToString("C")</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-    <div class="mt-4">
-        <h5 class="text-secondary mb-3">📷 Imágenes de Auditoría</h5>
-        <div class="d-flex flex-wrap gap-3">
-            @foreach (var i in Images)
-            {
-                <MaintenanceImageItemComponent item="@i" />
-            }
-        </div>
-    </div>
+	<div class="mt-4">
+		<h5 class="text-secondary mb-3">📷 Imágenes de Auditoría</h5>
+		<MaintenanceImageUploadComponent MaintenanceId="@objMaint.MaintenanceId.ToString()" SerialNumber="@serial" Type="@deviceType"></MaintenanceImageUploadComponent>
+		<div class="d-flex flex-wrap gap-3">
+			@foreach (var i in Images)
+			{
+				<MaintenanceImageItemComponent item="@i" />
+			}
+		</div>
+	</div>
 </div>
 
 
@@ -56,6 +61,9 @@
 
 	Maintenance objMaint = new();
 
+	string serial = "";
+	DeviceType deviceType;
+
 	List<MaintenanceImage> Images = new();
 
 	protected override async Task OnInitializedAsync()
@@ -64,9 +72,28 @@
 		{
 			int idInt = int.Parse(id);
 			objMaint = _MaintenanceService.GetById(idInt);
+
+
+			if (objMaint.Computer != null)
+			{
+				deviceType = DeviceType.Computer;
+				serial = objMaint.Computer.SerialNumber;
+			}
+			else if (objMaint.Peripheral != null)
+			{
+				deviceType = DeviceType.Peripheric;
+				serial = objMaint.Peripheral.SerialNumber;
+			}
+			else if (objMaint.SmartPhone != null)
+			{
+				deviceType = DeviceType.Phone;
+				serial = objMaint.SmartPhone.PhoneSerial;
+			}
+
+
 		}
 		await base.OnInitializedAsync();
 
-        Images = _MaintenanceImageService.Search(e => e.MaintenanceId == objMaint.MaintenanceId);
+		Images = _MaintenanceImageService.Search(e => e.MaintenanceId == objMaint.MaintenanceId);
 	}
 }
