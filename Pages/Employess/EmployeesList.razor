@@ -1,19 +1,35 @@
 ﻿@page "/employees"
 @inject IControllerServices<Employee> _EmployeesServices;
-<h3>Lista de Empleados</h3>
-
-<AuthorizeView Roles="Administrador">
-    <Authorized>
-        <AddDepartamentComponent />
-        <AddEmployeeComponent OnEmployeeAdded="UpdateEmployeeList" />
-        <TableEmployeeComponent Employees="@Employees" />
-    </Authorized>
-    <NotAuthorized>
-        No posee permisos
-    </NotAuthorized>
-</AuthorizeView>
 
 
+<Tabs Title="🏢 Empresa">
+    <Tab Title="👥 Empleados">
+        <div class="p-3">
+
+            <AuthorizeView Roles="Administrador">
+                <Authorized>
+ 
+                        <AddEmployeeComponent OnEmployeeAdded="UpdateEmployeeList" />
+
+                    <div class="mt-3">
+                        <TableEmployeeComponent Employees="@Employees" />
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="alert alert-warning mt-3" role="alert">
+                        🚫 No posee permisos para ver esta sección.
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </Tab>
+
+    <Tab Title="🏬 Departamentos">
+        <div class="p-3">
+            <AddDepartamentComponent />
+        </div>
+    </Tab>
+</Tabs>
 
 
 

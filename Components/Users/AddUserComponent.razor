@@ -7,63 +7,59 @@
 
 
 
-
-
-<div class="border m-2 p-3 rounded rounded-1 shadow">
+<div class="border m-2 p-4 rounded shadow-sm bg-light">
     @if (HideForm)
     {
-        <button @onclick="()=>HideForm=false" class="btn btn-outline-success">
-            Nuevo Registro
+        <button @onclick="() => HideForm = false" class="btn btn-outline-success">
+            ➕ Nuevo Registro
         </button>
     }
     else
     {
-
-        <EditForm Model="user">
-
-            <div>
-                <label>
-                    @nameof(user.UserName)
-                </label>
-                <InputText @bind-Value="user.UserName" class="form-control" />
+        <EditForm Model="user" class="mt-3">
+            <div class="mb-3">
+                <label class="form-label">👤 Nombre de Usuario</label>
+                <InputText @bind-Value="user.UserName" class="form-control" placeholder="Ej. juan.perez" />
             </div>
-            <div>
-                <label>
-                    @nameof(user.Email)
-                </label>
-                <InputText @bind-Value="user.Email" class="form-control" />
+
+            <div class="mb-3">
+                <label class="form-label">📧 Correo Electrónico</label>
+                <InputText @bind-Value="user.Email" class="form-control" placeholder="Ej. correo@ejemplo.com" />
             </div>
-            <div>
-                <label>
-                    @nameof(user.PhoneNumber)
-                </label>
-                <InputText @bind-Value="user.PhoneNumber" class="form-control" />
+
+            <div class="mb-3">
+                <label class="form-label">📱 Número de Teléfono</label>
+                <InputText @bind-Value="user.PhoneNumber" class="form-control" placeholder="Ej. 8888-8888" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">🔑 Contraseña</label>
+                <input type="password" @bind-value="Password" class="form-control" placeholder="Ingrese una contraseña segura" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">🔒 Confirmar Contraseña</label>
+                <input type="password" @bind-value="ConfirmPassword" class="form-control" placeholder="Repita la contraseña" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    ⚠️ @ErrorMessage
+                </div>
+            }
+
+            <div class="d-flex gap-2">
+                <button @onclick="Add" class="btn btn-outline-info">
+                    💾 Agregar
+                </button>
+                <button @onclick="() => HideForm = true" class="btn btn-outline-warning">
+                    ❌ Cancelar
+                </button>
             </div>
         </EditForm>
-        <div>
-            <label>
-                @nameof(Password)
-            </label>
-            <input type="password" @bind-value="Password" class="form-control" />
-        </div>
-        <div>
-            <label>
-                @nameof(ConfirmPassword)
-            </label>
-            <input type="password" @bind-value="ConfirmPassword" class="form-control" />
-        </div>
-        <label>
-            @ErrorMessage
-        </label>
-        <button @onclick="Add" class="btn btn-outline-info">
-            Agregar
-        </button>
-        <button @onclick="()=>HideForm=true" class="btn btn-outline-warning">
-            Cancelar
-        </button>
     }
 </div>
-
 
 
 

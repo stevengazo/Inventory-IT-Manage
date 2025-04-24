@@ -1,16 +1,38 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Inicio</PageTitle>
 
+<div class="container mt-2">
+    <AuthorizeView Roles="Administrador,Lector">
+        <Authorized>
+            <div class="card shadow-sm border-0">
+     
+                    <h4 class="mb-0">🖥️ Sistema de Gestión de TI</h4>
 
-<AuthorizeView Roles="Administrador,Lector">
-    <Authorized>
-        <AvariableComputersComponent />
-    </Authorized>
-    <NotAuthorized>
-        <h3>
-            No posee Permisos para ver la información
-        </h3>
-    </NotAuthorized>
-</AuthorizeView>
-
+                    <Tabs Title="📁 Activos">
+                        <Tab Title="💻 Laptops">
+                            <div class="p-3">
+                                <AvariableComputersComponent />
+                            </div>
+                    </Tab>
+                        <Tab Title="Perifericos">
+                            <div class="p-3">
+							<AvariablePeripheralComponent />
+                            </div>
+                        </Tab>
+                    </Tabs>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="text-center mt-5">
+                <h2 class="mb-3">👋 ¡Bienvenido al Sistema de Gestión de TI!</h2>
+                <p class="lead">
+                    Para acceder a esta sección necesitas iniciar sesión con una cuenta autorizada.
+                </p>
+                <a href="Identity/Account/Login" class="btn btn-primary btn-lg mt-3">
+                    🔐 Iniciar Sesión
+                </a>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
