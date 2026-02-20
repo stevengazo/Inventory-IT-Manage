@@ -2,67 +2,132 @@
 @using Microsoft.AspNetCore.Identity
 @inject ApplicationDbContext DbContext;
 
+<div class="shadow p-2 rounded my-2">
+    <input type="text"
+           class="form-control"
+           placeholder="Buscar por usuario o correo..."
+           @bind="searchTerm"
+           @bind:event="oninput" />
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Usuario</th>
-            <th>Correo</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (users != null)
-        {
-            foreach (IdentityUser item in users)
+<div class="shadow p-2 rounded table-responsive">
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th style="cursor:pointer" @onclick="() => SortBy(nameof(IdentityUser.UserName))">
+                    Usuario
+                </th>
+                <th style="cursor:pointer" @onclick="() => SortBy(nameof(IdentityUser.Email))">
+                    Correo
+                </th>
+                <th style="cursor:pointer" @onclick="() => SortBy(nameof(IdentityUser.EmailConfirmed))">
+                    Estado
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (users != null)
             {
-                <tr>
-                    <td>
-                        @item.UserName
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    @if (item.EmailConfirmed)
-                    {
-                        <td>
-                             Activo
+                foreach (IdentityUser item in FilteredData)
+                {
+                    <tr>
+                        <td>@item.UserName</td>
+                        <td>@item.Email</td>
+
+                        @if (item.EmailConfirmed)
+                        {
+                            <td class="text-success">
+                                Activo
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-danger">
+                                Inactivo
+                            </td>
+                        }
+
+                        <td class="d-flex gap-1">
+                            <a href="/users/@item.Id"
+                               class="bg-info rounded p-2 text-white text-decoration-none">
+                                <span class="oi oi-eye text-white"></span> Ver
+                            </a>
+
+                            <a href="/users/password/@item.Id"
+                               class="bg-success rounded p-2 text-white text-decoration-none">
+                                <span class="oi oi-question-mark text-white"></span> Contraseña
+                            </a>
+
+                            <button @onclick="() => Delete(item)"
+                                    class="btn btn-danger btn-sm rounded p-2 border-0 text-white">
+                                <span class="oi oi-delete text-white"></span> Desactivar
+                            </button>
                         </td>
-                    }else
-                    {
-                        <td class="text-danger">
-                            Inactivo
-                        </td>
-                    }
-                    <td>
-                        <a href="/users/@item.Id" class=" mx-1 bg-info h-100 h-100 rounded rounded-1 p-2 text-white text-decoration-none">
-                            <span class="oi oi-eye text-white" aria-hidden="true"></span> Ver
-                        </a>
-                        <a href="/users/password/@item.Id" class="mx-1 bg-success h-100 h-100 rounded rounded-1 p-2 text-white text-decoration-none">
-                            <span class="oi oi-question-mark text-white" aria-hidden="true"> </span> Contraseña
-                        </a>
-                        <button @onclick="()=>Delete(item)" class="mx-1 btn btn-danger btn-sm  rounded p-2 border border-0  text-white">
-                            <span class="oi oi-delete text-white" aria-hidden="true"></span> Desactivar
-                        </button>
-                    </td>
-                </tr>
+                    </tr>
+                }
             }
+        </tbody>
+    </table>
+</div>
 
-        }
-    </tbody>
-</table>
+@code {
 
-
-@code{
     [Parameter]
-    public List<IdentityUser> users { get; set; }
+    public List<IdentityUser> users { get; set; } = new();
 
+    private string searchTerm = "";
 
-    protected override async Task OnInitializedAsync()
+    private string currentSortColumn = nameof(IdentityUser.UserName);
+    private bool asc = true;
+
+    private IEnumerable<IdentityUser> FilteredData =>
+        ApplySorting(
+            users.Where(u =>
+            {
+                if (string.IsNullOrWhiteSpace(searchTerm))
+                    return true;
+
+                var term = searchTerm.ToLower();
+
+                return
+                    u.UserName?.ToLower().Contains(term) == true ||
+                    u.Email?.ToLower().Contains(term) == true;
+            })
+        );
+
+    void SortBy(string column)
     {
+        if (currentSortColumn == column)
+            asc = !asc;
+        else
+        {
+            currentSortColumn = column;
+            asc = true;
+        }
+    }
 
-        base.OnInitializedAsync();
+    IEnumerable<IdentityUser> ApplySorting(IEnumerable<IdentityUser> query)
+    {
+        return currentSortColumn switch
+        {
+            nameof(IdentityUser.UserName) =>
+                asc ? query.OrderBy(x => x.UserName)
+                    : query.OrderByDescending(x => x.UserName),
+
+            nameof(IdentityUser.Email) =>
+                asc ? query.OrderBy(x => x.Email)
+                    : query.OrderByDescending(x => x.Email),
+
+            nameof(IdentityUser.EmailConfirmed) =>
+                asc ? query.OrderBy(x => x.EmailConfirmed)
+                    : query.OrderByDescending(x => x.EmailConfirmed),
+
+            _ => query
+        };
     }
 
     protected void Delete(IdentityUser U)
@@ -73,4 +138,5 @@
         DbContext.SaveChanges();
         users.Remove(U);
     }
+
 }

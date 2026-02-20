@@ -17,66 +17,115 @@
 </div>
 
 <div class="table-responsive mx-auto">
-    <table class="table table-sm table-hover">
-        <thead>
-            <tr>
-                @if (ShowId){
-                    <th>
+    <table class="table table-sm table-hover align-middle mb-0">
+
+        <thead class="table-light text-nowrap sticky-top">
+            <tr class="small text-uppercase">
+
+                @if (ShowId)
+                {
+                    <th role="button"
+                        @onclick="() => SortBy(nameof(PhoneNumber.PhoneNumberId))">
                         Id
                     </th>
+                }
 
+                <th role="button"
+                    @onclick="() => SortBy(nameof(PhoneNumber.Number))">
+                    Número
+                </th>
+
+                <th role="button"
+                    @onclick="() => SortBy(nameof(PhoneNumber.Operator))">
+                    Operador
+                </th>
+
+                <th role="button"
+                    @onclick="() => SortBy(nameof(PhoneNumber.Type))">
+                    Tipo
+                </th>
+
+                <th role="button"
+                    @onclick="() => SortBy(nameof(PhoneNumber.Cost))">
+                    Costo
+                </th>
+
+                <th role="button"
+                    @onclick="() => SortBy(nameof(PhoneNumber.ExpireDate))">
+                    Vencimiento
+                </th>
+
+                <th class="text-center">
+                    Acciones
+                </th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (PhoneNumber i in FilteredData)
+            {
+                <tr class="border-top">
+
+                    @if (ShowId)
+                    {
+                        <td class="font-monospace small text-secondary">
+                            @i.PhoneNumberId
+                        </td>
                     }
-                    <th @onclick="() => SortBy(nameof(PhoneNumber.Number))">
-                        Número
-                    </th>
-                    <th @onclick="() => SortBy(nameof(PhoneNumber.Operator))">
-                        Operador
-                    </th>
-                    <th @onclick="() => SortBy(nameof(PhoneNumber.Type))">
-                        Tipo
-                    </th>
-                    <th @onclick="() => SortBy(nameof(PhoneNumber.Cost))">
-                        Costo
-                    </th>
-                    <th @onclick="() => SortBy(nameof(PhoneNumber.ExpireDate))">
-                        Fecha Vencimiento
-                    </th>
-                    <th>
-                        Acciones
-                    </th>
+
+                    <td class="fw-semibold text-nowrap">
+                        @i.Number
+                    </td>
+
+                    <td>
+                        <span class="badge bg-primary-subtle text-dark">
+                            @i.Operator
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge bg-info-subtle text-dark">
+                            @i.Type
+                        </span>
+                    </td>
+
+                    <td class="text-muted">
+                        @(i.Cost != 0 && i.Cost != 1
+                                            ? $"$ {i.Cost}"
+                                            : "$ No indicado")
+                    </td>
+
+                    <td class="small text-muted">
+                        @i.ExpireDate.ToShortDateString()
+                    </td>
+
+                    <AuthorizeView Roles="Administrador">
+                        <Authorized>
+                            <td class="text-center">
+                                <div class="d-inline-flex gap-1">
+
+                                    <a href="/phones-numbers/@i.PhoneNumberId"
+                                       class="btn btn-sm btn-outline-info">
+                                        <span class="oi oi-pencil"></span>
+                                    </a>
+
+                                </div>
+                            </td>
+                        </Authorized>
+
+                        <NotAuthorized>
+                            <td class="text-center small text-warning">
+                                No disponible
+                            </td>
+                        </NotAuthorized>
+                    </AuthorizeView>
+
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (PhoneNumber i in FilteredData)
-                {
-                    <tr>
-                        @if (ShowId){
-                            <th>
-                                @i.PhoneNumberId
-                            </th>
-
-                            }
-                            <td>@i.Number</td>
-                            <td>@i.Operator</td>
-                            <td>@i.Type</td>
-                            <td>@i.Cost</td>
-                            <td>@i.ExpireDate.ToShortDateString()</td>
-
-                            <AuthorizeView Roles="Administrador">
-                                <Authorized>
-                                    <td>
-                                        <a href="/phones-numbers/@i.PhoneNumberId"
-                                           class="btn btn-outline-info btn-sm">
-                                            Editar
-                                        </a>
-                                    </td>
-                                </Authorized>
-                            </AuthorizeView>
-                        </tr>
-                    }
+            }
         </tbody>
 
-            </table>
+    </table>
         </div>
 
 

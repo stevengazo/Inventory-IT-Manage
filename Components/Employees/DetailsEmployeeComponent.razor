@@ -1,70 +1,83 @@
-﻿
+﻿<div class="card shadow-sm border-0 rounded-4">
 
+    <!-- Header -->
+    <div class="card-header bg-primary text-white rounded-top-4">
+        <h5 class="mb-0">
+            <i class="bi bi-person-badge me-2"></i>
+            Información del Empleado
+        </h5>
+    </div>
 
-<div class="mx-2 p-2 my-2 shadow-sm">
-    <table class="table">
-        <tr>
-            <th>
-                @nameof(EmployeeObj.DNI)
-            </th>
-            <td>
-                @EmployeeObj.DNI
-            </td>
-        </tr>
-        <tr>
-            <th>
-                @nameof(EmployeeObj.Name)
-            </th>
-            <td>
-                @EmployeeObj.Name
-            </td>
-        </tr>
-        <tr>
-            <th>
-                @nameof(EmployeeObj.LastName)
-            </th>
-            <td>
-                @EmployeeObj.LastName
-            </td>
-        </tr>
-        <tr>
-            <th>
-                @nameof(EmployeeObj.SecondLastName)
-            </th>
-            <td>
-                @EmployeeObj.SecondLastName
-            </td>
-        </tr>
-        <tr>
-            <th>
-                @nameof(EmployeeObj.Email)
-            </th>
-            <td>
-                @EmployeeObj.Email
-            </td>
-        </tr>
-        <tr>
-            <th>
-                @nameof(EmployeeObj.Birthday)
-            </th>
-            <td>
-                @EmployeeObj.Birthday.ToLongDateString()
-            </td>
-        </tr>
-        <tr>
-            <th>
-                @nameof(EmployeeObj.Birthday)
-            </th>
-            <td>
-                @EmployeeObj.Birthday.ToLongDateString()
-            </td>
-        </tr>
-    </table>
+    <!-- Body -->
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <div class="info-item">
+                    <small class="text-muted">DNI</small>
+                    <div class="fw-semibold">@EmployeeObj.DNI</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-item">
+                    <small class="text-muted">Nombre</small>
+                    <div class="fw-semibold">@EmployeeObj.Name</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-item">
+                    <small class="text-muted">Primer Apellido</small>
+                    <div class="fw-semibold">@EmployeeObj.LastName</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-item">
+                    <small class="text-muted">Segundo Apellido</small>
+                    <div class="fw-semibold">@EmployeeObj.SecondLastName</div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="info-item">
+                    <small class="text-muted">Correo Electrónico</small>
+                    <div class="fw-semibold">@EmployeeObj.Email</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-item">
+                    <small class="text-muted">Fecha de Nacimiento</small>
+                    <div class="fw-semibold">
+                        @EmployeeObj.Birthday.ToString("dd MMMM yyyy")
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
+<style>
+    .info-item {
+        background: #f8f9fa;
+        padding: 12px 14px;
+        border-radius: 12px;
+        transition: all .2s ease;
+    }
 
+        .info-item:hover {
+            background: #eef1f5;
+            transform: scale(1.01);
+        }
+</style>
 
 @code {
     [Parameter]
-    public Employee EmployeeObj { get; set; }
+    public Employee EmployeeObj { get; set; } = new();
 }

@@ -2,183 +2,213 @@
 @inject IJSRuntime JS
 @inject IHttpContextAccessor httpContextAccessor
 
-
-<h3> Extensiones Registradas</h3>
+<h3>Extensiones Registradas</h3>
 
 <div class="d-flex flex-column justify-content-between p-2">
-    
+
     <p>
-        Esta tabla muestra la información sobre la asignación, la extension y el pbx utilizado.
+        Esta tabla muestra la información sobre la asignación, la extensión y el PBX utilizado.
     </p>
+
     <div class="d-flex flex-row justify-content-between gap-2">
 
-        <button @onclick="DownloadPDF" class="btn btn-outline-warning btn-sm">Descargar</button>
-        <input type="text" placeholder="Búsqueda (PBX,Usuario o Extension)" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
-    
+        <button @onclick="DownloadPDF"
+                class="btn btn-outline-warning btn-sm">
+            Descargar
+        </button>
+
+        <input type="text"
+               class="form-control w-25"
+               placeholder="Buscar por extensión, PBX o persona..."
+               @bind="searchText"
+               @bind:event="oninput" />
     </div>
-    
+
 </div>
 
 <div class="overflow-auto table-responsive">
-    <table class="table table-sm table-striped table-hover">
-        <thead>
-            <tr>
-                <th>
-                    Nombre
-                </th>
-                <th>
-                    PBX
-                </th>
-                @if (!infoisPublic)
-                {
-                    <th>
-                        Usuario
-                    </th>
-                    <th>
-                        Contraseña
-                    </th>
-                }
-                <th>
-                    Extension
-                </th>
-                <th>
-                    Empleado
-                </th>
-                <th colspan="1">
-                    Acciones
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Extensionstemp != null)
-            {
-                foreach (PhoneExtension item in Extensionstemp)
-                {
-                    <tr>
-                        <td>
-                            @item.PhoneExtensionName
-                        </td>
-                        <td>
-                            @item.PhoneNumberPBX
-                        </td>
-                        @if (!infoisPublic)
-                        {
-                            <td>
-                                @item.UserNumber
-                            </td>
-                            <td>
-                                @item.Password
-                            </td>
-                        }
-                        <td>
-                            @item.Extension
-                        </td>
-                        @if (item.Employee != null && !item.Employee.Fired)
-                        {
-                            <td>
-                                @item.Employee.Name @item.Employee.LastName
-                            </td>
-                        }
-                        else if (item.Employee != null && item.Employee.Fired)
-                        {
-                            <td class="text-danger">
-                                @item.Employee.Name @item.Employee.LastName (despedido)
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="text-info">
-                                Sin Asignar
-                            </td>
-                        }
-                        <AuthorizeView Roles="Administrador">
-                            <Authorized>
-                                <td class="d-flex flex-row gap-1">
-                                    <a href="/extensions/@item.PhoneExtensionId" class="btn btn-outline-info">Detalles</a>
+    <div class="shadow-sm rounded-4 border table-responsive">
 
-                                    <a href="/extension/assign/@item.PhoneExtensionId" class="btn btn-outline-success">Asignación</a>
+        <table class="table table-sm table-hover align-middle mb-0">
 
-                                    <a href="/extension/edit/@item.PhoneExtensionId" class="btn btn-outline-info">Editar</a>
+            <thead class="table-light text-nowrap sticky-top small text-uppercase">
+                <tr>
+                    <th>Nombre</th>
+                    <th>PBX</th>
+
+                    @if (!infoisPublic)
+                    {
+                        <th>Usuario</th>
+                        <th>Contraseña</th>
+                    }
+
+                    <th>Extensión</th>
+                    <th>Empleado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (FilteredData.Any())
+                {
+                    foreach (PhoneExtension item in FilteredData)
+                    {
+                        <tr>
+
+                            <td class="fw-semibold text-capitalize">
+                                @item.PhoneExtensionName
+                            </td>
+
+                            <td class="small text-muted">
+                                @item.PhoneNumberPBX
+                            </td>
+
+                            @if (!infoisPublic)
+                            {
+                                <td class="font-monospace small">
+                                    @item.UserNumber
                                 </td>
 
-                            </Authorized>
-                            <NotAuthorized>
-                                <td class="text-warning">
-                                    Acciones no disponibles
+                                <td class="font-monospace small text-muted">
+                                    ••••••••
                                 </td>
-                            </NotAuthorized>
-                        </AuthorizeView>
+                            }
 
+                            <td class="font-monospace fw-bold text-primary">
+                                @item.Extension
+                            </td>
 
-                    </tr>
+                            @if (item.Employee != null && !item.Employee.Fired)
+                            {
+                                <td class="text-nowrap">
+                                    @item.Employee.Name @item.Employee.LastName
+                                </td>
+                            }
+                            else if (item.Employee != null && item.Employee.Fired)
+                            {
+                                <td class="text-muted">
+                                    <span class="badge bg-danger-subtle text-dark">
+                                        @item.Employee.Name @item.Employee.LastName
+                                    </span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <span class="badge bg-info-subtle text-dark">
+                                        Sin asignar
+                                    </span>
+                                </td>
+                            }
 
+                            <AuthorizeView Roles="Administrador">
+                                <Authorized>
+                                    <td class="text-center">
+                                        <div class="d-inline-flex gap-1">
+
+                                            <a href="/extensions/@item.PhoneExtensionId"
+                                               class="btn btn-sm btn-outline-info">
+                                                <span class="oi oi-eye"></span>
+                                            </a>
+
+                                            <a href="/extension/assign/@item.PhoneExtensionId"
+                                               class="btn btn-sm btn-outline-success">
+                                                <span class="oi oi-person"></span>
+                                            </a>
+
+                                            <a href="/extension/edit/@item.PhoneExtensionId"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <span class="oi oi-pencil"></span>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </Authorized>
+
+                                <NotAuthorized>
+                                    <td class="text-center small text-warning">
+                                        No disponible
+                                    </td>
+                                </NotAuthorized>
+                            </AuthorizeView>
+
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
+            </tbody>
+
+        </table>
+
+    </div>
 </div>
 
-
-
-
 @code {
+
     [Parameter]
-    public List<PhoneExtension> Extensions { get; set; }
+    public List<PhoneExtension> Extensions { get; set; } = new();
 
     [Parameter]
     public bool PublicInfo { get; set; }
 
+    private string searchText = "";
     private bool infoisPublic = false;
 
-    List<PhoneExtension> Extensionstemp = new();
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         infoisPublic = PublicInfo;
-        Extensionstemp = Extensions;
-        base.OnInitializedAsync();   
     }
 
-    private void Search(string SearchValue = "")
+    private IEnumerable<PhoneExtension> FilteredData
     {
-        bool valid = int.TryParse(SearchValue, out int valueSe);
-
-        if (valid)
+        get
         {
-            if (!string.IsNullOrEmpty(SearchValue))
-            {
-                Extensionstemp = (from i in Extensions
-                                  where i.PhoneNumberPBX == valueSe || i.UserNumber == valueSe.ToString() || i.Extension == valueSe
-                                  select i)
-                    .ToList();
-            }
-            else
-            {
-                Extensionstemp = Extensions;
-            }
-        }
-        else
-        {
-            Extensionstemp = Extensions;
-        }
+            if (Extensions == null)
+                return Enumerable.Empty<PhoneExtension>();
 
+            if (string.IsNullOrWhiteSpace(searchText))
+                return Extensions;
+
+            var term = searchText.Trim();
+
+            return Extensions.Where(x =>
+
+                (x.Extension != null &&
+                 x.Extension.ToString().Contains(term, StringComparison.OrdinalIgnoreCase))
+
+                ||
+
+                (x.PhoneNumberPBX != null &&
+                 x.PhoneNumberPBX.ToString().Contains(term, StringComparison.OrdinalIgnoreCase))
+
+                ||
+
+                (!string.IsNullOrEmpty(x.UserNumber) &&
+                 x.UserNumber.Contains(term, StringComparison.OrdinalIgnoreCase))
+
+                ||
+
+                (x.Employee != null &&
+                 (
+                    (!string.IsNullOrEmpty(x.Employee.Name) &&
+                     x.Employee.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
+
+                    ||
+
+                    (!string.IsNullOrEmpty(x.Employee.LastName) &&
+                     x.Employee.LastName.Contains(term, StringComparison.OrdinalIgnoreCase))
+                 ))
+            );
+        }
     }
 
     private async Task DownloadPDF()
     {
-        try
-        {
-            byte[] pdfBytes = await pdfService.GenerateListExtensions(Extensions);
+        byte[] pdfBytes = await pdfService.GenerateListExtensions(FilteredData.ToList());
 
+        string pdfBase64 = Convert.ToBase64String(pdfBytes);
 
-            // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
-            string pdfBase64 = Convert.ToBase64String(pdfBytes);
-
-            // Invocar una función JavaScript para iniciar la descarga del PDF
-            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Extensiones {DateTime.Today.ToString("yyyy-MMM-dd")}.pdf");
-        }
-        catch (Exception ec)
-        {
-            throw;
-        }
+        await JS.InvokeVoidAsync("downloadPDF",
+            pdfBase64,
+            $"Extensiones {DateTime.Today:yyyy-MMM-dd}.pdf");
     }
 }

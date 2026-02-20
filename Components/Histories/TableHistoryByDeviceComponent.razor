@@ -23,31 +23,42 @@
     {
         <div class="table-responsive">
 
-            <table class="table ">
-                <thead>
-                    <tr>
-                        <th>
-                            Fecha
-                        </th>
-                        <th>
-                            Comentario
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (HistoryModel item in Histories)
-                    {
+            <div class="shadow-sm rounded-4 border table-responsive">
+
+                <table class="table table-sm table-hover align-middle mb-0">
+
+                    <thead class="table-light text-nowrap sticky-top small text-uppercase">
                         <tr>
-                            <td>
-                                @item.CreationDate.ToLongDateString()
-                            </td>
-                            <td>
-                                @item.Description
-                            </td>
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Comentario
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        @foreach (HistoryModel item in Histories)
+                        {
+                            <tr>
+
+                                <td class="small text-muted text-nowrap">
+                                    @item.CreationDate.ToShortDateString()
+                                </td>
+
+                                <td class="fw-semibold text-truncate" style="max-width:400px">
+                                    @item.Description
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
             </div>
 
     }

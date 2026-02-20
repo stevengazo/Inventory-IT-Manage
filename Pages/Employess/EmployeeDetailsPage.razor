@@ -1,15 +1,69 @@
 ﻿@page "/employee/{id}"
 
-
+@inject IControllerServices<ComputerModel> _ComputerService;
+@inject IControllerServices<PeripheralModel> _PeripheralsService;
 @inject IControllerServices<Employee> _EmployeeService
-
+@inject IControllerServices<Phone_Number_User_Model> _Phone_Number_UserService;
 <AuthorizeView Roles="Administrador,Lector">
+
     <Authorized>
-        <DetailsEmployeeComponent EmployeeObj="@employee" />
+
+        <div class="container-fluid px-2">
+
+            <!-- PERFIL -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <DetailsEmployeeComponent EmployeeObj="@employee" />
+                </div>
+            </div>
+
+            <!-- COMPUTADORAS -->
+
+                <div class="card shadow-sm border-0 rounded-4 h-100 my-3">
+                    <div class="card-header bg-light fw-semibold">
+                        💻 Equipos Asignados
+                    </div>
+                    <div class="card-body p-2">
+                        <TableComputers Computers="computers" />
+                    </div>
+                </div>
+        
+
+            <!-- PERIFÉRICOS -->
+
+                <div class="card shadow-sm border-0 rounded-4 h-100 my-3">
+                    <div class="card-header bg-light fw-semibold">
+                        🖱️ Periféricos
+                    </div>
+                    <div class="card-body p-2">
+                        <TablePeripheralComponent Peripherals="peri" />
+                    </div>
+                </div>
+         
+            <!-- TELÉFONOS -->
+      
+            <div class="card shadow-sm border-0 rounded-4 h-100  my-3">
+                    <div class="card-header bg-light fw-semibold">
+                        📱 Números Telefónicos
+                    </div>
+                    <div class="card-body p-2">
+                        <TablePhone_Number_UserComponent phone_Number_User_Models="phoneNumbers" />
+                    </div>
+                </div>
+    
+        </div>
+
     </Authorized>
+
     <NotAuthorized>
 
+        <div class="alert alert-warning shadow-sm rounded-3 mt-3">
+            <i class="bi bi-shield-lock me-2"></i>
+            No tiene permisos para visualizar la información de este empleado.
+        </div>
+
     </NotAuthorized>
+
 </AuthorizeView>
 
 
@@ -20,6 +74,10 @@
     public string id { get; set; }
     int _id = 0;
     private Employee employee = new();
+    private List<ComputerModel> computers = new();
+    private List<PeripheralModel> peri = new();
+    private List<Phone_Number_User_Model> phoneNumbers = new();
+
     protected override async Task OnInitializedAsync()
     {
         bool flag = int.TryParse(id, out _id);
@@ -28,5 +86,23 @@
             employee = _EmployeeService.GetById(_id);
         }
         base.OnInitializedAsync();
+        LoadComputers();
+            LoadPeripherals();
+        LoadPhoneNumbers();
     }
+
+    private async Task LoadComputers()
+    {
+         computers = _ComputerService.GetAll().Where(emp=>emp.EmployeeId == int.Parse(id)).ToList();
+    }
+
+    private async Task LoadPeripherals()
+    {
+        peri = _PeripheralsService.GetAll().Where(emp => emp.EmployeeId == int.Parse(id)).ToList();
+    }
+     private async Task LoadPhoneNumbers()
+    {
+        phoneNumbers = _Phone_Number_UserService.GetAll().Where(emp => emp.EmployeeId == int.Parse(id)).ToList();
+    }
+
 }

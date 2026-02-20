@@ -44,7 +44,7 @@
     {
         Employees = new();
         base.OnInitializedAsync();
-        Employees = _EmployeesServices.GetAll();
+        Employees = _EmployeesServices.GetAll().OrderBy(e=>e.Name).ToList();
 
     }
 
@@ -53,7 +53,7 @@
     {
         await InvokeAsync(() =>
         {
-            Employees = _EmployeesServices.GetAll().ToList();
+            Employees = _EmployeesServices.GetAll().OrderBy(e => e.Name).ToList();
             StateHasChanged();
         });
     }

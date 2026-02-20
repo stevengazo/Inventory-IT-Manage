@@ -15,82 +15,126 @@
 
 </div>
 
+<div class="shadow-sm rounded-4 border table-responsive">
 
-<div class="shadow p-2 rounded table-responsive">
-    <table class="table table-sm table-hover">
+    <table class="table table-sm table-hover align-middle mb-0">
 
-        <thead>
-            <tr>
-                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.CreationDate))">
-                    Fecha Registro
-                </th>
-                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Operator))">
-                    Operador
-                </th>
-                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Number))">
-                    Numero
-                </th>
-                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Type))">
-                    Tipo
-                </th>
-                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.Brand))">
+        <thead class="table-light text-nowrap sticky-top">
+            <tr class="small text-uppercase">
+
+                <th role="button" @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.Brand))">
                     Marca
                 </th>
-                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneModel))">
+
+                <th role="button" @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneModel))">
                     Modelo
                 </th>
-                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneSerial))">
+
+                <th role="button" @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneSerial))">
                     Serie
                 </th>
+
+                <th role="button" @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Number))">
+                    Número
+                </th>
+
+                <th role="button" @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Operator))">
+                    Operador
+                </th>
+
+                <th role="button" @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Type))">
+                    Tipo
+                </th>
+
                 <th>
                     Encargado
                 </th>
-                <th>
+
+                <th role="button" @onclick="() => SortBy(nameof(Phone_Number_User_Model.CreationDate))">
+                    Registro
+                </th>
+
+                <th class="text-center">
                     Acciones
                 </th>
+
             </tr>
         </thead>
 
         <tbody>
             @foreach (var item in FilteredData.Where(x => x.IsActive))
             {
-                <tr>
-                    <td>@item.CreationDate.ToShortDateString()</td>
-                    <td>@item.PhoneNumber.Operator</td>
-                    <td>@item.PhoneNumber.Number</td>
-                    <td>@item.PhoneNumber.Type</td>
-                    <td>@item.PhoneNumberModel.Brand.Name</td>
-                    <td>@item.PhoneNumberModel.PhoneModel</td>
-                    <td>@item.PhoneNumberModel.PhoneSerial</td>
-                    <td>@item.Employee.LastName @item.Employee.Name</td>
+                <tr class="border-top">
 
-                    <td class="d-flex gap-1">
-
-                        <button @onclick="() => DownloadPDF(item)"
-                                class="bg-warning border-0 rounded p-2">
-                            <span class="oi oi-document text-white"></span>
-                        </button>
-
-                        <AuthorizeView Roles="Administrador">
-                            <Authorized>
-                                <a href="/phone-number-user/@item.Id"
-                                   class="bg-danger rounded p-2">
-                                    <span class="oi oi-delete text-white"></span>
-                                </a>
-
-                                <a href="/smartphone/@item.SmartPhoneModelId"
-                                   class="bg-info rounded p-2">
-                                    <span class="oi oi-data-transfer-upload text-white"></span>
-                                </a>
-                            </Authorized>
-                        </AuthorizeView>
-
+                    <td class="fw-semibold text-nowrap">
+                        @item.PhoneNumberModel.Brand.Name
                     </td>
+
+                    <td class="text-muted text-nowrap">
+                        @item.PhoneNumberModel.PhoneModel
+                    </td>
+
+                    <td class="font-monospace small text-secondary">
+                        @item.PhoneNumberModel.PhoneSerial
+                    </td>
+
+                    <td class="fw-semibold text-nowrap">
+                        @item.PhoneNumber.Number
+                    </td>
+
+                    <td>
+                        <span class="badge bg-primary-subtle text-dark">
+                            @item.PhoneNumber.Operator
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge bg-info-subtle text-dark">
+                            @item.PhoneNumber.Type
+                        </span>
+                    </td>
+
+                    <td class="text-capitalize">
+                        @($"{item.Employee.Name} {item.Employee.LastName}")
+                    </td>
+
+                    <td class="small text-muted">
+                        @item.CreationDate.ToShortDateString()
+                    </td>
+
+                    <td class="text-center">
+                        <div class="d-inline-flex gap-1">
+
+                            <button @onclick="() => DownloadPDF(item)"
+                                    class="btn btn-sm btn-outline-warning">
+                                <span class="oi oi-document"></span>
+                            </button>
+
+                            <AuthorizeView Roles="Administrador">
+                                <Authorized>
+
+                                    <a href="/phone-number-user/@item.Id"
+                                       class="btn btn-sm btn-outline-danger">
+                                        <span class="oi oi-delete"></span>
+                                    </a>
+
+                                    <a href="/smartphone/@item.SmartPhoneModelId"
+                                       class="btn btn-sm btn-outline-info">
+                                        <span class="oi oi-data-transfer-upload"></span>
+                                    </a>
+
+                                </Authorized>
+                            </AuthorizeView>
+
+                        </div>
+                    </td>
+
                 </tr>
             }
         </tbody>
 
     </table>
+
 </div>
 
 

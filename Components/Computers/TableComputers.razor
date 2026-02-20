@@ -3,303 +3,334 @@
 @inject IControllerServices<ComputerModel> _ComputerService
 @inject IHttpContextAccessor httpContextAccessor
 
+<div class="shadow p-2 rounded">
+        <input type="text"
+               placeholder="Busqueda"
+               @oninput="@(e => Search(e.Value?.ToString()))"
+               class="form-control w-100" />
+    
 
-<div class="shadow p-2 rounded ">
-    <div class="d-flex flex-row justify-content-between p-2">
-        <h3 class="w-100">Computadoras Existentes</h3>
-        <input type="text" placeholder="Busqueda" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
-    </div>
+    @if (ActiveComputers.Any())
+    {
+        <div class="shadow-sm rounded-4 border table-responsive">
 
-    <div class="table-responsive">
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <td>Numero Serie</td>
-                    <td>Fecha Adquisicion</td>
-                    <td>Modelo</td>
-                    <AuthorizeView Roles="Administrador,Lector">
-                        <Authorized>
-                            <td class="d-none d-md-table-cell">Costo</td>
-                        </Authorized>
-                    </AuthorizeView>
-                    <td>Tipo Disco</td>
-                    <td class="d-none d-md-table-cell">Tamaño</td>
-                    <td class="d-none d-md-table-cell">Tipo RAM</td>
-                    <td class="d-none d-md-table-cell">Tamaño</td>
-                    <td>Procesador</td>
-                    <td class="d-none d-md-table-cell">Teclado</td>
-                    <td>Encargado</td>
-                    <td colspan="3">Acciones</td>
-                </tr>
-            </thead>
-            <tbody>
-                @if (computerstemp != null)
-                {
-                    @foreach (var C in computerstemp)
+            <table class="table table-sm table-hover align-middle mb-0">
+
+                <thead class="table-light text-nowrap sticky-top small text-uppercase">
+                    <tr>
+                        <th>Serie</th>
+                        <th>Adquisición</th>
+                        <th>Modelo</th>
+
+                        <AuthorizeView Roles="Administrador,Lector">
+                            <Authorized>
+                                <th class="d-none d-md-table-cell">Costo</th>
+                            </Authorized>
+                        </AuthorizeView>
+
+                        <th>Disco</th>
+                        <th class="d-none d-md-table-cell">Capacidad</th>
+                        <th class="d-none d-md-table-cell">RAM</th>
+                        <th class="d-none d-md-table-cell">Memoria</th>
+                        <th>Procesador</th>
+                        <th class="d-none d-md-table-cell">Teclado</th>
+                        <th>Encargado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var C in ActiveComputers)
                     {
-                        if (C.IsActive)
-                        {
-                            <tr>
-                                <td>@C.SerialNumber</td>
-                                <td>@C.AdquisitionDate.ToShortDateString()</td>
-                                <td>@C.ModelName</td>
-                                <AuthorizeView Roles="Administrador,Lector">
-                                    <Authorized>
-                                        @if (C.Cost != "0" || C.Cost != "1")
-                                        {
-                                            <td class="d-none d-md-table-cell">$ @C.Cost</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="d-none d-md-table-cell">$ No indicado</td>
+                        <tr>
 
-                                        }
-                                    </Authorized>
-                                </AuthorizeView>
-                                <td>@(C.HaveSSD ? "SSD" : "HDD")</td>
-                                <td class="d-none d-md-table-cell">@C.SizeDisk GB</td>
-                                <td class="d-none d-md-table-cell">@C.RAMType</td>
-                                <td class="d-none d-md-table-cell">@C.SizeRAM GB</td>
-                                <td>@C.Processor</td>
-                                <td class="d-none d-md-table-cell">@C.KeyboardLayout</td>
-                                <td>
-                                    @if (C.Employee != null && !C.Employee.Fired)
-                                    {
+                            <td class="font-monospace small text-secondary">
+                                @C.SerialNumber
+                            </td>
+
+                            <td class="small text-muted text-nowrap">
+                                @C.AdquisitionDate.ToShortDateString()
+                            </td>
+
+                            <td class="fw-semibold text-nowrap">
+                                @C.ModelName
+                            </td>
+
+                            <AuthorizeView Roles="Administrador,Lector">
+                                <Authorized>
+                                    <td class="d-none d-md-table-cell small text-muted">
+                                        @(C.Cost != "0" && C.Cost != "1"
+                                                                        ? $"$ {C.Cost}"
+                                                                        : "No indicado")
+                                    </td>
+                                </Authorized>
+                            </AuthorizeView>
+
+                            <td>
+                                <span class="badge @(C.HaveSSD ? "bg-success-subtle text-dark" : "bg-secondary-subtle text-dark")">
+                                    @(C.HaveSSD ? "SSD" : "HDD")
+                                </span>
+                            </td>
+
+                            <td class="d-none d-md-table-cell text-nowrap">
+                                @C.SizeDisk GB
+                            </td>
+
+                            <td class="d-none d-md-table-cell">
+                                <span class="badge bg-info-subtle text-dark">
+                                    @C.RAMType
+                                </span>
+                            </td>
+
+                            <td class="d-none d-md-table-cell text-nowrap">
+                                @C.SizeRAM GB
+                            </td>
+
+                            <td class="text-nowrap">
+                                @C.Processor
+                            </td>
+
+                            <td class="d-none d-md-table-cell">
+                                @C.KeyboardLayout
+                            </td>
+
+                            <td class="text-capitalize">
+                                @if (C.Employee != null && !C.Employee.Fired)
+                                {
+                                    <span class="fw-semibold">
                                         @($"{C.Employee.Name} {C.Employee.LastName}")
-                                    }
-                                    else if (C.Employee != null && C.Employee.Fired)
+                                    </span>
+                                }
+                                else if (C.Employee != null && C.Employee.Fired)
+                                {
+                                    <span class="text-danger small">
+                                        @($"{C.Employee.Name} {C.Employee.LastName}") (Despedido)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">
+                                        Sin asignar
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="text-center">
+                                <div class="d-inline-flex gap-1">
+
+                                    @if (C.Employee != null)
                                     {
-                                        <span class="text-danger">@C.Employee.Name @C.Employee.LastName (Despedido)</span>
+                                        <button @onclick="() => DownloadPDF(C)"
+                                                class="btn btn-sm btn-outline-warning">
+                                            <span class="oi oi-document"></span>
+                                        </button>
                                     }
-                                    else
-                                    {
-                                        <span>Sin Asignar</span>
-                                    }
-                                </td>
-                                <AuthorizeView Roles="Administrador">
-                                    <Authorized>
-                                        <td class="d-flex flex-row gap-1">
-                                            @if (C.Employee != null)
-                                            {
-                                                <button @onclick="() => DownloadPDF(C)" class="bg-warning border-0 rounded p-2">
-                                                    <span class="oi oi-document text-white" aria-hidden="true"></span>
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button class="btn btn-sm btn-outline-warning">No disponible</button>
-                                            }
-                                            <a href="/computers/@C.ComputerModelID" class="bg-info rounded p-2">
-                                                <span class="oi oi-eye text-white" aria-hidden="true"></span>
+
+                                    <a href="/computers/@C.ComputerModelID"
+                                       class="btn btn-sm btn-outline-info">
+                                        <span class="oi oi-eye"></span>
+                                    </a>
+
+                                    <AuthorizeView Roles="Administrador">
+                                        <Authorized>
+
+                                            <a href="/computers/edit/@C.ComputerModelID"
+                                               class="btn btn-sm btn-outline-success">
+                                                <span class="oi oi-pencil"></span>
                                             </a>
-                                            <a href="/computers/edit/@C.ComputerModelID" class="bg-success rounded p-2">
-                                                <span class="oi oi-pencil text-white" aria-hidden="true"></span>
-                                            </a>
-                                            <button @onclick="() => Disable(C)" class="bg-danger rounded p-2">
-                                                <span class="oi oi-delete text-white" aria-hidden="true"></span>
+
+                                            <button @onclick="() => Disable(C)"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                <span class="oi oi-delete"></span>
                                             </button>
-                                        </td>
-                                    </Authorized>
-                                    <NotAuthorized>
-                                        <td class="d-flex flex-row gap-1">
-                                            @if (C.Employee != null)
-                                            {
-                                                <button @onclick="() => DownloadPDF(C)" class="bg-warning border-0 rounded p-2">
-                                                    <span class="oi oi-document text-white" aria-hidden="true"></span>
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button class="btn btn-sm btn-outline-warning">No disponible</button>
-                                            }
-                                        </td>
-                                    </NotAuthorized>
-                                </AuthorizeView>
-                            </tr>
-                        }
+
+                                        </Authorized>
+                                    </AuthorizeView>
+
+                                </div>
+                            </td>
+
+                        </tr>
                     }
-                }
-            </tbody>
-        </table>
-    </div>
-    <hr/>
-    <h3>
-        Equipos Desactivados
-    </h3>
-    <div class="table-responsive">
-        <table class="table table-sm table-hover">
-            <thead>
-                <tr>
-                    <td>Numero Serie</td>
-                    <td>Fecha Adquisicion</td>
-                    <td>Modelo</td>
-                    <AuthorizeView Roles="Administrador,Lector">
-                        <Authorized>
-                            <td class="d-none d-md-table-cell">Costo</td>
-                        </Authorized>
-                    </AuthorizeView>
-                    <td>Tipo Disco</td>
-                    <td class="d-none d-md-table-cell">Tamaño</td>
-                    <td class="d-none d-md-table-cell">Tipo RAM</td>
-                    <td class="d-none d-md-table-cell">Tamaño</td>
-                    <td>Procesador</td>
-                    <td class="d-none d-md-table-cell">Teclado</td>
-                    <td>Encargado</td>
-                    <td colspan="3">Acciones</td>
-                </tr>
-            </thead>
-            <tbody>
-                @if (computerstemp != null)
-                {
-                    @foreach (var C in computerstemp)
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+    @if (InactiveComputers.Any())
+    {
+        <hr />
+        <h3>Equipos Desactivados</h3>
+
+        <div class="shadow-sm rounded-4 border table-responsive">
+
+            <table class="table table-sm table-hover align-middle mb-0">
+
+                <thead class="table-light text-nowrap sticky-top small text-uppercase">
+                    <tr>
+                        <th>Serie</th>
+                        <th>Adquisición</th>
+                        <th>Modelo</th>
+
+                        <AuthorizeView Roles="Administrador,Lector">
+                            <Authorized>
+                                <th class="d-none d-md-table-cell">Costo</th>
+                            </Authorized>
+                        </AuthorizeView>
+
+                        <th>Disco</th>
+                        <th class="d-none d-md-table-cell">Capacidad</th>
+                        <th class="d-none d-md-table-cell">RAM</th>
+                        <th class="d-none d-md-table-cell">Memoria</th>
+                        <th>Procesador</th>
+                        <th class="d-none d-md-table-cell">Teclado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var C in InactiveComputers)
                     {
-                        if (!C.IsActive)
-                        {
-                            <tr>
-                                <td>@C.SerialNumber</td>
-                                <td>@C.AdquisitionDate.ToShortDateString()</td>
-                                <td>@C.ModelName</td>
-                                <AuthorizeView Roles="Administrador,Lector">
-                                    <Authorized>
-                                        @if (C.Cost != "0" || C.Cost != "1")
-                                        {
-                                            <td class="d-none d-md-table-cell">$ @C.Cost</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="d-none d-md-table-cell">$ No indicado</td>
+                        <tr class="text-danger">
 
-                                        }
-                                    </Authorized>
-                                </AuthorizeView>
-                                <td>@(C.HaveSSD ? "SSD" : "HDD")</td>
-                                <td class="d-none d-md-table-cell">@C.SizeDisk GB</td>
-                                <td class="d-none d-md-table-cell">@C.RAMType</td>
-                                <td class="d-none d-md-table-cell">@C.SizeRAM GB</td>
-                                <td>@C.Processor</td>
-                                <td class="d-none d-md-table-cell">@C.KeyboardLayout</td>
-                                <td>
-                                    @if (C.Employee != null && !C.Employee.Fired)
-                                    {
-                                        @($"{C.Employee.Name} {C.Employee.LastName}")
-                                    }
-                                    else if (C.Employee != null && C.Employee.Fired)
-                                    {
-                                        <span class="text-danger">@C.Employee.Name @C.Employee.LastName (Despedido)</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Sin Asignar</span>
-                                    }
-                                </td>
-                                <AuthorizeView Roles="Administrador">
-                                    <Authorized>
-                                        <td class="d-flex flex-row gap-1">
-                                            @if (C.Employee != null)
-                                            {
-                                                <button @onclick="() => DownloadPDF(C)" class="bg-warning border-0 rounded p-2">
-                                                    <span class="oi oi-document text-white" aria-hidden="true"></span>
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button class="btn btn-sm btn-outline-warning">No disponible</button>
-                                            }
-                                            <a href="/computers/@C.ComputerModelID" class="bg-info rounded p-2">
-                                                <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                            <td class="font-monospace small text-secondary">
+                                @C.SerialNumber
+                            </td>
+
+                            <td class="small text-muted text-nowrap">
+                                @C.AdquisitionDate.ToShortDateString()
+                            </td>
+
+                            <td class="fw-semibold text-nowrap">
+                                @C.ModelName
+                            </td>
+
+                            <AuthorizeView Roles="Administrador,Lector">
+                                <Authorized>
+                                    <td class="d-none d-md-table-cell small text-muted">
+                                        @(C.Cost != "0" && C.Cost != "1"
+                                                                        ? $"$ {C.Cost}"
+                                                                        : "No indicado")
+                                    </td>
+                                </Authorized>
+                            </AuthorizeView>
+
+                            <td>
+                                <span class="badge @(C.HaveSSD ? "bg-success-subtle text-dark" : "bg-secondary-subtle text-dark")">
+                                    @(C.HaveSSD ? "SSD" : "HDD")
+                                </span>
+                            </td>
+
+                            <td class="d-none d-md-table-cell text-nowrap">
+                                @C.SizeDisk GB
+                            </td>
+
+                            <td class="d-none d-md-table-cell">
+                                <span class="badge bg-info-subtle text-dark">
+                                    @C.RAMType
+                                </span>
+                            </td>
+
+                            <td class="d-none d-md-table-cell text-nowrap">
+                                @C.SizeRAM GB
+                            </td>
+
+                            <td class="text-nowrap">
+                                @C.Processor
+                            </td>
+
+                            <td class="d-none d-md-table-cell">
+                                @C.KeyboardLayout
+                            </td>
+
+                          
+
+                            <td class="text-center">
+                                <div class="d-inline-flex gap-1">
+
+                        
+
+                                    <a href="/computers/@C.ComputerModelID"
+                                       class="btn btn-sm btn-outline-info">
+                                        <span class="oi oi-eye"></span>
+                                    </a>
+
+                                    <AuthorizeView Roles="Administrador">
+                                        <Authorized>
+
+                                            <a href="/computers/edit/@C.ComputerModelID"
+                                               class="btn btn-sm btn-outline-success">
+                                                <span class="oi oi-pencil"></span>
                                             </a>
-                                            <a href="/computers/edit/@C.ComputerModelID" class="bg-success rounded p-2">
-                                                <span class="oi oi-pencil text-white" aria-hidden="true"></span>
-                                            </a>
-                                            <button @onclick="() => Disable(C)" class="bg-danger rounded p-2">
-                                                <span class="oi oi-delete text-white" aria-hidden="true"></span>
-                                            </button>
-                                        </td>
-                                    </Authorized>
-                                    <NotAuthorized>
-                                        <td class="d-flex flex-row gap-1">
-                                            @if (C.Employee != null)
-                                            {
-                                                <button @onclick="() => DownloadPDF(C)" class="bg-warning border-0 rounded p-2">
-                                                    <span class="oi oi-document text-white" aria-hidden="true"></span>
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button class="btn btn-sm btn-outline-warning">No disponible</button>
-                                            }
-                                        </td>
-                                    </NotAuthorized>
-                                </AuthorizeView>
-                            </tr>
-                        }
+
+                                         
+
+                                        </Authorized>
+                                    </AuthorizeView>
+
+                                </div>
+                            </td>
+
+                        </tr>
                     }
-                }
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+
+            </table>
+
+        </div>
+    }
 </div>
 
-
-
-
-
-
-
 @code {
+
     [Parameter]
-    public List<ComputerModel> Computers { get; set; }
+    public List<ComputerModel> Computers { get; set; } = new();
+
     private List<ComputerModel> computerstemp = new();
 
-    
+    private IEnumerable<ComputerModel> ActiveComputers =>
+        computerstemp?.Where(x => x.IsActive) ?? Enumerable.Empty<ComputerModel>();
+
+    private IEnumerable<ComputerModel> InactiveComputers =>
+        computerstemp?.Where(x => !x.IsActive) ?? Enumerable.Empty<ComputerModel>();
 
     protected override void OnParametersSet()
     {
-        computerstemp = Computers;
-        base.OnParametersSet();
-        StateHasChanged(); // Notificar a Blazor que se han actualizado los parámetros y debe renderizar de nuevo
+        computerstemp = Computers.ToList();
     }
 
-
-
-    private async Task Disable(ComputerModel e)
+    private void Disable(ComputerModel e)
     {
         _ComputerService.Delete(e);
         Computers.Remove(e);
+        computerstemp.Remove(e);
     }
 
-    private void Search(string SearchValue="")
+    private void Search(string value = "")
     {
-        if (!string.IsNullOrEmpty(SearchValue))
+        if (!string.IsNullOrWhiteSpace(value))
         {
-            computerstemp = (from i in Computers
-                             where i.SerialNumber.ToLower().Contains(SearchValue.ToLower()) || i.ModelName.ToLower().Contains(SearchValue.ToLower())
-                             select i)
+            computerstemp = Computers
+                .Where(i =>
+                    i.SerialNumber.ToLower().Contains(value.ToLower()) ||
+                    i.ModelName.ToLower().Contains(value.ToLower()))
                 .ToList();
-       }
+        }
         else
         {
-            computerstemp = Computers;
+            computerstemp = Computers.ToList();
         }
-        
     }
 
     private async Task DownloadPDF(ComputerModel e)
     {
-        try
-        {
-            byte[] pdfBytes = await pdfService.GeneratePDFComputer(e);
+        var pdfBytes = await pdfService.GeneratePDFComputer(e);
+        string pdfBase64 = Convert.ToBase64String(pdfBytes);
 
-
-            // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
-            string pdfBase64 = Convert.ToBase64String(pdfBytes);
-
-            // Invocar una función JavaScript para iniciar la descarga del PDF
-            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Entrega Computadora {e.Employee.Name} {e.Employee.LastName} {DateTime.Now.ToShortTimeString()}.pdf");
-        }
-        catch (Exception ec)
-        {
-            throw;
-        }
+        await JS.InvokeVoidAsync("downloadPDF",
+            pdfBase64,
+            $"Entrega Computadora {e.Employee?.Name} {e.Employee?.LastName} {DateTime.Now:HHmmss}.pdf");
     }
 }

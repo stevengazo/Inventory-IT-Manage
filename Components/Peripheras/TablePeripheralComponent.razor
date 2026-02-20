@@ -11,88 +11,101 @@
         <input type="text" placeholder="Búsqueda" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
     </div>
     <div class="table-responsive">
-        <table class="table table-sm table-hover">
-            <thead>
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
                 <tr>
-                    <td>Nombre</td>
-                    <td>Marca</td>
-                    <td>Tipo</td>
-                    <td>Modelo</td>
-                    <td>Numero Serie</td>
-                    <td>Fecha Adquisición</td>
-                    <td>costo</td>
-                    <td>Empleado</td>
-                    <td colspan="3">Acciones</td>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Tipo</th>
+                    <th>Modelo</th>
+                    <th>Numero Serie</th>
+                    <th>Fecha Adquisición</th>
+                    <th>Costo</th>
+                    <th>Empleado</th>
+                    <th class="text-end">Acciones</th>
                 </tr>
             </thead>
+
             <tbody>
-                @if (Peripheralstmp != null)
+                @if (Peripheralstmp != null && Peripheralstmp.Any())
                 {
                     @foreach (var C in Peripheralstmp)
                     {
                         <tr>
-                            <td>
-                                @C.Name
-                            </td>
-                            <td>
-                                @C.Brand.Name
-                            </td>
-                            <td>
-                                @C.Type
-                            </td>
-                            <td>
-                                @C.Model
-                            </td>
-                            <td>
-                                @C.SerialNumber
-                            </td>
-                            <td>
-                                @C.AdquisitionDate.ToShortDateString()
-                            </td>
-                            <td>
-                                $@C.Cost
-                            </td>
+                            <td>@C.Name</td>
+                            <td>@C.Brand?.Name</td>
+                            <td>@C.Type</td>
+                            <td>@C.Model</td>
+                            <td>@C.SerialNumber</td>
+                            <td>@C.AdquisitionDate.ToShortDateString()</td>
+                            <td>$@C.Cost</td>
+
                             @if (C.Employee != null && !C.Employee.Fired)
                             {
-                                <td>@C.Employee.Name @C.Employee.LastName</td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-dark">
+                                        @C.Employee.Name @C.Employee.LastName
+                                    </span>
+                                </td>
                             }
                             else if (C.Employee != null && C.Employee.Fired)
                             {
-                                <td class="text-danger">@C.Employee.Name @C.Employee.LastName (Despedido)</td>
+                                <td>
+                                    <span class="badge bg-danger">
+                                        @C.Employee.Name @C.Employee.LastName (Despedido)
+                                    </span>
+                                </td>
                             }
                             else
                             {
-                                <td>Sin Asignar</td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        Sin Asignar
+                                    </span>
+                                </td>
                             }
-                            <td class="d-flex flex-row gap-1">
-                                @if (C.Employee != null)
-                                {
-                                    <button @onclick="()=>DownloadPDF(C)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2">
-                                        <span class="oi oi-document text-white" aria-hidden="true"></span>
-                                    </button>
-                                }
-                                else
-                                {
 
-                                    <button class="btn btn-sm btn-outline-warning">No disponible</button>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
 
-                                }
+                                    @if (C.Employee != null)
+                                    {
+                                        <button @onclick="() => DownloadPDF(C)"
+                                                class="btn btn-sm btn-warning rounded-3 shadow-sm">
+                                            <span class="oi oi-document text-white"></span>
+                                        </button>
+                                    }
+                                
 
-                                <AuthorizeView Roles="Administrador">
-                                    <Authorized>
-                                        <a href="/peripherals/@C.PeripheralModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
-                                            <span class="oi oi-eye text-white" aria-hidden="true"></span>
-                                        </a>
-                                        <a href="/peripherals/edit/@C.PeripheralModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
-                                            <span class="oi oi-pencil text-white" aria-hidden="true"></span>
-                                        </a>
-                                    </Authorized>
-                                    <NotAuthorized></NotAuthorized>
-                                </AuthorizeView>
+                                    <AuthorizeView Roles="Administrador">
+                                        <Authorized>
 
+                                            <a href="/peripherals/@C.PeripheralModelId"
+                                               class="btn btn-sm btn-info rounded-3 shadow-sm">
+                                                <span class="oi oi-eye text-white"></span>
+                                            </a>
+
+                                            <a href="/peripherals/edit/@C.PeripheralModelId"
+                                               class="btn btn-sm btn-success rounded-3 shadow-sm">
+                                                <span class="oi oi-pencil text-white"></span>
+                                            </a>
+
+                                        </Authorized>
+                                    </AuthorizeView>
+
+                                </div>
                             </td>
+
                         </tr>
                     }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-4">
+                            No hay periféricos registrados
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
