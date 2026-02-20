@@ -1,53 +1,71 @@
 ﻿@page "/phone-number-user"
 @inject IControllerServices<Phone_Number_User_Model> _Phone_Number_UserService;
 
-<h3>
-	Lista de Asignaciones de Celulares y Líneas Telefónicas
-</h3>
+    <div class="d-flex flex-row justify-content-between">
+    <h3>
+        Lista de Asignaciones de Celulares y Líneas Telefónicas
+    </h3>
+    <button class="btn btn-primary mb-3"
+            @onclick="ToggleAddComponent">
+        @(showAddComponent ? "Cerrar" : "Nueva Asignación")
+    </button>
+
+    </div>
+
 
 
 
 <AuthorizeView Roles="Administrador">
-	<Authorized>
-		<AddPhone_Number_UserComponent eventCallback="UpdateList" phone_Number_s="@phone_Numbers" />
-	</Authorized>
-	<NotAuthorized>
-	</NotAuthorized>
+    <Authorized>
+        
+        @if (showAddComponent)
+        {
+            <AddPhone_Number_UserComponent eventCallback="UpdateList"
+                                           phone_Number_s="@phone_Numbers" />
+        }
+
+    </Authorized>
 </AuthorizeView>
 
 <AuthorizeView Roles="Administrador,Lector">
-	<Authorized>
+    <Authorized>
 
-		<TablePhone_Number_UserComponent phone_Number_User_Models="@phone_Numbers" />
-	</Authorized>
-	<NotAuthorized>
-	</NotAuthorized>
+        <TablePhone_Number_UserComponent phone_Number_User_Models="@phone_Numbers" />
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
 </AuthorizeView>
 
 
 
 @code {
 
-	List<Phone_Number_User_Model> phone_Numbers { get; set; }
+    List<Phone_Number_User_Model> phone_Numbers { get; set; }
+
+    private bool showAddComponent = false;
+
+    private void ToggleAddComponent()
+    {
+        showAddComponent = !showAddComponent;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        phone_Numbers = _Phone_Number_UserService.GetAll();
+        base.OnInitializedAsync();
+    }
 
 
-
-	protected override async Task OnInitializedAsync()
-	{
-		phone_Numbers = _Phone_Number_UserService.GetAll();
-		base.OnInitializedAsync();
-	}
-
-
-	private async Task UpdateList()
-	{
-		// Actualizar la lista de computadoras después de agregar una nueva computadora
-		await InvokeAsync(() =>
-		{
-			phone_Numbers = _Phone_Number_UserService.GetAll();
-			StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
-		});
-	}
+    private async Task UpdateList()
+    {
+        showAddComponent = false;
+        // Actualizar la lista de computadoras después de agregar una nueva computadora
+        await InvokeAsync(() =>
+        {
+            phone_Numbers = _Phone_Number_UserService.GetAll();
+            StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
+        });
+    }
 
 }
 

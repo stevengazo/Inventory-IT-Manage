@@ -8,7 +8,6 @@
 <AuthorizeView Roles="Administrador">
     <Authorized>
         <AddPhoneNumberComponent OnPhoneNumberAdded="UpdateList" />
-
     </Authorized>
     <NotAuthorized>
         <h3>No posee permisos</h3>
@@ -17,7 +16,7 @@
 
 <AuthorizeView Roles="Administrador,Lector">
     <Authorized>
-        <TablePhoneNumbersComponent PhoneNumbers="@Phones" />
+        <TablePhoneNumbersComponent PhoneNumbers="@Phones" ShowId="false" />
     </Authorized>
     <NotAuthorized>
     </NotAuthorized>
@@ -37,7 +36,11 @@
 
 
         // Get the computers in the db
-        Phones = _PhoneNumberService.GetAll();
+        Phones = _PhoneNumberService
+                            .GetAll()
+                            .Where(e => e.IsActive)
+                            .OrderBy(e => e.PhoneNumberId)  
+                            .ToList();
 
     }
 

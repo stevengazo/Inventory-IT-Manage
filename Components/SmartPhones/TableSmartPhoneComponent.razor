@@ -1,37 +1,51 @@
 ﻿@inject IControllerServices<SmartPhoneModel> _SmartPhoneService;
 
+<div class="shadow p-2 rounded">
 
-<div class="shadow p-2 rounded ">
-<div class="d-flex flex-row justify-content-between p-2">
-    <h3 class="w-100">Telefonos</h3>
-    <input type="text" placeholder="Busqueda" @onchange="@(e => Search(((ChangeEventArgs)e).Value.ToString()))" class="form-control w-25" />
-</div>
+    <div class="row mb-2">
 
-<div class="table-responsive">
-        <table class="table">
+        <div class="col-md-6">
+            <input type="text" class="form-control"
+                   placeholder="Buscar número, marca, modelo o serial..."
+                   @bind="searchText"
+                   @bind:event="oninput" />
+        </div>
+
+        <div class="col-md-3">
+            ¿No encuentras algún equipo?
+            <a class="text-danger" href="/smartphone-disable">
+                Equipos Eliminados
+            </a>
+        </div>
+
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+
             <thead>
                 <tr>
-                    <th>
+                    <th @onclick="() => SortBy(nameof(SmartPhoneModel.PhoneNumber))">
                         Phone Number
                     </th>
 
-                    <th>
-                        Fecha de Adquisicion
+                    <th @onclick="() => SortBy(nameof(SmartPhoneModel.AdquisitionDate))">
+                        Fecha Adquisicion
                     </th>
 
-                    <th>
+                    <th @onclick="() => SortBy(nameof(SmartPhoneModel.BrandId))">
                         Marca
                     </th>
 
-                    <th>
+                    <th @onclick="() => SortBy(nameof(SmartPhoneModel.PhoneModel))">
                         Modelo
                     </th>
 
-                    <th>
-                        N Serie
+                    <th @onclick="() => SortBy(nameof(SmartPhoneModel.PhoneSerial))">
+                        Serial
                     </th>
 
-                    <th>
+                    <th @onclick="() => SortBy(nameof(SmartPhoneModel.Cost))">
                         Costo
                     </th>
 
@@ -44,105 +58,132 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (SmartPhoneModel i in SmartPhonestemp)
-                {
 
-                    _style = (i.isActive) ? "" : "text-danger italic";
+            <tbody>
+                @foreach (var i in FilteredData)
+                {
+                    var _style = (i.isActive) ? "" : "text-danger fst-italic";
 
                     <tr class="@_style">
+                        <td>@i.PhoneNumber</td>
+                        <td>@i.AdquisitionDate.ToShortDateString()</td>
+                        <td>@i.Brand?.Name</td>
+                        <td>@i.PhoneModel</td>
+                        <td>@i.PhoneSerial</td>
+                        <td>@i.Cost</td>
+
                         <td>
-                            @i.PhoneNumber
+                            @(i.isActive ? "Teléfono Activo" : "Inactivo")
                         </td>
-                        <td>
-                            @i.AdquisitionDate.ToLongDateString()
-                        </td>
-                        <td>
-                            @i.Brand.Name
-                        </td>
-                        <td>
-                            @i.PhoneModel
-                        </td>
-                        <td>
-                            @i.PhoneSerial
-                        </td>
-                        <td>
-                            @i.Cost
-                        </td>
-                        @if (i.isActive)
-                        {
-                            <td>
-                                Teléfono Activo
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                Inactivo
-                            </td>
-                        }
 
                         <AuthorizeView Roles="Administrador">
                             <Authorized>
                                 <td class="d-flex flex-row gap-1">
-                                    <a href="/phone-number-user" class="btn btn-outline-success">Asignación</a>
-                                    <a href="/smartphone/@i.SmartPhoneModelId" class="bg-info h-100 h-100 rounded rounded-1 p-2">
-                                        <span class="oi oi-eye text-white" aria-hidden="true"></span>
+                                    <a href="/phone-number-user" class="btn btn-outline-success btn-sm">
+                                        Asignación
                                     </a>
-                                    <a href="/smartphone/edit/@i.SmartPhoneModelId" class="bg-success h-100 h-100 rounded rounded-1 p-2">
-                                        <span class="oi oi-pencil text-white" aria-hidden="true"></span>
+
+                                    <a href="/smartphone/@i.SmartPhoneModelId"
+                                       class="bg-info rounded p-2">
+                                        <span class="oi oi-eye text-white"></span>
                                     </a>
-                                    <button @onclick="()=> Disable(i)" class="bg-danger h-100 h-100 rounded rounded-1 p-2">
-                                        <span class="oi oi-delete text-white" aria-hidden="true"></span>
+
+                                    <a href="/smartphone/edit/@i.SmartPhoneModelId"
+                                       class="bg-success rounded p-2">
+                                        <span class="oi oi-pencil text-white"></span>
+                                    </a>
+
+                                    <button @onclick="() => Disable(i)"
+                                            class="bg-danger rounded p-2">
+                                        <span class="oi oi-delete text-white"></span>
                                     </button>
                                 </td>
                             </Authorized>
-                            <NotAuthorized>
-                            </NotAuthorized>
                         </AuthorizeView>
                     </tr>
                 }
             </tbody>
+
         </table>
+    </div>
+
 </div>
-</div>
-
-
-
 
 
 @code {
+
     [Parameter]
-    public List<SmartPhoneModel> SmartPhones { get; set; }
-    string _style = "";
-    private List<SmartPhoneModel> SmartPhonestemp = new();
+    public List<SmartPhoneModel> SmartPhones { get; set; } = new();
+
+    private string searchText;
+
+    private string currentSortColumn = nameof(SmartPhoneModel.PhoneNumber);
+    private bool asc = true;
+
+    private IEnumerable<SmartPhoneModel> FilteredData =>
+        ApplySorting(
+            SmartPhones.Where(x =>
+            {
+                if (string.IsNullOrWhiteSpace(searchText))
+                    return true;
+
+                var term = searchText.Trim();
+
+                return
+                    x.PhoneNumber.ToString().Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    (x.Brand?.Name != null && x.Brand.Name.Contains(term, StringComparison.OrdinalIgnoreCase)) ||
+                    (x.PhoneModel != null && x.PhoneModel.Contains(term, StringComparison.OrdinalIgnoreCase)) ||
+                    (x.PhoneSerial != null && x.PhoneSerial.Contains(term, StringComparison.OrdinalIgnoreCase));
+            })
+        );
+
+    void SortBy(string column)
+    {
+        if (currentSortColumn == column)
+            asc = !asc;
+        else
+        {
+            currentSortColumn = column;
+            asc = true;
+        }
+    }
+
+    IEnumerable<SmartPhoneModel> ApplySorting(IEnumerable<SmartPhoneModel> query)
+    {
+        return currentSortColumn switch
+        {
+            nameof(SmartPhoneModel.PhoneNumber) =>
+                asc ? query.OrderBy(x => x.PhoneNumber)
+                    : query.OrderByDescending(x => x.PhoneNumber),
+
+            nameof(SmartPhoneModel.AdquisitionDate) =>
+                asc ? query.OrderBy(x => x.AdquisitionDate)
+                    : query.OrderByDescending(x => x.AdquisitionDate),
+
+            nameof(SmartPhoneModel.PhoneModel) =>
+                asc ? query.OrderBy(x => x.PhoneModel)
+                    : query.OrderByDescending(x => x.PhoneModel),
+
+            nameof(SmartPhoneModel.PhoneSerial) =>
+                asc ? query.OrderBy(x => x.PhoneSerial)
+                    : query.OrderByDescending(x => x.PhoneSerial),
+
+            nameof(SmartPhoneModel.Cost) =>
+                asc ? query.OrderBy(x => x.Cost)
+                    : query.OrderByDescending(x => x.Cost),
+
+            "Brand" =>
+                asc ? query.OrderBy(x => x.Brand.Name)
+                    : query.OrderByDescending(x => x.Brand.Name),
+
+            _ => query
+        };
+    }
 
     private void Disable(SmartPhoneModel e)
     {
         _SmartPhoneService.Delete(e);
         SmartPhones.Remove(e);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        SmartPhonestemp = SmartPhones?.OrderBy(e=>e.Brand.Name).ThenBy(e=>e.PhoneModel).ToList();   
-        base.OnInitializedAsync();   
-    }
-
-    private void Search(string SearchValue = "")
-    {
-        if (!string.IsNullOrEmpty(SearchValue))
-        {
-            SmartPhonestemp = (from i in SmartPhones
-                             where i.PhoneSerial.ToLower().Contains(SearchValue.ToLower()) || i.PhoneModel.ToLower().Contains(SearchValue.ToLower())
-                             select i)
-                .ToList();
-        }
-        else
-        {
-            SmartPhonestemp = SmartPhones;
-        }
-
     }
 
 }

@@ -1,39 +1,34 @@
-﻿@page "/smartphones"
-@inject IControllerServices<SmartPhoneModel> _SmarthPhoneService;
-<h3>Telefonos Celulares</h3>
+﻿@page "/smartphone-disable"
 
-<AuthorizeView Roles="Administrador">
-    <Authorized>
-        <AddSmartPhoneComponent OnSmartPhoneAdded="@UpdateComputerList" />
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
+@inject IControllerServices<SmartPhoneModel> _SmarthPhoneService;
+
+<h3>Dispositivos Eliminados</h3>
+
 <AuthorizeView Roles="Administrador,Lector">
     <Authorized>
         <TableSmartPhoneComponent SmartPhones="@SmartPhones" />
     </Authorized>
     <NotAuthorized>
-
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
 
-    private List<SmartPhoneModel> SmartPhones = new(); 
+    private List<SmartPhoneModel> SmartPhones = new();
 
 
     protected override async Task OnInitializedAsync()
     {
         base.OnInitializedAsync();
-        SmartPhones = _SmarthPhoneService.GetAll().Where(d => d.isActive).ToList();
+        SmartPhones = _SmarthPhoneService.GetAll().Where(d => !d.isActive).ToList();
     }
     private async Task UpdateComputerList()
     {
         await InvokeAsync(() =>
         {
-            SmartPhones = _SmarthPhoneService.GetAll().Where(d=>d.isActive).ToList();
+            SmartPhones = _SmarthPhoneService.GetAll().Where(d => !d.isActive).ToList();
             StateHasChanged(); // Asegura que se vuelva a renderizar el componente padre
         });
     }
+
 }

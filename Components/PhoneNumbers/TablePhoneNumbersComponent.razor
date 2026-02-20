@@ -1,96 +1,147 @@
-﻿
+﻿<div class="row mb-2 my-3">
 
+    <div class="col-md-6">
+        <input type="text" class="form-control"
+               placeholder="Buscar número, operador o tipo..."
+               @bind="searchText"
+               @bind:event="oninput" />
+    </div>
 
-<div class="table-responsive">
+    <div class="col-md-3">
+        ¿No encuentras algún activo? Revisa
+        <a href="phone-number-disable" class="text-danger">
+            Cuentas Desactivadas
+        </a>
+    </div>
 
+</div>
+
+<div class="table-responsive mx-auto">
     <table class="table table-sm table-hover">
         <thead>
             <tr>
-                <th>
-                    Número
-                </th>
-                <th>
-                    Operador
-                </th>
-                <th>
-                    Tipo
-                </th>
-                <th>
-                    Costo
-                </th>
-                <th>
-                    Fecha Vencimiento
-                </th>
-                <th>
-                    Estado
-                </th>
-                <th>
-                    Acciones
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (PhoneNumbers != null)
-            {
-                foreach (PhoneNumber i in PhoneNumbers)
+                @if (ShowId){
+                    <th>
+                        Id
+                    </th>
+
+                    }
+                    <th @onclick="() => SortBy(nameof(PhoneNumber.Number))">
+                        Número
+                    </th>
+                    <th @onclick="() => SortBy(nameof(PhoneNumber.Operator))">
+                        Operador
+                    </th>
+                    <th @onclick="() => SortBy(nameof(PhoneNumber.Type))">
+                        Tipo
+                    </th>
+                    <th @onclick="() => SortBy(nameof(PhoneNumber.Cost))">
+                        Costo
+                    </th>
+                    <th @onclick="() => SortBy(nameof(PhoneNumber.ExpireDate))">
+                        Fecha Vencimiento
+                    </th>
+                    <th>
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (PhoneNumber i in FilteredData)
                 {
                     <tr>
-                        <td>
-                            @i.Number
-                        </td>
-                        <td>
-                            @i.Operator
-                        </td>
-                        <td>
-                            @i.Type
-                        </td>
-                        <td>
-                            @i.Cost
-                        </td>
-                        <td>
-                            @i.ExpireDate.ToLongDateString()
-                        </td>
-                        @{
-                            if (i.IsActive)
-                            {
-                                <td>
-                                    Linea activa
-                                </td>
+                        @if (ShowId){
+                            <th>
+                                @i.PhoneNumberId
+                            </th>
+
                             }
-                            else
-                            {
-                                <td>
-                                    Linea Inactiva
-                                </td>
-                            }
-                        }
+                            <td>@i.Number</td>
+                            <td>@i.Operator</td>
+                            <td>@i.Type</td>
+                            <td>@i.Cost</td>
+                            <td>@i.ExpireDate.ToShortDateString()</td>
 
-                        <AuthorizeView Roles="Administrador">
-                            <Authorized>
-                                <td>
-                                    <a href="/phones-numbers/@i.PhoneNumberId" class="btn btn-outline-info">Editar</a>
-                                </td>
-
-                            </Authorized>
-                            <NotAuthorized>
-
-                            </NotAuthorized>
-                        </AuthorizeView>
-
-
-                    </tr>
-                }
-            }
+                            <AuthorizeView Roles="Administrador">
+                                <Authorized>
+                                    <td>
+                                        <a href="/phones-numbers/@i.PhoneNumberId"
+                                           class="btn btn-outline-info btn-sm">
+                                            Editar
+                                        </a>
+                                    </td>
+                                </Authorized>
+                            </AuthorizeView>
+                        </tr>
+                    }
         </tbody>
-    </table>
-</div>
 
-
-
+            </table>
+        </div>
 
 
 
 @code {
+
     [Parameter]
-    public List<PhoneNumber> PhoneNumbers { get; set; }
+    public List<PhoneNumber> PhoneNumbers { get; set; } = new();
+    [Parameter]
+    public bool ShowId { get; set; } = false;
+
+    private string searchText;
+
+    private string currentSortColumn = nameof(PhoneNumber.Number);
+    private bool asc = true;
+
+    private IEnumerable<PhoneNumber> FilteredData =>
+        ApplySorting(
+            PhoneNumbers
+            .Where(x =>
+                string.IsNullOrWhiteSpace(searchText) ||
+
+                x.Number.ToString().Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                (x.Operator != null && x.Operator.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                (x.Type != null && x.Type.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            )
+        );
+
+    void SortBy(string column)
+    {
+        if (currentSortColumn == column)
+            asc = !asc;
+        else
+        {
+            currentSortColumn = column;
+            asc = true;
+        }
+    }
+
+    IEnumerable<PhoneNumber> ApplySorting(IEnumerable<PhoneNumber> query)
+    {
+        return currentSortColumn switch
+        {
+            nameof(PhoneNumber.Number) =>
+                asc ? query.OrderBy(x => x.Number)
+                    : query.OrderByDescending(x => x.Number),
+
+            nameof(PhoneNumber.Operator) =>
+                asc ? query.OrderBy(x => x.Operator)
+                    : query.OrderByDescending(x => x.Operator),
+
+            nameof(PhoneNumber.Type) =>
+                asc ? query.OrderBy(x => x.Type)
+                    : query.OrderByDescending(x => x.Type),
+
+            nameof(PhoneNumber.Cost) =>
+                asc ? query.OrderBy(x => x.Cost)
+                    : query.OrderByDescending(x => x.Cost),
+
+            nameof(PhoneNumber.ExpireDate) =>
+                asc ? query.OrderBy(x => x.ExpireDate)
+                    : query.OrderByDescending(x => x.ExpireDate),
+
+            _ => query
+        };
+    }
+
 }

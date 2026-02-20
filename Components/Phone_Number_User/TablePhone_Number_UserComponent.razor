@@ -1,63 +1,48 @@
-﻿@using Microsoft.AspNetCore.Http;
-@using PdfSharp.Drawing;
-@using PdfSharp.Drawing.Layout;
-@using PdfSharp.Pdf;
-@using PdfSharp.Quality;
+﻿@using ClosedXML.Excel
 @inject PDFService pdfService
 @inject IJSRuntime JS
 @inject IHttpContextAccessor httpContextAccessor
 
+<div class="shadow p-2 rounded my-2 justify-content-between d-flex gap-2 flex flex-row ">
 
+    <input type="text" class="form-control"
+           placeholder="Buscar número, modelo, serie, marca, operador o encargado..."
+           @bind="searchTerm"
+           @bind:event="oninput" />
+    <button class="btn btn-success mx-3 w-25" @onclick="DownloadXLSX">
+        Descargar XLSX
+    </button>
 
-<!-- Formulario de búsqueda -->
-<div class="shadow p-2 rounded my-2 ">
-    <label> Busqueda</label>
-    <form @onsubmit="SearchPhones">
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <input type="number" class="form-control" placeholder="Buscar por número de teléfono" @bind="searchPhoneNumber" />
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Buscar por modelo" @bind="searchModel" />
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Buscar por número de serie" @bind="searchSerial" />
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Buscar</button>
-        <button type="button" class="btn btn-secondary" @onclick="ClearSearch">Limpiar</button>
-    </form>
 </div>
 
 
-
-
 <div class="shadow p-2 rounded table-responsive">
-    <table class="table">
+    <table class="table table-sm table-hover">
+
         <thead>
             <tr>
-                <th>
+                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.CreationDate))">
                     Fecha Registro
                 </th>
-                <th>
-                    Numero Telefonico
-                </th>
-                <th>
+                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Operator))">
                     Operador
                 </th>
-                <th>
+                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Number))">
+                    Numero
+                </th>
+                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumber.Type))">
                     Tipo
                 </th>
-                <th>
+                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.Brand))">
                     Marca
                 </th>
-                <th>
+                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneModel))">
                     Modelo
                 </th>
-                <th>
+                <th @onclick="() => SortBy(nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneSerial))">
                     Serie
                 </th>
-                <th colspan="2">
+                <th>
                     Encargado
                 </th>
                 <th>
@@ -65,140 +50,190 @@
                 </th>
             </tr>
         </thead>
+
         <tbody>
-            @if (filteredPhoneModels != null)
+            @foreach (var item in FilteredData.Where(x => x.IsActive))
             {
-                foreach (var item in filteredPhoneModels)
-                {
-                    if (item.IsActive)
-                    {
-                        <tr>
-                            <td>
-                                @item.CreationDate.ToShortDateString()
-                            </td>
-                            <td>
-                                @item.PhoneNumber.Operator
-                            </td>
-                            <td>
-                                @item.PhoneNumber.Number
-                            </td>
-                            <td>
-                                @item.PhoneNumber.Type
-                            </td>
-                            <td>
-                                @item.PhoneNumberModel.Brand.Name
-                            </td>
-                            <td>
-                                @item.PhoneNumberModel.PhoneModel
-                            </td>
-                            <td>
-                                @item.PhoneNumberModel.PhoneSerial
-                            </td>
-                            <td>
-                                @item.Employee.LastName
-                            </td>
-                            <td>
-                                @item.Employee.Name
-                            </td>
-                            
-                            <button @onclick="()=>DownloadPDF(item)" class="bg-warning border-0 h-100 h-100 rounded rounded-1 p-2 mx-1">
-                                <span class="oi oi-document text-white" aria-hidden="true"></span>
-                            </button>
-                            <AuthorizeView Roles="Administrador">
-                                <Authorized>
-                                    <a href="/phone-number-user/@item.Id" class="bg-danger h-100 h-100 rounded rounded-1 p-2 mx-1">
-                                        <span class="oi oi-delete text-white" aria-hidden="true"></span>
-                                    </a>
-                                    <a href="/smartphone/@item.SmartPhoneModelId" class="bg-info border-0 h-100 h-100 rounded rounded-1 p-2 mx-1">
-                                        <span class="oi oi-data-transfer-upload text-white" aria-hidden="true"></span>
-                                    </a>
-                                </Authorized>
-                                <NotAuthorized>
+                <tr>
+                    <td>@item.CreationDate.ToShortDateString()</td>
+                    <td>@item.PhoneNumber.Operator</td>
+                    <td>@item.PhoneNumber.Number</td>
+                    <td>@item.PhoneNumber.Type</td>
+                    <td>@item.PhoneNumberModel.Brand.Name</td>
+                    <td>@item.PhoneNumberModel.PhoneModel</td>
+                    <td>@item.PhoneNumberModel.PhoneSerial</td>
+                    <td>@item.Employee.LastName @item.Employee.Name</td>
 
-                                </NotAuthorized>
-                            </AuthorizeView>
-                            <td>
-                            </td>
-                        </tr>
-                    }
-                }
+                    <td class="d-flex gap-1">
+
+                        <button @onclick="() => DownloadPDF(item)"
+                                class="bg-warning border-0 rounded p-2">
+                            <span class="oi oi-document text-white"></span>
+                        </button>
+
+                        <AuthorizeView Roles="Administrador">
+                            <Authorized>
+                                <a href="/phone-number-user/@item.Id"
+                                   class="bg-danger rounded p-2">
+                                    <span class="oi oi-delete text-white"></span>
+                                </a>
+
+                                <a href="/smartphone/@item.SmartPhoneModelId"
+                                   class="bg-info rounded p-2">
+                                    <span class="oi oi-data-transfer-upload text-white"></span>
+                                </a>
+                            </Authorized>
+                        </AuthorizeView>
+
+                    </td>
+                </tr>
             }
-
         </tbody>
+
     </table>
 </div>
 
 
 
 @code {
+
     [Parameter]
-    public List<Phone_Number_User_Model> phone_Number_User_Models { get; set; }
+    public List<Phone_Number_User_Model> phone_Number_User_Models { get; set; } = new();
 
-    // Variables para capturar los valores de búsqueda
-    private int searchPhoneNumber { get; set; } = 0;
-    private string searchModel { get; set; } = string.Empty;
-    private string searchSerial { get; set; } = string.Empty;
+    private string searchTerm = "";
 
-    // Lista filtrada que se usa para mostrar los resultados de búsqueda
-    private List<Phone_Number_User_Model> filteredPhoneModels;
+    private string currentSortColumn = nameof(Phone_Number_User_Model.CreationDate);
+    private bool asc = true;
 
-    protected override async Task OnInitializedAsync()
+    private IEnumerable<Phone_Number_User_Model> FilteredData =>
+        ApplySorting(
+            phone_Number_User_Models.Where(item =>
+            {
+                if (string.IsNullOrWhiteSpace(searchTerm))
+                    return true;
+
+                var term = searchTerm.Trim().ToLower();
+
+                bool isNumber = int.TryParse(term, out var number);
+
+                return
+                    (isNumber && item.PhoneNumber.Number.ToString().Contains(term) )
+
+                    || item.PhoneNumber.Operator?.ToLower().Contains(term) == true
+                    || item.PhoneNumber.Type?.ToLower().Contains(term) == true
+
+                    || item.PhoneNumberModel.Brand.Name?.ToLower().Contains(term) == true
+                    || item.PhoneNumberModel.PhoneModel?.ToLower().Contains(term) == true
+                    || item.PhoneNumberModel.PhoneSerial?.ToLower().Contains(term) == true
+
+                    || item.Employee.Name?.ToLower().Contains(term) == true
+                    || item.Employee.LastName?.ToLower().Contains(term) == true;
+            })
+        );
+
+    void SortBy(string column)
     {
-        filteredPhoneModels = phone_Number_User_Models;
-        base.OnInitializedAsync();   
+        if (currentSortColumn == column)
+            asc = !asc;
+        else
+        {
+            currentSortColumn = column;
+            asc = true;
+        }
     }
 
+    IEnumerable<Phone_Number_User_Model> ApplySorting(IEnumerable<Phone_Number_User_Model> query)
+    {
+        return currentSortColumn switch
+        {
+            nameof(Phone_Number_User_Model.CreationDate) =>
+                asc ? query.OrderBy(x => x.CreationDate)
+                    : query.OrderByDescending(x => x.CreationDate),
 
-    // Método para limpiar los campos de búsqueda y restaurar la lista original
+            nameof(Phone_Number_User_Model.PhoneNumber.Operator) =>
+                asc ? query.OrderBy(x => x.PhoneNumber.Operator)
+                    : query.OrderByDescending(x => x.PhoneNumber.Operator),
+
+            nameof(Phone_Number_User_Model.PhoneNumber.Number) =>
+                    asc ? query.OrderBy(x => x.PhoneNumber.Number)
+                        : query.OrderByDescending(x => x.PhoneNumber.Number),
+
+            nameof(Phone_Number_User_Model.PhoneNumber.Type) =>
+                asc ? query.OrderBy(x => x.PhoneNumber.Type)
+                    : query.OrderByDescending(x => x.PhoneNumber.Type),
+
+            nameof(Phone_Number_User_Model.PhoneNumberModel.Brand) =>
+                asc ? query.OrderBy(x => x.PhoneNumberModel.Brand.Name)
+                    : query.OrderByDescending(x => x.PhoneNumberModel.Brand.Name),
+
+            nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneModel) =>
+                asc ? query.OrderBy(x => x.PhoneNumberModel.PhoneModel)
+                    : query.OrderByDescending(x => x.PhoneNumberModel.PhoneModel),
+
+            nameof(Phone_Number_User_Model.PhoneNumberModel.PhoneSerial) =>
+                asc ? query.OrderBy(x => x.PhoneNumberModel.PhoneSerial)
+                    : query.OrderByDescending(x => x.PhoneNumberModel.PhoneSerial),
+
+            _ => query
+        };
+    }
+
     private void ClearSearch()
     {
-        searchPhoneNumber = 0;
-        searchModel = string.Empty;
-        searchSerial = string.Empty;
-        filteredPhoneModels = phone_Number_User_Models;
+        searchTerm = "";
     }
 
-    private void SearchPhones()
+
+    private async Task DownloadXLSX()
     {
-        // Inicializamos la consulta base sobre la lista de modelos de teléfono
-        var query = phone_Number_User_Models.AsQueryable();
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("Telefonos");
 
-        // Filtrar por número de teléfono si se proporciona uno distinto de 0
-        if (searchPhoneNumber != 0)
+        var data = FilteredData.Where(x => x.IsActive).ToList();
+
+        ws.Cell(1, 1).Value = "Fecha";
+        ws.Cell(1, 2).Value = "Numero";
+        ws.Cell(1, 3).Value = "Operador";
+        ws.Cell(1, 4).Value = "Tipo";
+        ws.Cell(1, 5).Value = "Marca";
+        ws.Cell(1, 6).Value = "Modelo";
+        ws.Cell(1, 7).Value = "Serie";
+        ws.Cell(1, 8).Value = "Encargado";
+
+        int row = 2;
+
+        foreach (var i in data)
         {
-            query = query.Where(item => item.PhoneNumber.Number == searchPhoneNumber);
+            ws.Cell(row, 1).Value = i.CreationDate;
+            ws.Cell(row, 2).Value = i.PhoneNumber.Number;
+            ws.Cell(row, 3).Value = i.PhoneNumber.Operator;
+            ws.Cell(row, 4).Value = i.PhoneNumber.Type;
+            ws.Cell(row, 5).Value = i.PhoneNumberModel.Brand.Name;
+            ws.Cell(row, 6).Value = i.PhoneNumberModel.PhoneModel;
+            ws.Cell(row, 7).Value = i.PhoneNumberModel.PhoneSerial;
+            ws.Cell(row, 8).Value = $"{i.Employee.LastName} {i.Employee.Name}";
+            row++;
         }
 
-        // Filtrar por modelo de teléfono si se proporciona uno
-        if (!string.IsNullOrEmpty(searchModel))
-        {
-            query = query.Where(item => item.PhoneNumberModel.PhoneModel.ToUpper().Contains(searchModel.ToUpper()));
-        }
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        var content = Convert.ToBase64String(stream.ToArray());
 
-        // Filtrar por número de serie si se proporciona uno
-        if (!string.IsNullOrEmpty(searchSerial))
-        {
-            query = query.Where(item => item.PhoneNumberModel.PhoneSerial.ToUpper().Contains(searchSerial.ToUpper()));
-        }
-
-        // Convertir el resultado filtrado a una lista
-        filteredPhoneModels = query.ToList();
+        await JS.InvokeVoidAsync("downloadFile",
+            $"Telefonos_{DateTime.Now:yyyyMMddHHmmss}.xlsx",
+            content,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
 
     private async Task DownloadPDF(Phone_Number_User_Model e)
     {
-        try
-        {
-            byte[] pdfBytes = await pdfService.GeneratePDFPhone(e);
-            // Convertir los bytes del PDF a una cadena base64 para pasarlos a JavaScript
-            string pdfBase64 = Convert.ToBase64String(pdfBytes);
-            // Invocar una función JavaScript para iniciar la descarga del PDF
-            await JS.InvokeVoidAsync("downloadPDF", pdfBase64, $"Entrega Telefono {e.Employee.Name} {e.Employee.LastName} {DateTime.Now.ToShortTimeString()}.pdf");
-        }
-        catch (Exception ec)
-        {
-            throw;
-        }
+        var pdfBytes = await pdfService.GeneratePDFPhone(e);
+        string pdfBase64 = Convert.ToBase64String(pdfBytes);
+
+        await JS.InvokeVoidAsync("downloadPDF",
+            pdfBase64,
+            $"Entrega Telefono {e.Employee.Name} {e.Employee.LastName}.pdf");
     }
+
 }

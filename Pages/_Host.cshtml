@@ -14,6 +14,13 @@
         link.download = fileName;
         link.click();
     };
+
+    window.downloadFile =     function downloadFile(filename, base64, mime) {
+        const link = document.createElement('a');
+        link.href = `data:${mime};base64,${base64}`;
+        link.download = filename;
+        link.click();
+    }
 </script>
 
 

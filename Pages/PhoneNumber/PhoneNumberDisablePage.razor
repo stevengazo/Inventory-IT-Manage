@@ -1,0 +1,38 @@
+﻿@page "/phone-number-disable"
+
+
+@inject IControllerServices<PhoneNumber> _PhoneNumberService;
+
+<h3>Cuentas Desactivadas</h3>
+
+
+<AuthorizeView Roles="Administrador,Lector">
+    <Authorized>
+        <TablePhoneNumbersComponent PhoneNumbers="@Phones" ShowId="true" />
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+    List<PhoneNumber> Phones { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Phones = new();
+        base.OnInitializedAsync();
+
+
+        // Get the computers in the db
+        Phones = _PhoneNumberService
+                            .GetAll()
+                            .Where(e => !e.IsActive)
+                            .OrderBy(e => e.PhoneNumberId)
+                            .ToList();
+
+    }
+
+}
