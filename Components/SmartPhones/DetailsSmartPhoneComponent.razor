@@ -1,77 +1,51 @@
-﻿
-<div class="p-2 my-3 shadow rounded rounded-1 border border-1">
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>
-                    @nameof(smartPhone.PhoneNumber)
-                </th>
-                <td>
-                    @smartPhone.PhoneNumber
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @nameof(smartPhone.AdquisitionDate)
-                </th>
-                <td>
+﻿<div class="card shadow-sm border-0 rounded-3 my-3">
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <small class="text-muted">@nameof(smartPhone.PhoneNumber)</small>
+                <div class="fw-semibold">@smartPhone.PhoneNumber</div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">@nameof(smartPhone.AdquisitionDate)</small>
+                <div class="fw-semibold">
                     @smartPhone.AdquisitionDate.ToLongDateString()
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @nameof(smartPhone.PhoneModel)
-                </th>
-                <td>
-                    @smartPhone.PhoneModel
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @nameof(smartPhone.PhoneNumber)
-                </th>
-                <td>
-                    @smartPhone.PhoneNumber
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @nameof(smartPhone.Description)
-                </th>
-                <td>
-                    @smartPhone.Description
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @nameof(smartPhone.Cost)
-                </th>
-                <td>
-                    @smartPhone.Cost.ToString();
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @nameof(smartPhone.Status)
-                </th>
-                <td>
-                    @smartPhone.Status
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @nameof(smartPhone.Brand)
-                </th>
-                <td>
-                    @smartPhone.Brand.Name
-                </td>
-            </tr>
-        </tbody>
-        
-    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">@nameof(smartPhone.PhoneModel)</small>
+                <div class="fw-semibold">@smartPhone.PhoneModel</div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">@nameof(smartPhone.Brand)</small>
+                <div class="fw-semibold">@smartPhone.Brand?.Name</div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">@nameof(smartPhone.Cost)</small>
+                <div class="fw-semibold">
+                    @smartPhone.Cost
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">@nameof(smartPhone.Status)</small>
+                <div class="fw-semibold">@smartPhone.Status</div>
+            </div>
+
+            <div class="col-12">
+                <small class="text-muted">@nameof(smartPhone.Description)</small>
+                <div class="fw-semibold">@smartPhone.Description</div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
-
-
 
 @code {
     [Parameter]

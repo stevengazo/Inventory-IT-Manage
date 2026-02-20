@@ -1,84 +1,60 @@
-﻿
+﻿<div class="card shadow-sm border-0 rounded-3 my-3">
+    <div class="card-body">
 
+        <div class="row g-3">
 
-<table class="table">
-    <tbody>
-        <tr>
-            <th>
-                Marca
-            </th>
-            <td>
-                @peripheral.Brand.Name
-            </td>
-        </tr>
-        <tr>
-            <th>
-                @nameof(peripheral.Name)
-            </th>
-            <td>
-                @peripheral.Name
-            </td>
-        </tr>
-                <tr>
-            <th>
-                Tipo
-            </th>
-            <td>
-                @peripheral.Type
-            </td>
-        </tr>
-                <tr>
-            <th>
-                Número de Serie
-            </th>
-            <td>
-                @peripheral.SerialNumber
-            </td>
-        </tr>
-                <tr>
-            <th>
-                Modelo
-            </th>
-            <td>
-                @peripheral.Model
-            </td>
-        </tr>
-                <tr>
-            <th>
-                Fecha Adquisición
-            </th>
-            <td>
-                @peripheral.AdquisitionDate.ToLongDateString()
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Costo
-            </th>
-            <td>
-                @peripheral.Cost
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Empleado
-            </th>
-            @if (peripheral.Employee != null)
-            {
-                <td>
-                    @peripheral.Employee.Name @peripheral.Employee.LastName
-                </td>
-            }
-            else
-            {
-                <td>
-                    Sin Asignar
-                </td>
-            }
-        </tr>
-    </tbody>
-</table>
+            <div class="col-md-6">
+                <small class="text-muted">Marca</small>
+                <div class="fw-semibold">@peripheral.Brand?.Name</div>
+            </div>
 
+            <div class="col-md-6">
+                <small class="text-muted">@nameof(peripheral.Name)</small>
+                <div class="fw-semibold">@peripheral.Name</div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Tipo</small>
+                <div class="fw-semibold">@peripheral.Type</div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Número de Serie</small>
+                <div class="fw-semibold">@peripheral.SerialNumber</div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Modelo</small>
+                <div class="fw-semibold">@peripheral.Model</div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Fecha Adquisición</small>
+                <div class="fw-semibold">
+                    @peripheral.AdquisitionDate.ToLongDateString()
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Costo</small>
+                <div class="fw-semibold">
+                    @peripheral.Cost.ToString("C")
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <small class="text-muted">Empleado</small>
+                <div class="fw-semibold">
+                    @(peripheral.Employee != null
+                                        ? $"{peripheral.Employee.Name} {peripheral.Employee.LastName}"
+                                        : "Sin Asignar")
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 @code {
     [Parameter]

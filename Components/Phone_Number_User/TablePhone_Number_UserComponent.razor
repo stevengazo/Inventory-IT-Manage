@@ -95,7 +95,17 @@
                     </td>
 
                     <td class="text-capitalize">
-                        @($"{item.Employee.Name} {item.Employee.LastName}")
+                        <a href="/employee/@item.EmployeeId"
+                           class="badge bg-primary text-white
+                  text-decoration-none fw-semibold
+                  d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill
+                  employee-badge">
+
+                            <i class="bi bi-person-fill"></i>
+
+                            @($"{item.Employee.Name} {item.Employee.LastName}")
+
+                        </a>
                     </td>
 
                     <td class="small text-muted">

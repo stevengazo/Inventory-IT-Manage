@@ -97,9 +97,18 @@
                             <td class="text-capitalize">
                                 @if (C.Employee != null && !C.Employee.Fired)
                                 {
-                                    <span class="fw-semibold">
+                                    <a href="/employee/@C.EmployeeId"
+                                       class="badge bg-primary text-white
+                              text-decoration-none fw-semibold
+                              d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill
+                              employee-badge">
+
+                                        <i class="bi bi-person-fill bg-white text-white"></i>
+
                                         @($"{C.Employee.Name} {C.Employee.LastName}")
-                                    </span>
+
+                                    </a>
+
                                 }
                                 else if (C.Employee != null && C.Employee.Fired)
                                 {

@@ -1,143 +1,121 @@
-﻿
+﻿<div class="d-flex justify-content-center my-3">
 
+    <div class="card shadow-sm border-0 rounded-4 w-100" style="max-width: 720px;">
 
-<div class="p-2 my-3 w-100 shadow rounded rounded-1 border border-1">
-    <table class="table table-hover table-sm">
-        <tr class="">
-            <th>
-                Identificador
-            </th>
-            <td>
-                @ComputerModel.ComputerModelID
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Marca
-            </th>
-            <td>
-                @ComputerModel.Brand.Name
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Número de Serie
-            </th>
-            <td>
-                @ComputerModel.SerialNumber
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Modelo
-            </th>
-            <td>
-                @ComputerModel.ModelName
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Fecha Adquisición
-            </th>
-            <td>
-                @ComputerModel.AdquisitionDate.ToLongDateString()
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Costo
-            </th>
-            <td>
-                $ @ComputerModel.Cost
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Tipo Disco
-            </th>
-            @if (ComputerModel.HaveSSD)
-            {
-                <td>
-                    SSD
-                </td>
-            }
-            else
-            {
-                <td>
-                    HDD
-                </td>
-            }
-        </tr>
-        <tr>
-            <th>
-                Tamaño Disco
-            </th>
-            <td>
-                @ComputerModel.SizeDisk GB
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Tipo RAM
-            </th>
-            <td>
-                @ComputerModel.RAMType
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Tamaño RAM
-            </th>
-            <td>
-                @ComputerModel.SizeRAM GB
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Procesador
-            </th>
-            <td>
-                @ComputerModel.Processor
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Teclado Numérico
-            </th>
-            @if (ComputerModel.HasNumericKeyboard)
-            {
-                <td>
-                    Tiene Teclado Numérico
-                </td>
-            }
-            else
-            {
-                <td>
-                    No Tiene teclado Numérico
-                </td>
-            }
-        </tr>
-        <tr>
-            <th>
-                Empleado
-            </th>
-            @if (ComputerModel.Employee != null)
-            {
-                <td>
-                    @ComputerModel.Employee.Name @ComputerModel.Employee.LastName
-                </td>
-            }
-            else
-            {
-                <td class="text-info">
-                    Sin Asignar
-                </td>
-            }
-        </tr>
-    </table>
+        <div class="card-header bg-light fw-semibold small text-uppercase">
+            Especificaciones del Equipo
+        </div>
+
+        <div class="card-body p-3">
+
+            <div class="row g-3 small align-items-center">
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Identificador</span>
+                    <span class="font-monospace">@ComputerModel.ComputerModelID</span>
+                </div>
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Marca</span>
+                    <span class="fw-semibold">@ComputerModel.Brand.Name</span>
+                </div>
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Serie</span>
+                    <span class="font-monospace">@ComputerModel.SerialNumber</span>
+                </div>
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Modelo</span>
+                    <span class="text-secondary">@ComputerModel.ModelName</span>
+                </div>
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Adquisición</span>
+                    <span>@ComputerModel.AdquisitionDate.ToShortDateString()</span>
+                </div>
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Costo</span>
+                    <span class="badge bg-success-subtle text-dark">
+                        $ @ComputerModel.Cost
+                    </span>
+                </div>
+
+                <div class="col-4">
+                    <span class="text-muted d-block">Disco</span>
+                    <span class="badge @(ComputerModel.HaveSSD
+                                                  ? "bg-primary-subtle text-dark" 
+                                                  : "bg-secondary-subtle text-dark")">
+                        @(ComputerModel.HaveSSD ? "SSD" : "HDD")
+                    </span>
+                </div>
+
+                <div class="col-4">
+                    <span class="text-muted d-block">Tamaño</span>
+                    <span>@ComputerModel.SizeDisk GB</span>
+                </div>
+
+                <div class="col-4">
+                    <span class="text-muted d-block">RAM</span>
+                    <span>@ComputerModel.SizeRAM GB</span>
+                </div>
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Procesador</span>
+                    <span>@ComputerModel.Processor</span>
+                </div>
+
+                <div class="col-6">
+                    <span class="text-muted d-block">Teclado Num.</span>
+                    <span class="badge @(ComputerModel.HasNumericKeyboard
+                                                  ? "bg-success-subtle text-dark"
+                                                  : "bg-danger-subtle text-dark")">
+                        @(ComputerModel.HasNumericKeyboard ? "Sí" : "No")
+                    </span>
+                </div>
+
+                <div class="col-12">
+                    <span class="text-muted d-block">Empleado</span>
+
+                    @if (ComputerModel.Employee != null && !ComputerModel.Employee.Fired)
+                    {
+                        <span class="text-capitalize">
+                            @ComputerModel.Employee.Name @ComputerModel.Employee.LastName
+                        </span>
+                    }
+                    else if (ComputerModel.Employee != null && ComputerModel.Employee.Fired)
+                    {
+                        
+                            <a href="/employee/@ComputerModel.EmployeeId"
+                               class="badge bg-primary text-white
+    text-decoration-none fw-semibold
+    d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill
+    employee-badge">
+
+                                <i class="bi bi-person-fill"></i>
+
+                                @($"{ComputerModel.Employee.Name} {ComputerModel.Employee.LastName}")
+
+                            </a>
+
+                      
+                    }
+                    else
+                    {
+                        <span class="badge bg-info-subtle text-dark">
+                            Sin asignar
+                        </span>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-
-
 
 @code {
     [Parameter]
